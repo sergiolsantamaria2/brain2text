@@ -1,0 +1,3 @@
+[submodule "references/nejm_brain_to_text"]
+	path = references/nejm_brain_to_text
+	url = https://github.com/srothh/nejm-brain-to-text.git
