@@ -1,38 +1,80 @@
+# =========================
 # Python
+# =========================
 __pycache__/
 *.py[cod]
+*.pyd
+*.so
 *.egg-info/
-build/
 dist/
+build/
+pip-wheel-metadata/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
 
-# Envs
+# =========================
+# Virtual envs
+# =========================
 .venv/
 venv/
-.env
+ENV/
+env/
+.conda/
+conda-env/
 
-# Jupyter
+# =========================
+# Jupyter / notebooks
+# =========================
 .ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
 
-# OS
+# =========================
+# OS / editor
+# =========================
 .DS_Store
 Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
 
-# Runs / outputs
-runs/
-wandb/
-trained_models/
-output/
-**/training_log
-*.log
-
-# Data
+# =========================
+# Project artifacts (DO NOT VERSION)
+# =========================
+# Local datasets and derived caches
 data/
-**/*.hdf5
-**/*.h5
-**/*.npz
-**/*.npy
+!data/.gitkeep
 
-# Large artifacts
+# Training outputs: logs, checkpoints, predictions, hydra outputs
+runs/
+!runs/.gitkeep
+
+# Large temporary outputs (if you ever generate them)
+**/*.ckpt
 **/*.pt
 **/*.pth
-**/*.ckpt
+**/*.onnx
+**/*.npz
+**/*.npy
+**/*.hdf5
+**/*.h5
+
+# Logs
+*.log
+logs/
+wandb/
+tensorboard/
+lightning_logs/
+
+# Kaggle / credentials / secrets
+.kaggle/
+kaggle.json
+.env
+.env.*
+*.pem
+*.key
+
+# Optional: local override configs (if you create them)
+configs/local/
