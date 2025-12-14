@@ -5,16 +5,17 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "brain2text"
 version = "0.1.0"
-description = "Brain2Text project"
-readme = "README.md"
+description = "Brain2Text training code (project wrapper around NEJM reference)."
 requires-python = ">=3.9"
 dependencies = [
-  "numpy",
   "omegaconf",
+  "numpy",
   "torch",
   "torchaudio",
+  "tqdm",
+  "pandas",
+  "editdistance",
   "wandb",
-  "h5py",
 ]
 
 [tool.setuptools]
