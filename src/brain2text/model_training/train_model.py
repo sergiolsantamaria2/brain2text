@@ -12,10 +12,27 @@ def _default_config_path() -> Path:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, default=str(_default_config_path()))
+    # Permite pasar varios --config y se aplican en orden (el último sobreescribe)
+    parser.add_argument(
+        "--config",
+        action="append",
+        default=[str(_default_config_path())],
+        help="Config YAML(s). You can pass multiple: --config base.yaml --config exp.yaml",
+    )
+    parser.add_argument(
+        "--print_config",
+        action="store_true",
+        help="Print final merged config and exit",
+    )
     args_cli = parser.parse_args()
 
-    cfg = OmegaConf.load(args_cli.config)
+    cfgs = [OmegaConf.load(p) for p in args_cli.config]
+    cfg = OmegaConf.merge(*cfgs)
+
+    if args_cli.print_config:
+        print(OmegaConf.to_yaml(cfg))
+        return
+
     trainer = BrainToTextDecoder_Trainer(cfg)
     trainer.train()
 
