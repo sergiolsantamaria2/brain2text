@@ -9,7 +9,7 @@ from tqdm import tqdm
 import editdistance
 import argparse
 
-from rnn_model import GRUDecoder
+from brain2text.src.brain2text.models.rnn_model import GRUDecoder
 from evaluate_model_helpers import *
 
 # argument parser for command line arguments

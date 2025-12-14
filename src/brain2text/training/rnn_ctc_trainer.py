@@ -17,8 +17,8 @@ except ImportError:
     wandb = None
 
 
-from brain2text.src.brain2text.data.dataset import BrainToTextDataset, train_test_split_indicies
-from data_augmentations import gauss_smooth
+from brain2text.data.dataset import BrainToTextDataset, train_test_split_indicies
+from brain2text.training.data_augmentations import gauss_smooth
 
 import torchaudio.functional as F # for edit distance
 from omegaconf import OmegaConf
@@ -27,7 +27,7 @@ torch.set_float32_matmul_precision('high') # makes float32 matmuls faster on som
 torch.backends.cudnn.deterministic = True # makes training more reproducible
 torch._dynamo.config.cache_size_limit = 64
 
-from brain2text.src.brain2text.models.rnn_model import GRUDecoder
+from brain2text.models.rnn_model import GRUDecoder
 
 class BrainToTextDecoder_Trainer:
     """
@@ -60,13 +60,13 @@ class BrainToTextDecoder_Trainer:
 
         self.transform_args = self.args['dataset']['data_transforms']
 
-        # Create output directory
-        if args['mode'] == 'train':
-            os.makedirs(self.args['output_dir'], exist_ok=False)
+        # Create output/checkpoint directories (RunManager usually creates them)
+        if args.get("mode", "train") == "train":
+            os.makedirs(self.args["output_dir"], exist_ok=True)
 
-        # Create checkpoint directory
-        if args['save_best_checkpoint'] or args['save_all_val_steps'] or args['save_final_model']: 
-            os.makedirs(self.args['checkpoint_dir'], exist_ok=False)
+        if args.get("save_best_checkpoint", False) or args.get("save_all_val_steps", False) or args.get("save_final_model", False):
+            os.makedirs(self.args["checkpoint_dir"], exist_ok=True)
+
 
         # Set up logging
         self.logger = logging.getLogger(__name__)
@@ -683,6 +683,13 @@ class BrainToTextDecoder_Trainer:
                         "val/loss": val_metrics["avg_loss"],
                     }, step=i)
 
+                # Always save a "last" checkpoint for resume/debugging
+                self.save_model_checkpoint(
+                    f'{self.args["checkpoint_dir"]}/last.ckpt',
+                    val_metrics["avg_PER"],
+                    val_metrics["avg_loss"],
+                )
+
 
                 # Determine if new best day. Based on if PER is lower, or in the case of a PER tie, if loss is lower
                 new_best = False
@@ -701,7 +708,8 @@ class BrainToTextDecoder_Trainer:
                     # Checkpoint if metrics have improved 
                     if save_best_checkpoint:
                         self.logger.info(f"Checkpointing model")
-                        self.save_model_checkpoint(f'{self.args["checkpoint_dir"]}/best_checkpoint', self.best_val_PER, self.best_val_loss)
+                        self.save_model_checkpoint(f'{self.args["checkpoint_dir"]}/best.ckpt', self.best_val_PER, self.best_val_loss)
+
 
                     # save validation metrics to pickle file
                     if self.args['save_val_metrics']:
