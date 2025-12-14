@@ -1,80 +1,14 @@
-# =========================
-# Python
-# =========================
-__pycache__/
-*.py[cod]
-*.pyd
-*.so
-*.egg-info/
-dist/
-build/
-pip-wheel-metadata/
-.pytest_cache/
-.coverage
-htmlcov/
-.mypy_cache/
-.ruff_cache/
-
-# =========================
-# Virtual envs
-# =========================
-.venv/
-venv/
-ENV/
-env/
-.conda/
-conda-env/
-
-# =========================
-# Jupyter / notebooks
-# =========================
-.ipynb_checkpoints/
-notebooks/.ipynb_checkpoints/
-
-# =========================
-# OS / editor
-# =========================
-.DS_Store
-Thumbs.db
-Desktop.ini
-.vscode/
-.idea/
-
-# =========================
-# Project artifacts (DO NOT VERSION)
-# =========================
-# Local datasets and derived caches
+# data
 data/
 !data/.gitkeep
 
-# Training outputs: logs, checkpoints, predictions, hydra outputs
-runs/
-!runs/.gitkeep
-
-# Large temporary outputs (if you ever generate them)
-**/*.ckpt
-**/*.pt
-**/*.pth
-**/*.onnx
-**/*.npz
-**/*.npy
-**/*.hdf5
-**/*.h5
-
-# Logs
-*.log
-logs/
+# outputs
+trained_models/
 wandb/
-tensorboard/
-lightning_logs/
+*.log
 
-# Kaggle / credentials / secrets
-.kaggle/
-kaggle.json
-.env
-.env.*
-*.pem
-*.key
-
-# Optional: local override configs (if you create them)
-configs/local/
+# python
+__pycache__/
+*.pyc
+.venv/
+.conda/

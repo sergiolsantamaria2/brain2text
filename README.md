@@ -1,3 +1,12 @@
+## Quickstart (cluster)
+
+```bash
+cd brain2text
+pip install -e .
+export WANDB_API_KEY=...   # o wandb login
+export B2T_DATA_DIR=$(pwd)/data/hdf5_data_final
+./scripts/train.sh configs/experiments/gru_lr_warmup_cosine.yaml
+
 # An Accurate and Rapidly Calibrating Speech Neuroprosthesis
 *The New England Journal of Medicine* (2024)
 
