@@ -1,0 +1,23 @@
+output_dir: trained_models/sweep_step1/w1000_lr3e-3_day1p5e-3_20k
+checkpoint_dir: ${output_dir}/checkpoint
+num_training_batches: 20000
+
+lr_scheduler_type: cosine
+lr_max: 0.003
+lr_min: 0.0001
+lr_warmup_steps: 1000
+lr_decay_steps: 20000
+
+lr_max_day: 0.0015
+lr_min_day: 0.0001
+lr_warmup_steps_day: 1000
+lr_decay_steps_day: 20000
+
+save_all_val_steps: false
+save_val_logits: false
+
+wandb:
+  enabled: true
+  project: brain2text
+  run_name: sweep_w1000_lr3e-3_day1p5e-3_20k
+  tags: ["sweep", "step1", "cosine", "warmup1000", "lr_high"]
