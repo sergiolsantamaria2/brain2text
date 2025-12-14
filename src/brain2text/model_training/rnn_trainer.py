@@ -17,8 +17,8 @@ except ImportError:
     wandb = None
 
 
-from dataset import BrainToTextDataset, train_test_split_indicies
-from data_augmentations import gauss_smooth
+from .dataset import BrainToTextDataset, train_test_split_indicies
+from .data_augmentations import gauss_smooth
 
 import torchaudio.functional as F # for edit distance
 from omegaconf import OmegaConf
@@ -27,7 +27,7 @@ torch.set_float32_matmul_precision('high') # makes float32 matmuls faster on som
 torch.backends.cudnn.deterministic = True # makes training more reproducible
 torch._dynamo.config.cache_size_limit = 64
 
-from rnn_model import GRUDecoder
+from .rnn_model import GRUDecoder
 
 class BrainToTextDecoder_Trainer:
     """
