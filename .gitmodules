@@ -1,3 +1,9 @@
 [submodule "references/nejm_brain_to_text"]
 	path = references/nejm_brain_to_text
 	url = https://github.com/srothh/nejm-brain-to-text.git
+[submodule "references/xlstm"]
+	path = references/xlstm
+	url = https://github.com/NX-AI/xlstm.git
+[submodule "references/tiny-gpt"]
+	path = references/tiny-gpt
+	url = https://github.com/guillaumeBellec/tiny-gpt.git
