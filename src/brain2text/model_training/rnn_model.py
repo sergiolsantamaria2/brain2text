@@ -134,3 +134,161 @@ class GRUDecoder(nn.Module):
         return logits
         
 
+import torch
+from torch import nn
+
+
+class ResLSTMDecoder(nn.Module):
+    """
+    Decoder con LSTM apiladas + residual connections + LayerNorm.
+    Diseñado para ser comparable con GRUDecoder y no romper el trainer.
+
+    Notas:
+    - Proyecta la entrada (posible patching) a n_units para que el residual sea válido.
+    - states (si se usa) debe ser un tuple (h, c) con shape (n_layers, B, n_units).
+    """
+    def __init__(
+        self,
+        neural_dim,
+        n_units,
+        n_days,
+        n_classes,
+        rnn_dropout=0.0,
+        input_dropout=0.0,
+        n_layers=5,
+        patch_size=0,
+        patch_stride=0,
+        norm_type="layernorm",     # "layernorm" | "none"
+        post_norm=False,
+    ):
+        super().__init__()
+
+        self.neural_dim = neural_dim
+        self.n_units = n_units
+        self.n_classes = n_classes
+        self.n_layers = n_layers
+        self.n_days = n_days
+
+        self.rnn_dropout = rnn_dropout
+        self.input_dropout = input_dropout
+
+        self.patch_size = patch_size
+        self.patch_stride = patch_stride
+
+        # Day-specific layers (idéntico a GRUDecoder)
+        self.day_layer_activation = nn.Softsign()
+
+        self.day_weights = nn.ParameterList(
+            [nn.Parameter(torch.eye(self.neural_dim)) for _ in range(self.n_days)]
+        )
+        self.day_biases = nn.ParameterList(
+            [nn.Parameter(torch.zeros(1, self.neural_dim)) for _ in range(self.n_days)]
+        )
+        self.day_layer_dropout = nn.Dropout(input_dropout)
+
+        # Input size efectivo (por patching)
+        self.input_size = self.neural_dim
+        if self.patch_size > 0:
+            self.input_size *= self.patch_size
+
+        # Proyección a d_model = n_units para residuals
+        self.in_proj = nn.Identity() if self.input_size == self.n_units else nn.Linear(self.input_size, self.n_units)
+
+        # Norms
+        def make_norm():
+            if norm_type == "layernorm":
+                return nn.LayerNorm(self.n_units)
+            if norm_type == "none":
+                return nn.Identity()
+            raise ValueError(f"norm_type inválido: {norm_type}")
+
+        self.pre_norms = nn.ModuleList([make_norm() for _ in range(self.n_layers)])
+        self.post_norms = nn.ModuleList([make_norm() for _ in range(self.n_layers)]) if post_norm else None
+
+        self.dropout = nn.Dropout(self.rnn_dropout)
+
+        # LSTM por capa (para controlar residual por-layer)
+        self.lstms = nn.ModuleList([
+            nn.LSTM(
+                input_size=self.n_units,
+                hidden_size=self.n_units,
+                num_layers=1,
+                batch_first=True,
+                bidirectional=False,
+            )
+            for _ in range(self.n_layers)
+        ])
+
+        # Init similar a tu GRU (ortogonal/xavier)
+        for lstm in self.lstms:
+            for name, param in lstm.named_parameters():
+                if "weight_hh" in name:
+                    nn.init.orthogonal_(param)
+                elif "weight_ih" in name:
+                    nn.init.xavier_uniform_(param)
+                elif "bias" in name:
+                    nn.init.zeros_(param)
+
+        self.out = nn.Linear(self.n_units, self.n_classes)
+        nn.init.xavier_uniform_(self.out.weight)
+
+        # Learnable initial states (h0, c0)
+        self.h0 = nn.Parameter(nn.init.xavier_uniform_(torch.zeros(self.n_layers, 1, self.n_units)))
+        self.c0 = nn.Parameter(nn.init.xavier_uniform_(torch.zeros(self.n_layers, 1, self.n_units)))
+
+    def forward(self, x, day_idx, states=None, return_state=False):
+        # Day-specific projection
+        day_weights = torch.stack([self.day_weights[i] for i in day_idx], dim=0)
+        day_biases = torch.cat([self.day_biases[i] for i in day_idx], dim=0).unsqueeze(1)
+
+        x = torch.einsum("btd,bdk->btk", x, day_weights) + day_biases
+        x = self.day_layer_activation(x)
+
+        if self.input_dropout > 0:
+            x = self.day_layer_dropout(x)
+
+        # Optional patching (idéntico a GRUDecoder)
+        if self.patch_size > 0:
+            x = x.unsqueeze(1)                      # [B, 1, T, D]
+            x = x.permute(0, 3, 1, 2)               # [B, D, 1, T]
+            x_unfold = x.unfold(3, self.patch_size, self.patch_stride)
+            x_unfold = x_unfold.squeeze(2)          # [B, D, N, P]
+            x_unfold = x_unfold.permute(0, 2, 3, 1) # [B, N, P, D]
+            x = x_unfold.reshape(x.size(0), x_unfold.size(1), -1)  # [B, N, D*P]
+
+        # Project to n_units for residual LSTM stack
+        x = self.in_proj(x)
+
+        B = x.shape[0]
+        if states is None:
+            h = self.h0.expand(self.n_layers, B, self.n_units).contiguous()
+            c = self.c0.expand(self.n_layers, B, self.n_units).contiguous()
+        else:
+            h, c = states
+
+        new_h = []
+        new_c = []
+
+        # Residual LSTM stack
+        for i in range(self.n_layers):
+            residual = x
+            x_norm = self.pre_norms[i](x)
+
+            out, (h_i, c_i) = self.lstms[i](x_norm, (h[i:i+1], c[i:i+1]))
+            out = self.dropout(out)
+
+            x = residual + out
+            if self.post_norms is not None:
+                x = self.post_norms[i](x)
+
+            new_h.append(h_i)
+            new_c.append(c_i)
+
+        logits = self.out(x)
+
+        if return_state:
+            h_new = torch.cat(new_h, dim=0)  # (n_layers, B, n_units)
+            c_new = torch.cat(new_c, dim=0)
+            return logits, (h_new, c_new)
+
+        return logits

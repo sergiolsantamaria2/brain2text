@@ -27,8 +27,7 @@ torch.set_float32_matmul_precision('high') # makes float32 matmuls faster on som
 torch.backends.cudnn.deterministic = True # makes training more reproducible
 torch._dynamo.config.cache_size_limit = 64
 
-from .rnn_model import GRUDecoder
-
+from .rnn_model import GRUDecoder, ResLSTMDecoder
 class BrainToTextDecoder_Trainer:
     """
     This class will initialize and train a brain-to-text phoneme decoder
@@ -175,18 +174,37 @@ class BrainToTextDecoder_Trainer:
 
 
 
-        # Initialize the model 
-        self.model = GRUDecoder(
-            neural_dim = self.args['model']['n_input_features'],
-            n_units = self.args['model']['n_units'],
-            n_days = len(self.args['dataset']['sessions']),
-            n_classes  = self.args['dataset']['n_classes'],
-            rnn_dropout = self.args['model']['rnn_dropout'], 
-            input_dropout = self.args['model']['input_network']['input_layer_dropout'], 
-            n_layers = self.args['model']['n_layers'],
-            patch_size = self.args['model']['patch_size'],
-            patch_stride = self.args['model']['patch_stride'],
+        # Initialize the model (selectable via config)
+        decoder_type = str(self.args.get("model", {}).get("decoder_type", "gru")).lower()
+
+        if decoder_type == "gru":
+            DecoderCls = GRUDecoder
+        elif decoder_type == "reslstm":
+            DecoderCls = ResLSTMDecoder
+        else:
+            raise ValueError(f"Invalid model.decoder_type: {decoder_type}. Use 'gru' or 'reslstm'.")
+
+        decoder_kwargs = dict(
+            neural_dim=self.args["model"]["n_input_features"],
+            n_units=self.args["model"]["n_units"],
+            n_days=len(self.args["dataset"]["sessions"]),
+            n_classes=self.args["dataset"]["n_classes"],
+            rnn_dropout=self.args["model"]["rnn_dropout"],
+            input_dropout=self.args["model"]["input_network"]["input_layer_dropout"],
+            n_layers=self.args["model"]["n_layers"],
+            patch_size=self.args["model"]["patch_size"],
+            patch_stride=self.args["model"]["patch_stride"],
         )
+
+        # Extra args only for ResLSTMDecoder (safe defaults if not present)
+        if DecoderCls is ResLSTMDecoder:
+            decoder_kwargs.update(dict(
+                norm_type=str(self.args.get("model", {}).get("reslstm_norm", "layernorm")),
+                post_norm=bool(self.args.get("model", {}).get("reslstm_post_norm", False)),
+            ))
+
+        self.model = DecoderCls(**decoder_kwargs)
+
 
         # Call torch.compile to speed up training
         self.logger.info("Using torch.compile")
@@ -306,11 +324,11 @@ class BrainToTextDecoder_Trainer:
 
         # Set rnn and/or input layers to not trainable if specified 
         for name, param in self.model.named_parameters():
-            if not self.args['model']['rnn_trainable'] and 'gru' in name:
+            if (not self.args["model"]["rnn_trainable"]) and (("gru" in name) or ("lstms" in name)):
+                param.requires_grad = False
+            elif (not self.args["model"]["input_network"]["input_trainable"]) and ("day_" in name):
                 param.requires_grad = False
 
-            elif not self.args['model']['input_network']['input_trainable'] and 'day' in name:
-                param.requires_grad = False
 
         # Send model to device 
         self.model.to(self.device)
@@ -323,19 +341,29 @@ class BrainToTextDecoder_Trainer:
 
         Day weights should have a separate learning rate
         '''
-        bias_params = [p for name, p in self.model.named_parameters() if 'gru.bias' in name or 'out.bias' in name]
-        day_params = [p for name, p in self.model.named_parameters() if 'day_' in name]
-        other_params = [p for name, p in self.model.named_parameters() if 'day_' not in name and 'gru.bias' not in name and 'out.bias' not in name]
+        day_params = [p for name, p in self.model.named_parameters() if "day_" in name]
+
+        # No weight decay for biases and normalization params (LayerNorm etc.), excluding day_ (day_ has its own group)
+        no_decay_params = [
+            p for name, p in self.model.named_parameters()
+            if ("day_" not in name) and (("bias" in name) or ("norm" in name))
+        ]
+
+        other_params = [
+            p for name, p in self.model.named_parameters()
+            if ("day_" not in name) and ("bias" not in name) and ("norm" not in name)
+        ]
+
 
         if len(day_params) != 0:
             param_groups = [
-                    {'params' : bias_params, 'weight_decay' : 0, 'group_type' : 'bias'},
+                    {'params' : no_decay_params, 'weight_decay' : 0, 'group_type' : 'no_decay'},
                     {'params' : day_params, 'lr' : self.args['lr_max_day'], 'weight_decay' : self.args['weight_decay_day'], 'group_type' : 'day_layer'},
                     {'params' : other_params, 'group_type' : 'other'}
                 ]
         else: 
             param_groups = [
-                    {'params' : bias_params, 'weight_decay' : 0, 'group_type' : 'bias'},
+                    {'params' : no_decay_params, 'weight_decay' : 0, 'group_type' : 'bias'},
                     {'params' : other_params, 'group_type' : 'other'}
                 ]
             
@@ -588,7 +616,16 @@ class BrainToTextDecoder_Trainer:
                 # Apply augmentations to the data
                 features, n_time_steps = self.transform_data(features, n_time_steps, 'train')
 
-                adjusted_lens = ((n_time_steps - self.args['model']['patch_size']) / self.args['model']['patch_stride'] + 1).to(torch.int32)
+                ps = int(self.args["model"]["patch_size"])
+                st = int(self.args["model"]["patch_stride"])
+
+                if ps > 0:
+                    if st <= 0:
+                        raise ValueError(f"Invalid patch_stride={st} with patch_size={ps}")
+                    adjusted_lens = ((n_time_steps - ps) / st + 1).to(torch.int32)
+                else:
+                    adjusted_lens = n_time_steps.to(torch.int32)
+
 
                 # Get phoneme predictions 
                 logits = self.model(features, day_indicies)
@@ -810,7 +847,16 @@ class BrainToTextDecoder_Trainer:
                 with torch.autocast(device_type = "cuda", enabled = self.args['use_amp'], dtype = torch.bfloat16):
                     features, n_time_steps = self.transform_data(features, n_time_steps, 'val')
 
-                    adjusted_lens = ((n_time_steps - self.args['model']['patch_size']) / self.args['model']['patch_stride'] + 1).to(torch.int32)
+                    ps = int(self.args["model"]["patch_size"])
+                    st = int(self.args["model"]["patch_stride"])
+
+                    if ps > 0:
+                        if st <= 0:
+                            raise ValueError(f"Invalid patch_stride={st} with patch_size={ps}")
+                        adjusted_lens = ((n_time_steps - ps) / st + 1).to(torch.int32)
+                    else:
+                        adjusted_lens = n_time_steps.to(torch.int32)
+
 
                     logits = self.model(features, day_indicies)
     
@@ -822,7 +868,6 @@ class BrainToTextDecoder_Trainer:
                     )
                     loss = torch.mean(loss)
 
-                metrics['losses'].append(loss.cpu().detach().numpy())
 
                 # Calculate PER per day and also avg over entire validation set
                 batch_edit_distance = 0 
