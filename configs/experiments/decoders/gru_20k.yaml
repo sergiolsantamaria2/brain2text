@@ -1,7 +1,7 @@
 model:
   decoder_type: gru
 
-output_dir: trained_models/compare_decoders/gru_20k
+output_dir: trained_models/compare_decoders/gru_20k_$(date +%F_%H%M%S)
 checkpoint_dir: ${output_dir}/checkpoint
 
 num_training_batches: 20000
