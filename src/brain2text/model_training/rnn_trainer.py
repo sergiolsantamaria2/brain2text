@@ -199,8 +199,8 @@ class BrainToTextDecoder_Trainer:
         # Extra args only for ResLSTMDecoder (safe defaults if not present)
         if DecoderCls is ResLSTMDecoder:
             decoder_kwargs.update(dict(
-                norm_type=str(self.args.get("model", {}).get("reslstm_norm", "layernorm")),
-                post_norm=bool(self.args.get("model", {}).get("reslstm_post_norm", False)),
+                reslstm_lstm_layers=int(self.args.get("model", {}).get("reslstm_lstm_layers", 2)),
+                reslstm_lstm_dropout=float(self.args.get("model", {}).get("reslstm_lstm_dropout", 0.1)),
             ))
 
         self.model = DecoderCls(**decoder_kwargs)
@@ -346,8 +346,9 @@ class BrainToTextDecoder_Trainer:
         # No weight decay for biases and normalization params (LayerNorm etc.), excluding day_ (day_ has its own group)
         no_decay_params = [
             p for name, p in self.model.named_parameters()
-            if ("day_" not in name) and (("bias" in name) or ("norm" in name))
+            if ("day_" not in name) and (("bias" in name) or ("norm" in name) or ("bn" in name))
         ]
+
 
         other_params = [
             p for name, p in self.model.named_parameters()
@@ -818,8 +819,8 @@ class BrainToTextDecoder_Trainer:
         metrics['trial_nums'] = []
         metrics['day_indicies'] = []
 
-        total_edit_distance = 0
-        total_seq_length = 0
+        total_edit_distance = 0.0
+        total_seq_length = 0.0
 
         # Calculate PER for each specific day
         day_per = {}
@@ -892,8 +893,8 @@ class BrainToTextDecoder_Trainer:
             day_per[day]['total_seq_length'] += torch.sum(phone_seq_lens).item()
 
 
-            total_edit_distance += batch_edit_distance
-            total_seq_length += int(torch.sum(phone_seq_lens).item())
+            total_edit_distance += float(batch_edit_distance)
+            total_seq_length += float(torch.sum(phone_seq_lens).item())
 
 
             # Record metrics
@@ -922,7 +923,8 @@ class BrainToTextDecoder_Trainer:
             if total_seq_length == 0:
                 metrics['avg_PER'] = float("inf")  # o float("nan") si prefieres
             else:
-                metrics['avg_PER'] = float(total_edit_distance) / float(total_seq_length)
+                avg_PER = total_edit_distance / max(1.0, total_seq_length)
+                metrics["avg_PER"] = float(avg_PER)
 
             metrics['avg_loss'] = float(np.mean(metrics['losses']))
 
