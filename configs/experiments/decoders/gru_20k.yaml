@@ -1,0 +1,22 @@
+model:
+  decoder_type: gru
+
+output_dir: trained_models/compare_decoders/gru_20k
+checkpoint_dir: ${output_dir}/checkpoint
+
+num_training_batches: 20000
+
+# evitar sustos del warning del cluster
+dataset:
+  num_dataloader_workers: 1
+
+# reducir disco
+save_all_val_steps: false
+save_val_logits: false
+
+wandb:
+  enabled: true
+  project: brain2text
+  run_name: compare_gru_20k
+  tags: ["compare", "gru", "20k"]
+
