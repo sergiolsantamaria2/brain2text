@@ -61,7 +61,7 @@ class BrainToTextDecoder_Trainer:
 
         # Create output directory
         if args['mode'] == 'train':
-            os.makedirs(self.args['output_dir'], exist_ok=False)
+            os.makedirs(self.args["output_dir"], exist_ok=True)
 
         # Create checkpoint directory
         if args['save_best_checkpoint'] or args['save_all_val_steps'] or args['save_final_model']: 
@@ -258,6 +258,18 @@ class BrainToTextDecoder_Trainer:
             seed = self.args['dataset']['seed'],
             bad_trials_dict = None,
             )
+        
+        # --- ensure output/checkpoint dirs exist ---
+        self.args["output_dir"] = str(self.args["output_dir"])
+        if "checkpoint_dir" in self.args and self.args["checkpoint_dir"] is not None:
+            self.args["checkpoint_dir"] = str(self.args["checkpoint_dir"])
+        else:
+            self.args["checkpoint_dir"] = os.path.join(self.args["output_dir"], "checkpoint")
+
+        os.makedirs(self.args["output_dir"], exist_ok=True)
+        os.makedirs(self.args["checkpoint_dir"], exist_ok=True)
+        # ------------------------------------------
+
 
         # Save dictionaries to output directory to know which trials were train vs val 
         with open(os.path.join(self.args['output_dir'], 'train_val_trials.json'), 'w') as f: 
