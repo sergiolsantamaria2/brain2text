@@ -913,10 +913,18 @@ class BrainToTextDecoder_Trainer:
             metrics['trial_nums'].append(batch['trial_nums'].numpy())
             metrics['day_indicies'].append(batch['day_indicies'].cpu().numpy())
 
-        avg_PER = total_edit_distance / total_seq_length
+            # total_seq_length puede ser tensor o float/int según cómo lo vayas acumulando
+            if isinstance(total_seq_length, torch.Tensor):
+                total_seq_length = total_seq_length.item()
 
-        metrics['day_PERs'] = day_per
-        metrics['avg_PER'] = avg_PER.item()
-        metrics['avg_loss'] = np.mean(metrics['losses'])
+            metrics['day_PERs'] = day_per
+
+            if total_seq_length == 0:
+                metrics['avg_PER'] = float("inf")  # o float("nan") si prefieres
+            else:
+                metrics['avg_PER'] = float(total_edit_distance) / float(total_seq_length)
+
+            metrics['avg_loss'] = float(np.mean(metrics['losses']))
+
 
         return metrics
