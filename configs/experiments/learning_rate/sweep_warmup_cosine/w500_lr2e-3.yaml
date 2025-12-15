@@ -19,5 +19,5 @@ save_val_logits: false
 wandb:
   enabled: true
   project: brain2text
-  run_name: sweep_w500_lr2e-3_day1e-3_20k
+  run_name: sweep_w500_lr2e-3_day1e-3_20k_${now:%Y-%m-%d_%H%M%S}
   tags: ["sweep", "step1", "cosine", "warmup500"]

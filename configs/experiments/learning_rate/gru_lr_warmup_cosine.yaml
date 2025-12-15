@@ -20,5 +20,5 @@ lr_decay_steps_day: ${num_training_batches}
 wandb:
   enabled: true
   project: brain2text
-  run_name: ${exp_name}
+  run_name: ${exp_name}_${now:%Y-%m-%d_%H%M%S}
   tags: ["lr", "warmup", "cosine"]
