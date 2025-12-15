@@ -257,20 +257,24 @@ class ResLSTMDecoder(nn.Module):
         self.out = nn.Linear(n_units, n_classes)
 
     def forward(self, features, day_indicies):
-        # features: (B,T,C)
-        day = int(day_indicies[0].item())
-        W = self.day_weights[day]
-        b = self.day_biases[day]
+        # Day-specific affine (por sample, igual que GRU)
+        day_ids = day_indicies.view(-1).tolist()  # lista de ints, len=B
 
-        x = self.day_layer_activation(features @ W + b)
+        day_weights = torch.stack([self.day_weights[i] for i in day_ids], dim=0)  # (B, D, D)
+        day_biases  = torch.cat([self.day_biases[i] for i in day_ids], dim=0).unsqueeze(1)  # (B, 1, D)
+
+        x = torch.einsum("btd,bdk->btk", features, day_weights) + day_biases
+        x = self.day_layer_activation(x)
         x = self.day_layer_dropout(x)
+
 
         # patching
         if self.patch_size > 0:
             ps = self.patch_size
             st = self.patch_stride
-            x = x.unfold(dimension=1, size=ps, step=st)     # (B, T', ps, C)
-            x = x.contiguous().view(x.size(0), x.size(1), -1)  # (B, T', ps*C)
+            x = x.unfold(dimension=1, size=ps, step=st)          # (B, T', C, ps)
+            x = x.permute(0, 1, 3, 2).contiguous()               # (B, T', ps, C)
+            x = x.view(x.size(0), x.size(1), -1)                 # (B, T', ps*C)
 
         x = self.in_proj(x)           # (B, T', n_units)
         x = self.reslstm(x)           # (B, T', n_units)
@@ -359,14 +363,17 @@ class XLSTMDecoder(nn.Module):
         self.out = nn.Linear(n_units, n_classes, bias=True)
 
     def _apply_day_layer(self, x: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
-        # day_indicies: (B,) o (B,1)
-        day = int(day_indicies[0].item())
-        W = self.day_weights[day]
-        b = self.day_biases[day]
-        x = x @ W + b
+        # day_indicies: (B,) o (B,1) -> lo aplanamos
+        day_ids = day_indicies.view(-1).tolist()  # lista de ints, len=B
+
+        day_weights = torch.stack([self.day_weights[i] for i in day_ids], dim=0)  # (B, D, D)
+        day_biases  = torch.cat([self.day_biases[i] for i in day_ids], dim=0).unsqueeze(1)  # (B, 1, D)
+
+        x = torch.einsum("btd,bdk->btk", x, day_weights) + day_biases
         x = self.day_layer_activation(x)
         x = self.day_layer_dropout(x)
         return x
+
 
     def _patchify(self, x: torch.Tensor) -> torch.Tensor:
         # x: (B,T,C)
