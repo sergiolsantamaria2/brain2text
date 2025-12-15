@@ -1,0 +1,13 @@
+output_dir: trained_models/reslstm/rms_pre
+checkpoint_dir: ${output_dir}/checkpoint
+
+model:
+  decoder_type: reslstm
+  reslstm_norm: rmsnorm
+  reslstm_post_norm: false
+
+wandb:
+  enabled: true
+  project: brain2text
+  run_name: reslstm_rms_pre
+  tags: ["reslstm", "rmsnorm", "pre"]

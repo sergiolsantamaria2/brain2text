@@ -1,9 +1,0 @@
-model:
-  decoder_type: reslstm
-  reslstm_norm: layernorm
-  reslstm_post_norm: false
-
-wandb:
-  enabled: true
-  run_name: reslstm_lr_warmup_cosine_base
-  tags: ["arch", "reslstm", "lr", "warmup", "cosine"]
