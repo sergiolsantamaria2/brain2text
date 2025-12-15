@@ -1,4 +1,4 @@
-output_dir: trained_models/sweep_step1/w2000_lr2e-3_day1e-3_20k
+output_dir: trained_models/sweep_step1/w2000_lr2e-3_day1e-3_20k_${now:%Y-%m-%d_%H%M%S}
 checkpoint_dir: ${output_dir}/checkpoint
 num_training_batches: 20000
 

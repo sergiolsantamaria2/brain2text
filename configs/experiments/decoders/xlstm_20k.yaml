@@ -21,5 +21,5 @@ save_val_logits: false
 wandb:
   enabled: true
   project: brain2text
-  run_name: compare_xlstm_20k
+  run_name: xlstm_20k
   tags: ["compare", "xlstm", "20k"]
