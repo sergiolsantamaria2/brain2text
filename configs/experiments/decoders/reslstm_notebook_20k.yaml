@@ -3,7 +3,7 @@ model:
   reslstm_lstm_layers: 2
   reslstm_lstm_dropout: 0.1
 
-gpu_number: "1"
+gpu_number: "0"
 
 output_dir: trained_models/compare_decoders/reslstm_notebook_20k_${oc.env:RUN_ID}
 checkpoint_dir: ${output_dir}/checkpoint
