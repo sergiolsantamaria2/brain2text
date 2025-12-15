@@ -893,7 +893,8 @@ class BrainToTextDecoder_Trainer:
 
 
             total_edit_distance += batch_edit_distance
-            total_seq_length += torch.sum(phone_seq_lens)
+            total_seq_length += int(torch.sum(phone_seq_lens).item())
+
 
             # Record metrics
             if return_logits: 
