@@ -277,3 +277,120 @@ class ResLSTMDecoder(nn.Module):
         x = self.dropout(x)
         logits = self.out(x)          # (B, T', n_classes)
         return logits
+
+
+from brain2text.xlstm.xlstm_block_stack import xLSTMBlockStack, xLSTMBlockStackConfig
+from brain2text.xlstm.blocks.slstm.block import sLSTMBlockConfig
+from brain2text.xlstm.blocks.slstm.layer import sLSTMLayerConfig
+
+
+import torch
+from torch import nn
+
+class XLSTMDecoder(nn.Module):
+    def __init__(
+        self,
+        neural_dim: int,
+        n_units: int,
+        n_days: int,
+        n_classes: int,
+        rnn_dropout: float,
+        input_dropout: float,
+        n_layers: int,
+        patch_size: int,
+        patch_stride: int,
+        xlstm_num_blocks: int = None,
+        xlstm_num_heads: int = 4,
+        xlstm_conv1d_kernel_size: int = 4,
+        xlstm_dropout: float = None,
+    ):
+        super().__init__()
+
+        self.neural_dim = neural_dim
+        self.n_units = n_units
+        self.n_days = n_days
+        self.n_classes = n_classes
+        self.patch_size = int(patch_size)
+        self.patch_stride = int(patch_stride)
+
+        if xlstm_num_blocks is None:
+            xlstm_num_blocks = int(n_layers)
+        if xlstm_dropout is None:
+            xlstm_dropout = float(rnn_dropout)
+
+        if n_units % xlstm_num_heads != 0:
+            raise ValueError(f"xlstm_num_heads must divide n_units. Got n_units={n_units}, heads={xlstm_num_heads}")
+
+        # Day-specific input layers (mismo patrón que tus modelos)
+        self.day_layer_activation = nn.Softsign()
+        self.day_weights = nn.ParameterList([nn.Parameter(torch.eye(neural_dim)) for _ in range(n_days)])
+        self.day_biases = nn.ParameterList([nn.Parameter(torch.zeros(1, neural_dim)) for _ in range(n_days)])
+        self.day_layer_dropout = nn.Dropout(p=float(input_dropout))
+
+        # Patching: (B,T,C) -> (B,T', patch_size*C)
+        if self.patch_size > 0:
+            self.in_proj = nn.Linear(self.patch_size * neural_dim, n_units, bias=True)
+        else:
+            self.in_proj = nn.Linear(neural_dim, n_units, bias=True)
+
+        # sLSTM-only stack (evita mLSTM y “context_length” dinámico para empezar)
+        slstm_layer_cfg = sLSTMLayerConfig(
+            embedding_dim=n_units,
+            num_heads=int(xlstm_num_heads),
+            conv1d_kernel_size=int(xlstm_conv1d_kernel_size),
+            dropout=float(xlstm_dropout),
+        )
+        slstm_block_cfg = sLSTMBlockConfig(slstm=slstm_layer_cfg, feedforward=None)
+
+        stack_cfg = xLSTMBlockStackConfig(
+            mlstm_block=None,
+            slstm_block=slstm_block_cfg,
+            context_length=-1,
+            num_blocks=int(xlstm_num_blocks),
+            embedding_dim=int(n_units),
+            add_post_blocks_norm=True,
+            bias=False,
+            dropout=float(xlstm_dropout),
+            slstm_at="all",
+        )
+        self.xlstm = xLSTMBlockStack(stack_cfg)
+
+        self.dropout = nn.Dropout(p=float(rnn_dropout))
+        self.out = nn.Linear(n_units, n_classes, bias=True)
+
+    def _apply_day_layer(self, x: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
+        # day_indicies: (B,) o (B,1)
+        day = int(day_indicies[0].item())
+        W = self.day_weights[day]
+        b = self.day_biases[day]
+        x = x @ W + b
+        x = self.day_layer_activation(x)
+        x = self.day_layer_dropout(x)
+        return x
+
+    def _patchify(self, x: torch.Tensor) -> torch.Tensor:
+        # x: (B,T,C)
+        if self.patch_size <= 0:
+            return x
+
+        B, T, C = x.shape
+        ps = self.patch_size
+        st = self.patch_stride
+        if st <= 0:
+            raise ValueError(f"Invalid patch_stride={st}")
+
+        # unfold temporal
+        x = x.unfold(dimension=1, size=ps, step=st)          # (B, T', C, ps)
+        x = x.permute(0, 1, 3, 2).contiguous()               # (B, T', ps, C)
+        x = x.view(B, x.shape[1], ps * C)                    # (B, T', ps*C)
+        return x
+
+    def forward(self, features: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
+        # features: (B,T,C)
+        x = self._apply_day_layer(features, day_indicies)
+        x = self._patchify(x)
+        x = self.in_proj(x)
+        x = self.xlstm(x)
+        x = self.dropout(x)
+        logits = self.out(x)
+        return logits

@@ -27,7 +27,7 @@ torch.set_float32_matmul_precision('high') # makes float32 matmuls faster on som
 torch.backends.cudnn.deterministic = True # makes training more reproducible
 torch._dynamo.config.cache_size_limit = 64
 
-from .rnn_model import GRUDecoder, ResLSTMDecoder
+from .rnn_model import GRUDecoder, ResLSTMDecoder, XLSTMDecoder
 class BrainToTextDecoder_Trainer:
     """
     This class will initialize and train a brain-to-text phoneme decoder
@@ -181,6 +181,8 @@ class BrainToTextDecoder_Trainer:
             DecoderCls = GRUDecoder
         elif decoder_type == "reslstm":
             DecoderCls = ResLSTMDecoder
+        elif decoder_type == "xlstm":
+            DecoderCls = XLSTMDecoder
         else:
             raise ValueError(f"Invalid model.decoder_type: {decoder_type}. Use 'gru' or 'reslstm'.")
 
@@ -195,6 +197,13 @@ class BrainToTextDecoder_Trainer:
             patch_size=self.args["model"]["patch_size"],
             patch_stride=self.args["model"]["patch_stride"],
         )
+        if DecoderCls is XLSTMDecoder:
+            decoder_kwargs.update(dict(
+                xlstm_num_blocks=int(self.args["model"].get("xlstm_num_blocks", self.args["model"]["n_layers"])),
+                xlstm_num_heads=int(self.args["model"].get("xlstm_num_heads", 4)),
+                xlstm_conv1d_kernel_size=int(self.args["model"].get("xlstm_conv1d_kernel_size", 4)),
+                xlstm_dropout=float(self.args["model"].get("xlstm_dropout", self.args["model"]["rnn_dropout"])),
+            ))
 
         # Extra args only for ResLSTMDecoder (safe defaults if not present)
         if DecoderCls is ResLSTMDecoder:

@@ -2,6 +2,14 @@ from pathlib import Path
 import argparse
 from omegaconf import OmegaConf
 from .rnn_trainer import BrainToTextDecoder_Trainer
+from datetime import datetime
+
+# resolver para timestamps en YAML: ${now:%Y-%m-%d_%H%M%S}
+OmegaConf.register_new_resolver(
+    "now",
+    lambda fmt="%Y-%m-%d_%H%M%S": datetime.now().strftime(fmt),
+    replace=True,
+)
 
 
 def _default_config_path() -> Path:
