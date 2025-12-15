@@ -363,7 +363,7 @@ class BrainToTextDecoder_Trainer:
                 ]
         else: 
             param_groups = [
-                    {'params' : no_decay_params, 'weight_decay' : 0, 'group_type' : 'bias'},
+                    {'params' : no_decay_params, 'weight_decay' : 0, 'group_type' : 'no_decay'},
                     {'params' : other_params, 'group_type' : 'other'}
                 ]
             
