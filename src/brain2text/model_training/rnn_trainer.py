@@ -373,8 +373,9 @@ class BrainToTextDecoder_Trainer:
 
         other_params = [
             p for name, p in self.model.named_parameters()
-            if ("day_" not in name) and ("bias" not in name) and ("norm" not in name)
+            if ("day_" not in name) and ("bias" not in name) and ("norm" not in name) and ("bn" not in name)
         ]
+
 
 
         if len(day_params) != 0:
