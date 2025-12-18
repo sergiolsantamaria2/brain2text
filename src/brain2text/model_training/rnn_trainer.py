@@ -714,22 +714,19 @@ class BrainToTextDecoder_Trainer:
 
             # Log to wandb (per step)
             if self.use_wandb:
+                lrs = self.learning_rate_scheduler.get_last_lr()  # lista, una LR por param group
+
                 log_dict = {
-                    "train/loss": loss.detach().item(),
+                    "train/loss": float(loss.detach().item()),
                     "train/grad_norm": float(grad_norm),
-                    "lr_used/group0": float(used_lrs[0]),
+                    "lr/group0": float(lrs[0]),
                 }
-                if len(used_lrs) > 1:
-                    log_dict["lr_used/group1"] = float(used_lrs[1])
-                if len(used_lrs) > 2:
-                    log_dict["lr_used/group2"] = float(used_lrs[2])
-
                 if len(lrs) > 1:
-                    log_dict["lr/group1"] = lrs[1]
+                    log_dict["lr/group1"] = float(lrs[1])
                 if len(lrs) > 2:
-                    log_dict["lr/group2"] = lrs[2]
-                wandb.log(log_dict, step=i)
+                    log_dict["lr/group2"] = float(lrs[2])
 
+                wandb.log(log_dict, step=i)
             
             # Save training metrics 
             train_step_duration = time.time() - start_time
