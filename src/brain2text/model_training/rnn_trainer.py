@@ -114,6 +114,9 @@ class BrainToTextDecoder_Trainer:
 
         # Optional: Weights & Biases logging
         self.use_wandb = bool(self.args.get("wandb", {}).get("enabled", False))
+        wandb_group = self.args["wandb"].get("group", None) or os.environ.get("WANDB_RUN_GROUP")
+        wandb_job_type = self.args["wandb"].get("job_type", None) or os.environ.get("WANDB_JOB_TYPE")
+
         if self.use_wandb:
             if wandb is None:
                 raise ImportError("wandb is enabled in rnn_args.yaml but wandb is not installed. Run: pip install wandb")
@@ -122,6 +125,8 @@ class BrainToTextDecoder_Trainer:
                 name=self.args["wandb"].get("run_name", None),
                 tags=self.args["wandb"].get("tags", None),
                 config=OmegaConf.to_container(self.args, resolve=True),
+                group=wandb_group,
+                job_type=wandb_job_type,
             )
 
 

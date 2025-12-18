@@ -10,6 +10,14 @@ echo "Experiment dir: ${EXP_DIR}"
 echo "GPU: ${GPU}"
 echo
 
+GROUP="reslstm_$(date +%Y%m%d_%H%M%S)"
+export WANDB_RUN_GROUP="${GROUP}"
+export WANDB_JOB_TYPE="reslstm_ablation"
+
+echo "W&B group: ${WANDB_RUN_GROUP}"
+echo "W&B job_type: ${WANDB_JOB_TYPE}"
+
+
 shopt -s nullglob
 OVERRIDES=("${EXP_DIR}"/*.yaml)
 if [[ ${#OVERRIDES[@]} -eq 0 ]]; then
