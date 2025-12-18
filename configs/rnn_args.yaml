@@ -4,7 +4,7 @@ model:
   rnn_dropout: 0.4 # dropout rate for the GRU layers
   rnn_trainable: true # whether the GRU layers are trainable
   n_layers: 5 # number of GRU layers
-    decoder_type: gru
+  decoder_type: gru
 
   # ResLSTM knobs (safe defaults)
   reslstm_num_blocks: 1
