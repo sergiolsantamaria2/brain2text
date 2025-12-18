@@ -137,6 +137,7 @@ class GRUDecoder(nn.Module):
 import torch
 from torch import nn
 
+
 class RMSNorm(nn.Module):
     def __init__(self, d: int, eps: float = 1e-8):
         super().__init__()
@@ -147,19 +148,6 @@ class RMSNorm(nn.Module):
         # x: (B,T,D)
         rms = x.pow(2).mean(dim=-1, keepdim=True).add(self.eps).sqrt()
         return (x / rms) * self.scale
-
-
-def build_time_norm(norm_type: str, d: int) -> nn.Module:
-    norm_type = (norm_type or "none").lower()
-    if norm_type == "bn":
-        return MyBatchNorm1d(d)
-    if norm_type == "layernorm":
-        return nn.LayerNorm(d)
-    if norm_type == "rmsnorm":
-        return RMSNorm(d)
-    if norm_type == "none":
-        return nn.Identity()
-    raise ValueError(f"Unknown norm_type={norm_type}. Use one of: bn, layernorm, rmsnorm, none.")
 
 
 class MyBatchNorm1d(nn.Module):
@@ -178,6 +166,17 @@ class MyBatchNorm1d(nn.Module):
         else:
             raise ValueError(f"MyBatchNorm1d expected 2D or 3D input, got shape={tuple(x.shape)}")
 
+def build_time_norm(norm_type: str, d: int) -> nn.Module:
+    norm_type = (norm_type or "none").lower()
+    if norm_type == "bn":
+        return MyBatchNorm1d(d)
+    if norm_type == "layernorm":
+        return nn.LayerNorm(d)
+    if norm_type == "rmsnorm":
+        return RMSNorm(d)
+    if norm_type == "none":
+        return nn.Identity()
+    raise ValueError(f"Unknown norm_type={norm_type}. Use one of: bn, layernorm, rmsnorm, none.")
 
 class ResLSTMSublayer(nn.Module):
     """
