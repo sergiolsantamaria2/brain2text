@@ -1,8 +1,11 @@
 from pathlib import Path
 import argparse
-from omegaconf import OmegaConf
-from .rnn_trainer import BrainToTextDecoder_Trainer
 from datetime import datetime
+
+from omegaconf import OmegaConf
+
+from .rnn_trainer import BrainToTextDecoder_Trainer
+
 
 # resolver para timestamps en YAML: ${now:%Y-%m-%d_%H%M%S}
 OmegaConf.register_new_resolver(
@@ -17,31 +20,46 @@ def _default_config_path() -> Path:
     return repo_root / "configs" / "rnn_args.yaml"
 
 
+def _flatten(maybe_lists):
+    out = []
+    for x in maybe_lists:
+        if x is None:
+            continue
+        if isinstance(x, list):
+            out.extend(x)
+        else:
+            out.append(x)
+    return out
+
+
 def main():
     parser = argparse.ArgumentParser()
+
     parser.add_argument(
         "--config",
         action="append",
         default=[str(_default_config_path())],
-        help="Ruta a YAML. Puedes pasar --config varias veces (base + overrides).",
+        help="Path to YAML base config. You can pass --config multiple times (they are merged in order).",
+    )
+    parser.add_argument(
+        "--override",
+        action="append",
+        default=[],
+        help="Path to an override YAML config. Can be specified multiple times.",
+    )
+    parser.add_argument(
+        "--set",
+        action="append",
+        default=[],
+        help="Dotlist overrides like model.n_units=512. Can be specified multiple times.",
     )
     parser.add_argument(
         "--print_config",
         action="store_true",
-        help="Imprime el config final y sale.",
+        help="Print the final merged config and exit.",
     )
-    args_cli = parser.parse_args()
 
-    cfgs = [OmegaConf.load(p) for p in args_cli.config]
-    cfg = OmegaConf.merge(*cfgs)
+    args = parser.parse_args()
 
-    if args_cli.print_config:
-        print(OmegaConf.to_yaml(cfg, resolve=True))
-        return
-
-    trainer = BrainToTextDecoder_Trainer(cfg)
-    trainer.train()
-
-
-if __name__ == "__main__":
-    main()
+    # Merge base configs provided via --config (in order)
+    c
