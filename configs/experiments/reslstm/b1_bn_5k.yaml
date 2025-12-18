@@ -8,13 +8,10 @@ model:
   reslstm_pre_norm: false
   reslstm_residual_dropout: 0.0
 
-
 gpu_number: "0"
 
-output_dir: trained_models/compare_decoders/reslstm_20k_${now:%Y-%m-%d_%H%M%S}
-checkpoint_dir: ${output_dir}/checkpoint
-
-num_training_batches: 20000
+num_training_batches: 5000
+batches_per_val_step: 500
 
 dataset:
   num_dataloader_workers: 1
@@ -22,8 +19,11 @@ dataset:
 save_all_val_steps: false
 save_val_logits: false
 
+output_dir: trained_models/reslstm_ablation/b1_bn_5k_${now:%Y-%m-%d_%H%M%S}
+checkpoint_dir: ${output_dir}/checkpoint
+
 wandb:
   enabled: true
   project: brain2text
-  run_name: reslstm_20k_${now:%Y-%m-%d_%H%M%S}
-  tags: ["compare", "reslstm", "20k"]
+  run_name: b1_bn_5k_${now:%Y-%m-%d_%H%M%S}
+  tags: ["reslstm", "ablation", "blocks1", "bn", "5k"]

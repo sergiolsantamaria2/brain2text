@@ -137,12 +137,32 @@ class GRUDecoder(nn.Module):
 import torch
 from torch import nn
 
+class RMSNorm(nn.Module):
+    def __init__(self, d: int, eps: float = 1e-8):
+        super().__init__()
+        self.eps = eps
+        self.scale = nn.Parameter(torch.ones(d))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # x: (B,T,D)
+        rms = x.pow(2).mean(dim=-1, keepdim=True).add(self.eps).sqrt()
+        return (x / rms) * self.scale
+
+
+def build_time_norm(norm_type: str, d: int) -> nn.Module:
+    norm_type = (norm_type or "none").lower()
+    if norm_type == "bn":
+        return MyBatchNorm1d(d)
+    if norm_type == "layernorm":
+        return nn.LayerNorm(d)
+    if norm_type == "rmsnorm":
+        return RMSNorm(d)
+    if norm_type == "none":
+        return nn.Identity()
+    raise ValueError(f"Unknown norm_type={norm_type}. Use one of: bn, layernorm, rmsnorm, none.")
+
 
 class MyBatchNorm1d(nn.Module):
-    """
-    BatchNorm que acepta (B,T,D) o (B,D).
-    OJO: con padding, BN ve los ceros. Es el comportamiento del notebook.
-    """
     def __init__(self, d, eps=1e-5, momentum=0.1):
         super().__init__()
         self.bn = nn.BatchNorm1d(d, eps=eps, momentum=momentum)
@@ -159,53 +179,90 @@ class MyBatchNorm1d(nn.Module):
             raise ValueError(f"MyBatchNorm1d expected 2D or 3D input, got shape={tuple(x.shape)}")
 
 
-class ResLSTMBlock(nn.Module):
+class ResLSTMSublayer(nn.Module):
     """
-    Bloque ResLSTM del notebook:
-      x <- BN(x + BiLSTM(x))
-      x <- BN(x + BiLSTM(x))
-    Cada BiLSTM es num_layers=2, bidirectional=True, hidden_size=d//2 => salida d.
+    One residual BiLSTM sublayer:
+      - pre_norm: y = LSTM(norm(x)); x = x + dropout(y)
+      - post_norm: y = LSTM(x); x = norm(x + dropout(y))
     """
-    def __init__(self, d, lstm_layers=2, lstm_dropout=0.1):
+    def __init__(
+        self,
+        d: int,
+        lstm_layers: int = 2,
+        lstm_dropout: float = 0.1,
+        norm_type: str = "bn",
+        pre_norm: bool = False,
+        residual_dropout: float = 0.0,
+    ):
         super().__init__()
         assert d % 2 == 0, f"ResLSTM requires even d, got d={d}"
+        self.pre_norm = bool(pre_norm)
 
-        self.lstm1 = nn.LSTM(
+        self.norm = build_time_norm(norm_type, d)
+        self.residual_dropout = nn.Dropout(p=float(residual_dropout))
+
+        self.lstm = nn.LSTM(
             input_size=d,
             hidden_size=d // 2,
-            num_layers=lstm_layers,
-            dropout=lstm_dropout if lstm_layers > 1 else 0.0,
+            num_layers=int(lstm_layers),
+            dropout=float(lstm_dropout) if int(lstm_layers) > 1 else 0.0,
             bidirectional=True,
             batch_first=True,
         )
-        self.bn1 = MyBatchNorm1d(d)
 
-        self.lstm2 = nn.LSTM(
-            input_size=d,
-            hidden_size=d // 2,
-            num_layers=lstm_layers,
-            dropout=lstm_dropout if lstm_layers > 1 else 0.0,
-            bidirectional=True,
-            batch_first=True,
-        )
-        self.bn2 = MyBatchNorm1d(d)
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if self.pre_norm:
+            x_in = self.norm(x)
+            y, _ = self.lstm(x_in)
+            y = self.residual_dropout(y)
+            return x + y
+        else:
+            y, _ = self.lstm(x)
+            y = self.residual_dropout(y)
+            return self.norm(x + y)
 
-    def forward(self, x):
-        y, _ = self.lstm1(x)
-        x = self.bn1(x + y)
-        y, _ = self.lstm2(x)
-        x = self.bn2(x + y)
+
+class ResLSTMBlock(nn.Module):
+    """
+    Notebook-style block = 2 residual BiLSTM sublayers.
+    """
+    def __init__(
+        self,
+        d: int,
+        lstm_layers: int = 2,
+        lstm_dropout: float = 0.1,
+        norm_type: str = "bn",
+        pre_norm: bool = False,
+        residual_dropout: float = 0.0,
+        sublayers_per_block: int = 2,
+    ):
+        super().__init__()
+        self.layers = nn.ModuleList([
+            ResLSTMSublayer(
+                d=d,
+                lstm_layers=lstm_layers,
+                lstm_dropout=lstm_dropout,
+                norm_type=norm_type,
+                pre_norm=pre_norm,
+                residual_dropout=residual_dropout,
+            )
+            for _ in range(int(sublayers_per_block))
+        ])
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        for layer in self.layers:
+            x = layer(x)
         return x
 
 
 class ResLSTMDecoder(nn.Module):
     """
-    Decoder para Brain2Text:
-      - day-specific affine (como ya tenías)
-      - patching (como ya tenías)
-      - proyección a n_units
-      - ResLSTMBlock (del notebook)
-      - salida a n_classes
+    Decoder:
+      - day-specific affine
+      - patching
+      - projection to n_units
+      - stack of ResLSTMBlocks
+      - output head
     """
     def __init__(
         self,
@@ -215,12 +272,17 @@ class ResLSTMDecoder(nn.Module):
         n_classes: int,
         rnn_dropout: float,
         input_dropout: float,
-        n_layers: int,          # no lo usamos aquí, lo dejamos por compat
+        n_layers: int,          # kept for compatibility
         patch_size: int,
         patch_stride: int,
-        # nuevos knobs (puedes overridearlos):
+        # knobs
+        reslstm_num_blocks: int = 1,
+        reslstm_sublayers_per_block: int = 2,
         reslstm_lstm_layers: int = 2,
         reslstm_lstm_dropout: float = 0.1,
+        reslstm_norm: str = "bn",
+        reslstm_pre_norm: bool = False,
+        reslstm_residual_dropout: float = 0.0,
     ):
         super().__init__()
 
@@ -235,51 +297,54 @@ class ResLSTMDecoder(nn.Module):
         self.day_layer_activation = nn.Softsign()
         self.day_layer_dropout = nn.Dropout(p=float(input_dropout))
 
-        self.day_weights = nn.ParameterList([
-            nn.Parameter(torch.eye(neural_dim)) for _ in range(n_days)
-        ])
-        self.day_biases = nn.ParameterList([
-            nn.Parameter(torch.zeros(1, neural_dim)) for _ in range(n_days)
-        ])
+        self.day_weights = nn.Parameter(torch.eye(neural_dim).unsqueeze(0).repeat(n_days, 1, 1))
+        self.day_biases = nn.Parameter(torch.zeros(n_days, neural_dim))
 
         # Patching => flatten => proj
         in_dim = neural_dim * self.patch_size if self.patch_size > 0 else neural_dim
         self.in_proj = nn.Linear(in_dim, n_units)
+        nn.init.xavier_uniform_(self.in_proj.weight)
 
-        # Notebook ResLSTM
-        self.reslstm = ResLSTMBlock(
-            d=n_units,
-            lstm_layers=reslstm_lstm_layers,
-            lstm_dropout=reslstm_lstm_dropout,
-        )
+        # Stack blocks
+        self.reslstm = nn.Sequential(*[
+            ResLSTMBlock(
+                d=n_units,
+                lstm_layers=int(reslstm_lstm_layers),
+                lstm_dropout=float(reslstm_lstm_dropout),
+                norm_type=str(reslstm_norm),
+                pre_norm=bool(reslstm_pre_norm),
+                residual_dropout=float(reslstm_residual_dropout),
+                sublayers_per_block=int(reslstm_sublayers_per_block),
+            )
+            for _ in range(int(reslstm_num_blocks))
+        ])
 
         self.dropout = nn.Dropout(p=float(rnn_dropout))
         self.out = nn.Linear(n_units, n_classes)
+        nn.init.xavier_uniform_(self.out.weight)
 
-    def forward(self, features, day_indicies):
-        # Day-specific affine (por sample, igual que GRU)
-        day_ids = day_indicies.view(-1).tolist()  # lista de ints, len=B
+    def forward(self, features: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
+        # Vectorized day indexing (no .tolist() sync)
+        day_ids = day_indicies.view(-1).long()
+        W = self.day_weights.index_select(0, day_ids)                 # (B, D, D)
+        b = self.day_biases.index_select(0, day_ids).unsqueeze(1)     # (B, 1, D)
 
-        day_weights = torch.stack([self.day_weights[i] for i in day_ids], dim=0)  # (B, D, D)
-        day_biases  = torch.cat([self.day_biases[i] for i in day_ids], dim=0).unsqueeze(1)  # (B, 1, D)
-
-        x = torch.einsum("btd,bdk->btk", features, day_weights) + day_biases
+        x = torch.einsum("btd,bdk->btk", features, W) + b
         x = self.day_layer_activation(x)
         x = self.day_layer_dropout(x)
-
 
         # patching
         if self.patch_size > 0:
             ps = self.patch_size
             st = self.patch_stride
-            x = x.unfold(dimension=1, size=ps, step=st)          # (B, T', C, ps)
-            x = x.permute(0, 1, 3, 2).contiguous()               # (B, T', ps, C)
-            x = x.view(x.size(0), x.size(1), -1)                 # (B, T', ps*C)
+            x = x.unfold(dimension=1, size=ps, step=st)               # (B, T', C, ps)
+            x = x.permute(0, 1, 3, 2).contiguous()                    # (B, T', ps, C)
+            x = x.view(x.size(0), x.size(1), -1)                      # (B, T', ps*C)
 
-        x = self.in_proj(x)           # (B, T', n_units)
-        x = self.reslstm(x)           # (B, T', n_units)
+        x = self.in_proj(x)                                           # (B, T', n_units)
+        x = self.reslstm(x)                                           # (B, T', n_units)
         x = self.dropout(x)
-        logits = self.out(x)          # (B, T', n_classes)
+        logits = self.out(x)                                          # (B, T', n_classes)
         return logits
 
 

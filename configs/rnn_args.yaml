@@ -4,6 +4,17 @@ model:
   rnn_dropout: 0.4 # dropout rate for the GRU layers
   rnn_trainable: true # whether the GRU layers are trainable
   n_layers: 5 # number of GRU layers
+    decoder_type: gru
+
+  # ResLSTM knobs (safe defaults)
+  reslstm_num_blocks: 1
+  reslstm_sublayers_per_block: 2
+  reslstm_lstm_layers: 2
+  reslstm_lstm_dropout: 0.1
+  reslstm_norm: bn            # bn | layernorm | rmsnorm | none
+  reslstm_pre_norm: false
+  reslstm_residual_dropout: 0.0
+
   patch_size: 14 # size of the input patches (14 time steps)
   patch_stride: 4 # stride for the input patches (4 time steps)
 

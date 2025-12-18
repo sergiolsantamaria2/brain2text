@@ -207,10 +207,17 @@ class BrainToTextDecoder_Trainer:
 
         # Extra args only for ResLSTMDecoder (safe defaults if not present)
         if DecoderCls is ResLSTMDecoder:
+            mcfg = self.args.get("model", {})
             decoder_kwargs.update(dict(
-                reslstm_lstm_layers=int(self.args.get("model", {}).get("reslstm_lstm_layers", 2)),
-                reslstm_lstm_dropout=float(self.args.get("model", {}).get("reslstm_lstm_dropout", 0.1)),
+                reslstm_num_blocks=int(mcfg.get("reslstm_num_blocks", 1)),
+                reslstm_sublayers_per_block=int(mcfg.get("reslstm_sublayers_per_block", 2)),
+                reslstm_lstm_layers=int(mcfg.get("reslstm_lstm_layers", 2)),
+                reslstm_lstm_dropout=float(mcfg.get("reslstm_lstm_dropout", 0.1)),
+                reslstm_norm=str(mcfg.get("reslstm_norm", "bn")),
+                reslstm_pre_norm=bool(mcfg.get("reslstm_pre_norm", False)),
+                reslstm_residual_dropout=float(mcfg.get("reslstm_residual_dropout", 0.0)),
             ))
+
 
         self.model = DecoderCls(**decoder_kwargs)
 
@@ -345,8 +352,9 @@ class BrainToTextDecoder_Trainer:
 
         # Set rnn and/or input layers to not trainable if specified 
         for name, param in self.model.named_parameters():
-            if (not self.args["model"]["rnn_trainable"]) and (("gru" in name) or ("lstms" in name)):
+            if (not self.args["model"]["rnn_trainable"]) and (("gru" in name) or ("lstm" in name) or ("xlstm" in name)):
                 param.requires_grad = False
+
             elif (not self.args["model"]["input_network"]["input_trainable"]) and ("day_" in name):
                 param.requires_grad = False
 
@@ -617,6 +625,15 @@ class BrainToTextDecoder_Trainer:
 
         train_start_time = time.time()
 
+                # Prime LR scheduler so the very first optimizer update uses warmup LR.
+        if (
+            str(self.args.get("lr_scheduler_type", "")).lower() == "cosine"
+            and (not bool(self.args.get("init_from_checkpoint", False)))
+            and int(self.args.get("lr_warmup_steps", 0)) > 0
+        ):
+            self.learning_rate_scheduler.step()
+
+
         # train for specified number of batches
         for i, batch in enumerate(self.train_loader):
             
@@ -645,7 +662,9 @@ class BrainToTextDecoder_Trainer:
                 if ps > 0:
                     if st <= 0:
                         raise ValueError(f"Invalid patch_stride={st} with patch_size={ps}")
-                    adjusted_lens = ((n_time_steps - ps) / st + 1).to(torch.int32)
+                    adjusted_lens = torch.div((n_time_steps - ps), st, rounding_mode="floor") + 1
+                    adjusted_lens = adjusted_lens.to(torch.int32)
+
                 else:
                     adjusted_lens = n_time_steps.to(torch.int32)
 
@@ -682,18 +701,24 @@ class BrainToTextDecoder_Trainer:
                     # optional: also skip scheduler step to keep LR schedule consistent
                     continue
 
+                used_lrs = [pg["lr"] for pg in self.optimizer.param_groups]
+
                 self.optimizer.step()
                 self.learning_rate_scheduler.step()
 
 
             # Log to wandb (per step)
             if self.use_wandb:
-                lrs = self.learning_rate_scheduler.get_last_lr()  # one LR per param group
                 log_dict = {
                     "train/loss": loss.detach().item(),
                     "train/grad_norm": float(grad_norm),
-                    "lr/group0": lrs[0],
+                    "lr_used/group0": float(used_lrs[0]),
                 }
+                if len(used_lrs) > 1:
+                    log_dict["lr_used/group1"] = float(used_lrs[1])
+                if len(used_lrs) > 2:
+                    log_dict["lr_used/group2"] = float(used_lrs[2])
+
                 if len(lrs) > 1:
                     log_dict["lr/group1"] = lrs[1]
                 if len(lrs) > 2:
@@ -876,7 +901,9 @@ class BrainToTextDecoder_Trainer:
                     if ps > 0:
                         if st <= 0:
                             raise ValueError(f"Invalid patch_stride={st} with patch_size={ps}")
-                        adjusted_lens = ((n_time_steps - ps) / st + 1).to(torch.int32)
+                        adjusted_lens = torch.div((n_time_steps - ps), st, rounding_mode="floor") + 1
+                        adjusted_lens = adjusted_lens.to(torch.int32)
+
                     else:
                         adjusted_lens = n_time_steps.to(torch.int32)
 
