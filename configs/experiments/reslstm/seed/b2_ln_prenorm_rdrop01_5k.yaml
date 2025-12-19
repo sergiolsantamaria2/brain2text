@@ -1,0 +1,29 @@
+model:
+  decoder_type: reslstm
+  reslstm_num_blocks: 2
+  reslstm_sublayers_per_block: 2
+  reslstm_lstm_layers: 2
+  reslstm_lstm_dropout: 0.1
+  reslstm_norm: layernorm
+  reslstm_pre_norm: true
+  reslstm_residual_dropout: 0.1
+
+gpu_number: "0"
+
+num_training_batches: 5000
+batches_per_val_step: 500
+
+dataset:
+  num_dataloader_workers: 1
+
+save_all_val_steps: false
+save_val_logits: false
+
+output_dir: trained_models/reslstm_ablation/b2_ln_prenorm_rdrop01_5k_${now:%Y-%m-%d_%H%M%S}
+checkpoint_dir: ${output_dir}/checkpoint
+
+wandb:
+  enabled: true
+  project: brain2text
+  run_name: b2_ln_prenorm_rdrop01_5k_${now:%Y-%m-%d_%H%M%S}
+  tags: ["reslstm", "ablation", "blocks2", "ln", "prenorm", "rdrop0.1", "5k"]
