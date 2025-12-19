@@ -193,3 +193,12 @@ wandb:
   project: brain2text
   run_name: gru_lr_warmup_cosine_base
   tags: ["lr", "warmup", "cosine"]
+
+eval:
+  compute_wer: false          # true si quieres WER en val
+  wer_every_val_steps: 1      # 1 = cada validation step; 2 = cada 2, etc.
+  wer_max_trials: 64          # limita coste (por defecto 64 trials por validation)
+  redis_host: localhost
+  redis_port: 6379
+  redis_db: 0
+  redis_flush_each_eval: true # como en tu script; si molesta, pon false
