@@ -437,14 +437,27 @@ class BrainToTextDecoder_Trainer:
                     {'params' : other_params, 'group_type' : 'other'}
                 ]
             
-        optim = torch.optim.AdamW(
-            param_groups,
-            lr = self.args['lr_max'],
-            betas = (self.args['beta0'], self.args['beta1']),
-            eps = self.args['epsilon'],
-            weight_decay = self.args['weight_decay'],
-            fused = True
+        # AdamW: fused solo si está disponible en tu torch
+        adamw_kwargs = dict(
+            lr=self.args["lr_max"],
+            betas=(self.args["beta0"], self.args["beta1"]),
+            eps=self.args["epsilon"],
+            weight_decay=self.args["weight_decay"],
         )
+
+        try:
+            optim = torch.optim.AdamW(
+                param_groups,
+                fused=True,
+                **adamw_kwargs,
+            )
+            self.logger.info("AdamW(fused=True) enabled.")
+        except TypeError:
+            optim = torch.optim.AdamW(
+                param_groups,
+                **adamw_kwargs,
+            )
+            self.logger.info("AdamW(fused) not available in this torch build. Using standard AdamW.")
 
         return optim 
 

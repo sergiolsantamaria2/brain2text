@@ -1,9 +1,9 @@
 # Core
-numpy>=1.26
+numpy<2
+editdistance
 scipy>=1.11
 pandas>=2.1
 tqdm>=4.66
-editdistance
 # --- torch (GPU cu117) ---
 torch==1.13.1+cu117
 torchaudio==0.13.1
