@@ -3,6 +3,11 @@ numpy>=1.26
 scipy>=1.11
 pandas>=2.1
 tqdm>=4.66
+editdistance
+# --- torch (GPU cu117) ---
+torch==1.13.1+cu117
+torchaudio==0.13.1
+torchvision==0.14.1
 
 # Data format
 h5py>=3.10

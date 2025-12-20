@@ -11,6 +11,7 @@ import logging
 import sys
 import json
 import pickle
+from brain2text.lm.local_lm import LocalNgramDecoder, LocalLMConfig
 try:
     import wandb
 except ImportError:
@@ -149,35 +150,30 @@ class BrainToTextDecoder_Trainer:
         self._lm_last = None
         self._val_step_count = 0  # counts validation calls, not train steps
 
+        self.eval_cfg = self.args.get("eval", {})
+        self.compute_wer = bool(self.eval_cfg.get("compute_wer", False))
+        self._val_step_count = 0
+        self._lm = None
+
         if self.compute_wer:
-            if redis is None:
-                self.logger.warning("eval.compute_wer=true but redis package is not installed. Disabling WER.")
+            try:
+                cfg = LocalLMConfig(
+                    lm_dir=str(self.eval_cfg["lm_dir"]),
+                    max_active=int(self.eval_cfg.get("max_active", 7000)),
+                    min_active=int(self.eval_cfg.get("min_active", 200)),
+                    beam=float(self.eval_cfg.get("beam", 15.0)),
+                    lattice_beam=float(self.eval_cfg.get("lattice_beam", 8.0)),
+                    ctc_blank_skip_threshold=float(self.eval_cfg.get("ctc_blank_skip_threshold", 0.95)),
+                    length_penalty=float(self.eval_cfg.get("length_penalty", 0.0)),
+                    acoustic_scale=float(self.eval_cfg.get("acoustic_scale", 0.35)),
+                    nbest=int(self.eval_cfg.get("nbest", 50)),
+                    blank_penalty=float(self.eval_cfg.get("blank_penalty", 90.0)),
+                )
+                self._lm = LocalNgramDecoder(cfg)
+                self.logger.info(f"Local LM WER enabled. lm_dir={cfg.lm_dir}")
+            except Exception as e:
+                self.logger.warning(f"Could not initialize local LM decoder. Disabling WER. Reason: {e}")
                 self.compute_wer = False
-            else:
-                host = str(self.eval_cfg.get("redis_host", "localhost"))
-                port = int(self.eval_cfg.get("redis_port", 6379))
-                db = int(self.eval_cfg.get("redis_db", 0))
-                try:
-                    self._redis = redis.Redis(host=host, port=port, db=db)
-                    # streams
-                    self._lm_streams = {
-                        "in": "remote_lm_input",
-                        "out_partial": "remote_lm_output_partial",
-                        "out_final": "remote_lm_output_final",
-                    }
-                    # initialize timestamps
-                    now_ms = get_current_redis_time_ms(self._redis)
-                    self._lm_last = {
-                        "partial": now_ms,
-                        "final": now_ms,
-                        "reset": now_ms,
-                        "finalize": now_ms,
-                        "update": now_ms,
-                    }
-                    self.logger.info(f"WER enabled: Redis at {host}:{port} db={db}")
-                except Exception as e:
-                    self.logger.warning(f"Could not connect to Redis for WER ({e}). Disabling WER.")
-                    self.compute_wer = False
         # -----------------------------------------------------------
 
 
@@ -827,6 +823,10 @@ class BrainToTextDecoder_Trainer:
 
                     wandb.log(log_payload, step=i)
 
+                    if wer_key in val_metrics and np.isfinite(val_metrics[wer_key]):
+                        log_payload[f"val/WER_{wer_tag}"] = float(val_metrics[wer_key])
+                        log_payload["val/WER_num_trials"] = int(val_metrics.get("wer_num_trials", 0))
+
                 # Determine if new best day. Based on if PER is lower, or in the case of a PER tie, if loss is lower
                 new_best = False
                 if val_metrics['avg_PER'] < self.best_val_PER:
@@ -1007,12 +1007,10 @@ class BrainToTextDecoder_Trainer:
 
         self._val_step_count += 1
 
-        # Decide whether to compute WER this validation call
         wer_every = int(self.eval_cfg.get("wer_every_val_steps", 1))
-        do_wer_now = self.compute_wer and (wer_every > 0) and ((self._val_step_count % wer_every) == 0)
-
+        do_wer_now = self.compute_wer and (self._lm is not None) and (wer_every > 0) and ((self._val_step_count % wer_every) == 0)
         wer_max_trials = int(self.eval_cfg.get("wer_max_trials", 64))
-        wer_collected = []  # list of {"logits_np": ..., "true_sentence": ...}
+        wer_collected = []  # list of (logits_tc, true_sentence)
 
         # Calculate PER for each specific day
         day_per = {}
@@ -1057,35 +1055,26 @@ class BrainToTextDecoder_Trainer:
 
                                         # Collect a subset for WER computation (expensive)
                     if do_wer_now and (len(wer_collected) < wer_max_trials):
-                        # logits: (B, T, C) in torch
-                        # collect per-trial
                         for b in range(logits.shape[0]):
                             if len(wer_collected) >= wer_max_trials:
                                 break
 
-                            # Convert to CPU numpy float32 (LM side doesn't need bf16)
-                            logits_bt = logits[b, : adjusted_lens[b].item(), :].detach().cpu().float().numpy()
+                            T = int(adjusted_lens[b].item())
+                            logits_tc = logits[b, :T, :].detach().cpu().float().numpy()
 
-                            # Ground truth sentence (string)
-                            # In your dataset code you store `transcriptions` as numpy; you already append it to metrics.
-                            # Here we pick the per-trial string.
                             true_sentence = batch["transcriptions"][b]
-                            # If it's bytes / numpy scalar, normalize:
+                            # normaliza bytes/numpy scalars
                             try:
-                                if isinstance(true_sentence, (np.bytes_, bytes)):
+                                if isinstance(true_sentence, (bytes, np.bytes_)):
                                     true_sentence = true_sentence.decode("utf-8")
-                                elif isinstance(true_sentence, np.ndarray):
-                                    # sometimes shape () with dtype object/bytes
+                                elif hasattr(true_sentence, "item"):
                                     true_sentence = true_sentence.item()
                                     if isinstance(true_sentence, (bytes, np.bytes_)):
                                         true_sentence = true_sentence.decode("utf-8")
                             except Exception:
                                 true_sentence = str(true_sentence)
 
-                            wer_collected.append({
-                                "logits_np": logits_bt,         # (T,C)
-                                "true_sentence": true_sentence, # string
-                            })
+                            wer_collected.append((logits_tc, str(true_sentence)))
     
                     loss = self.ctc_loss(
                         torch.permute(logits.log_softmax(2), [1, 0, 2]),
@@ -1155,20 +1144,34 @@ class BrainToTextDecoder_Trainer:
         metrics["avg_loss"] = float(np.mean(metrics["losses"])) if len(metrics["losses"]) > 0 else float("nan")
 
         # --- finalize WER (remote LM) ---
-        wer_tag = str(self.eval_cfg.get("wer_tag", "3gram"))
+        wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
         wer_key = f"avg_WER_{wer_tag}"
 
-        if do_wer_now:
-            try:
-                wer = self._compute_remote_lm_wer_from_val_batches(wer_collected)
-                metrics[wer_key] = float(wer) if wer is not None else float("nan")
-            except Exception as e:
-                self.logger.warning(f"WER computation failed ({e}). Setting {wer_key}=nan.")
-                metrics[wer_key] = float("nan")
+        if do_wer_now and len(wer_collected) > 0:
+            total_ed = 0
+            total_words = 0
+            for logits_tc, true_sentence in wer_collected:
+                pred_sentence = self._lm.decode_from_logits(logits_tc, input_is_log_probs=False)
+                wer = self._lm.wer_percent(true_sentence, pred_sentence)
+                if wer is None:
+                    continue
+                # convertir WER% a contadores para promediar correctamente:
+                # wer% = 100*ed/words => ed = wer%*words/100
+                # pero aquí mejor recomputar ed/words directamente usando el wrapper.
+                t = true_sentence
+                # Reutilizamos wer_percent, pero necesitamos words:
+                true_words = len(t.split())
+                if true_words == 0:
+                    continue
+                ed_est = int(round(wer * true_words / 100.0))
+                total_ed += ed_est
+                total_words += true_words
+
+            metrics[wer_key] = (100.0 * float(total_ed) / float(total_words)) if total_words > 0 else float("nan")
+            metrics["wer_num_trials"] = int(len(wer_collected))
         else:
             metrics[wer_key] = float("nan")
-
-        metrics["wer_num_trials"] = int(len(wer_collected)) if do_wer_now else 0
+            metrics["wer_num_trials"] = 0
 
 
         return metrics
