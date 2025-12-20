@@ -795,7 +795,8 @@ class BrainToTextDecoder_Trainer:
                         "val/loss": float(val_metrics["avg_loss"]),
                     }
 
-                    wer_tag = str(self.eval_cfg.get("wer_tag", "3gram"))
+                    wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
+                    wer_key = f"avg_WER_{wer_tag}"
                     wer_key = f"avg_WER_{wer_tag}"
                     if wer_key in val_metrics and np.isfinite(val_metrics[wer_key]):
                         log_payload[f"val/WER_{wer_tag}"] = float(val_metrics[wer_key])
@@ -1054,7 +1055,8 @@ class BrainToTextDecoder_Trainer:
             total_words = 0
 
             for logits_tc, true_sentence in wer_collected:
-                pred_sentence = self._lm.decode_from_logits(logits_tc, input_is_log_probs=False)
+                log_probs_tc = torch.log_softmax(logits[b, :T, :], dim=-1).detach().cpu().float().numpy()
+                pred_sentence = self._lm.decode_from_logits(log_probs_tc, input_is_log_probs=True)
 
                 # Usa la MISMA normalización que ya tienes en helpers
                 true_clean = remove_punctuation(str(true_sentence)).strip()
