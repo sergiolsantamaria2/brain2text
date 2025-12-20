@@ -18,19 +18,7 @@ except ImportError:
     wandb = None
 
 import editdistance
-try:
-    import redis
-except ImportError:
-    redis = None
-
-from .evaluate_model_helpers import (
-    rearrange_speech_logits_pt,
-    reset_remote_language_model,
-    send_logits_to_remote_lm,
-    finalize_remote_lm,
-    get_current_redis_time_ms,
-    remove_punctuation,
-)
+from .evaluate_model_helpers import remove_punctuation
 
 from .dataset import BrainToTextDataset, train_test_split_indicies
 from .data_augmentations import gauss_smooth
@@ -141,15 +129,7 @@ class BrainToTextDecoder_Trainer:
                 job_type=wandb_job_type,
             )
 
-                # ---------------- WER (remote LM via Redis) ----------------
-        self.eval_cfg = self.args.get("eval", {})
-        self.compute_wer = bool(self.eval_cfg.get("compute_wer", False))
-
-        self._redis = None
-        self._lm_streams = None
-        self._lm_last = None
-        self._val_step_count = 0  # counts validation calls, not train steps
-
+       # ---------------- WER (local LM) ----------------
         self.eval_cfg = self.args.get("eval", {})
         self.compute_wer = bool(self.eval_cfg.get("compute_wer", False))
         self._val_step_count = 0
@@ -174,7 +154,7 @@ class BrainToTextDecoder_Trainer:
             except Exception as e:
                 self.logger.warning(f"Could not initialize local LM decoder. Disabling WER. Reason: {e}")
                 self.compute_wer = False
-        # -----------------------------------------------------------
+        # ------------------------------------------------
 
 
         # Set seed if provided 
@@ -675,7 +655,7 @@ class BrainToTextDecoder_Trainer:
 
         train_start_time = time.time()
 
-                # Prime LR scheduler so the very first optimizer update uses warmup LR.
+        # Prime LR scheduler so the very first optimizer update uses warmup LR.
         if (
             str(self.args.get("lr_scheduler_type", "")).lower() == "cosine"
             and (not bool(self.args.get("init_from_checkpoint", False)))
@@ -823,9 +803,6 @@ class BrainToTextDecoder_Trainer:
 
                     wandb.log(log_payload, step=i)
 
-                    if wer_key in val_metrics and np.isfinite(val_metrics[wer_key]):
-                        log_payload[f"val/WER_{wer_tag}"] = float(val_metrics[wer_key])
-                        log_payload["val/WER_num_trials"] = int(val_metrics.get("wer_num_trials", 0))
 
                 # Determine if new best day. Based on if PER is lower, or in the case of a PER tie, if loss is lower
                 new_best = False
@@ -899,82 +876,6 @@ class BrainToTextDecoder_Trainer:
 
         return train_stats
 
-
-    def _compute_remote_lm_wer_from_val_batches(self, collected):
-
-        if (not self.compute_wer) or (self._redis is None):
-            return None
-
-        if not collected:
-            return None
-
-        # optional flush
-        if bool(self.eval_cfg.get("redis_flush_each_eval", True)):
-            try:
-                self._redis.flushall()
-            except Exception as e:
-                self.logger.warning(f"Redis flushall failed ({e}). Continuing without flush.")
-
-        total_true_words = 0
-        total_ed = 0
-
-        for item in collected:
-            true_sentence = item["true_sentence"]
-            if true_sentence is None:
-                continue
-
-            # Your helper expects logits in a specific shape; keep consistent with evaluate_model.py:
-            # logits passed to rearrange_speech_logits_pt should be torch tensor in (1,T,C) or equivalent.
-            logits_np = np.asarray(item["logits_np"], dtype=np.float32)
-
-            # Esperamos (T,C) o (1,T,C). Normalizamos a (1,T,C)
-            if logits_np.ndim == 2:
-                logits_np = logits_np[None, :, :]
-            elif logits_np.ndim != 3:
-                raise ValueError(f"logits_np debe ser 2D o 3D, got shape={logits_np.shape}")
-
-            # Asegura layout contiguo para tobytes()
-            logits_np = np.ascontiguousarray(logits_np)
-
-            # Reorden: [BLANK, phonemes..., SIL] -> [BLANK, SIL, phonemes...]
-            logits_rearr = rearrange_speech_logits_pt(logits_np)[0]  # (T,C) float32
-
-            # reset LM
-            self._lm_last["reset"] = reset_remote_language_model(self._redis, self._lm_last["reset"])
-
-            # send logits
-            self._lm_last["partial"], _ = send_logits_to_remote_lm(
-                self._redis,
-                self._lm_streams["in"],
-                self._lm_streams["out_partial"],
-                self._lm_last["partial"],
-                logits_rearr,
-            )
-
-            # finalize
-            self._lm_last["final"], lm_out = finalize_remote_lm(
-                self._redis,
-                self._lm_streams["out_final"],
-                self._lm_last["final"],
-            )
-
-            pred_sentence = lm_out["candidate_sentences"][0]
-
-            # WER computation (same normalization as your script)
-            true_clean = remove_punctuation(str(true_sentence)).strip()
-            pred_clean = remove_punctuation(str(pred_sentence)).strip()
-
-            true_words = true_clean.split()
-            pred_words = pred_clean.split()
-
-            ed = editdistance.eval(true_words, pred_words)
-            total_true_words += len(true_words)
-            total_ed += ed
-
-        if total_true_words == 0:
-            return None
-
-        return 100.0 * float(total_ed) / float(total_true_words)
 
 
     def validation(self, loader, return_logits = False, return_data = False):
@@ -1143,29 +1044,30 @@ class BrainToTextDecoder_Trainer:
 
         metrics["avg_loss"] = float(np.mean(metrics["losses"])) if len(metrics["losses"]) > 0 else float("nan")
 
-        # --- finalize WER (remote LM) ---
+        # --- finalize WER (local LM) ---
         wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
         wer_key = f"avg_WER_{wer_tag}"
+
 
         if do_wer_now and len(wer_collected) > 0:
             total_ed = 0
             total_words = 0
+
             for logits_tc, true_sentence in wer_collected:
                 pred_sentence = self._lm.decode_from_logits(logits_tc, input_is_log_probs=False)
-                wer = self._lm.wer_percent(true_sentence, pred_sentence)
-                if wer is None:
+
+                # Usa la MISMA normalización que ya tienes en helpers
+                true_clean = remove_punctuation(str(true_sentence)).strip()
+                pred_clean = remove_punctuation(str(pred_sentence)).strip()
+
+                true_words = true_clean.split()
+                pred_words = pred_clean.split()
+
+                if len(true_words) == 0:
                     continue
-                # convertir WER% a contadores para promediar correctamente:
-                # wer% = 100*ed/words => ed = wer%*words/100
-                # pero aquí mejor recomputar ed/words directamente usando el wrapper.
-                t = true_sentence
-                # Reutilizamos wer_percent, pero necesitamos words:
-                true_words = len(t.split())
-                if true_words == 0:
-                    continue
-                ed_est = int(round(wer * true_words / 100.0))
-                total_ed += ed_est
-                total_words += true_words
+
+                total_ed += editdistance.eval(true_words, pred_words)
+                total_words += len(true_words)
 
             metrics[wer_key] = (100.0 * float(total_ed) / float(total_words)) if total_words > 0 else float("nan")
             metrics["wer_num_trials"] = int(len(wer_collected))
