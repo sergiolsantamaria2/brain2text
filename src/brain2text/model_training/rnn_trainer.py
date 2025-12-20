@@ -23,12 +23,18 @@ from .evaluate_model_helpers import remove_punctuation
 from .dataset import BrainToTextDataset, train_test_split_indicies
 from .data_augmentations import gauss_smooth
 
-import torchaudio.functional as F # for edit distance
 from omegaconf import OmegaConf
 
 torch.set_float32_matmul_precision('high') # makes float32 matmuls faster on some GPUs
 torch.backends.cudnn.deterministic = True # makes training more reproducible
-torch._dynamo.config.cache_size_limit = 64
+# --- opcional: solo Torch >= 2 ---
+if hasattr(torch, "set_float32_matmul_precision"):
+    torch.set_float32_matmul_precision("high")
+
+torch.backends.cudnn.deterministic = True
+
+if hasattr(torch, "_dynamo"):
+    torch._dynamo.config.cache_size_limit = 64
 
 from .rnn_model import GRUDecoder, ResLSTMDecoder, XLSTMDecoder
 class BrainToTextDecoder_Trainer:
@@ -253,8 +259,11 @@ class BrainToTextDecoder_Trainer:
 
 
         # Call torch.compile to speed up training
-        self.logger.info("Using torch.compile")
-        self.model = torch.compile(self.model)
+        self.logger.info("Using torch.compile (if available)")
+        if hasattr(torch, "compile"):
+            self.model = torch.compile(self.model)
+        else:
+            self.logger.info("torch.compile not available (torch<2.0). Skipping.")
 
         self.logger.info(f"Initialized RNN decoding model")
 
@@ -1000,7 +1009,7 @@ class BrainToTextDecoder_Trainer:
                         labels[iterIdx][0 : phone_seq_lens[iterIdx]].cpu().detach()
                     )
             
-                    batch_edit_distance += F.edit_distance(decoded_seq, trueSeq)
+                    batch_edit_distance += editdistance.eval(decoded_seq.tolist(), trueSeq.tolist())
 
                     decoded_seqs.append(decoded_seq)
 
