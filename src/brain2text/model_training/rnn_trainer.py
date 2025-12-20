@@ -925,15 +925,19 @@ class BrainToTextDecoder_Trainer:
 
             # Your helper expects logits in a specific shape; keep consistent with evaluate_model.py:
             # logits passed to rearrange_speech_logits_pt should be torch tensor in (1,T,C) or equivalent.
-            logits_np = item["logits_np"]
-            if logits_np.ndim == 2:
-                logits_np = np.expand_dims(logits_np, axis=0)  # (1,T,C)
+            logits_np = np.asarray(item["logits_np"], dtype=np.float32)
 
-            logits_np = np.asarray(logits_np, dtype=np.float32)
+            # Esperamos (T,C) o (1,T,C). Normalizamos a (1,T,C)
             if logits_np.ndim == 2:
-                logits_np = np.expand_dims(logits_np, axis=0)  # (1,T,C)
+                logits_np = logits_np[None, :, :]
+            elif logits_np.ndim != 3:
+                raise ValueError(f"logits_np debe ser 2D o 3D, got shape={logits_np.shape}")
 
-            logits_rearr = rearrange_speech_logits_pt(logits_np)[0]  # (T,C) numpy
+            # Asegura layout contiguo para tobytes()
+            logits_np = np.ascontiguousarray(logits_np)
+
+            # Reorden: [BLANK, phonemes..., SIL] -> [BLANK, SIL, phonemes...]
+            logits_rearr = rearrange_speech_logits_pt(logits_np)[0]  # (T,C) float32
 
             # reset LM
             self._lm_last["reset"] = reset_remote_language_model(self._redis, self._lm_last["reset"])
