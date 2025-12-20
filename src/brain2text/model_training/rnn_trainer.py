@@ -77,9 +77,6 @@ class BrainToTextDecoder_Trainer:
         if args['mode'] == 'train':
             os.makedirs(self.args["output_dir"], exist_ok=True)
 
-        # Create checkpoint directory
-        if args['save_best_checkpoint'] or args['save_all_val_steps'] or args['save_final_model']: 
-            os.makedirs(self.args['checkpoint_dir'], exist_ok=False)
 
         # Set up logging
         self.logger = logging.getLogger(__name__)
@@ -818,13 +815,17 @@ class BrainToTextDecoder_Trainer:
 
                 if self.use_wandb:
                     log_payload = {
-                        "val/PER": val_metrics["avg_PER"],
-                        "val/loss": val_metrics["avg_loss"],
+                        "val/PER": float(val_metrics["avg_PER"]),
+                        "val/loss": float(val_metrics["avg_loss"]),
                     }
-                    if "avg_WER" in val_metrics and np.isfinite(val_metrics["avg_WER"]):
-                        log_payload["val/WER"] = float(val_metrics["avg_WER"])
-                    wandb.log(log_payload, step=i)
 
+                    wer_tag = str(self.eval_cfg.get("wer_tag", "3gram"))
+                    wer_key = f"avg_WER_{wer_tag}"
+                    if wer_key in val_metrics and np.isfinite(val_metrics[wer_key]):
+                        log_payload[f"val/WER_{wer_tag}"] = float(val_metrics[wer_key])
+                        log_payload["val/WER_num_trials"] = int(val_metrics.get("wer_num_trials", 0))
+
+                    wandb.log(log_payload, step=i)
 
                 # Determine if new best day. Based on if PER is lower, or in the case of a PER tie, if loss is lower
                 new_best = False
@@ -899,74 +900,78 @@ class BrainToTextDecoder_Trainer:
         return train_stats
 
 
-        def _compute_remote_lm_wer_from_val_batches(self, collected):
+    def _compute_remote_lm_wer_from_val_batches(self, collected):
 
-            if (not self.compute_wer) or (self._redis is None):
-                return None
+        if (not self.compute_wer) or (self._redis is None):
+            return None
 
-            if not collected:
-                return None
+        if not collected:
+            return None
 
-            # optional flush
-            if bool(self.eval_cfg.get("redis_flush_each_eval", True)):
-                try:
-                    self._redis.flushall()
-                except Exception as e:
-                    self.logger.warning(f"Redis flushall failed ({e}). Continuing without flush.")
+        # optional flush
+        if bool(self.eval_cfg.get("redis_flush_each_eval", True)):
+            try:
+                self._redis.flushall()
+            except Exception as e:
+                self.logger.warning(f"Redis flushall failed ({e}). Continuing without flush.")
 
-            total_true_words = 0
-            total_ed = 0
+        total_true_words = 0
+        total_ed = 0
 
-            for item in collected:
-                true_sentence = item["true_sentence"]
-                if true_sentence is None:
-                    continue
+        for item in collected:
+            true_sentence = item["true_sentence"]
+            if true_sentence is None:
+                continue
 
-                # Your helper expects logits in a specific shape; keep consistent with evaluate_model.py:
-                # logits passed to rearrange_speech_logits_pt should be torch tensor in (1,T,C) or equivalent.
-                logits_np = item["logits_np"]
-                if logits_np.ndim == 2:
-                    logits_np = np.expand_dims(logits_np, axis=0)  # (1,T,C)
+            # Your helper expects logits in a specific shape; keep consistent with evaluate_model.py:
+            # logits passed to rearrange_speech_logits_pt should be torch tensor in (1,T,C) or equivalent.
+            logits_np = item["logits_np"]
+            if logits_np.ndim == 2:
+                logits_np = np.expand_dims(logits_np, axis=0)  # (1,T,C)
 
-                logits_pt = torch.tensor(logits_np, device="cpu")
-                logits_rearr = rearrange_speech_logits_pt(logits_pt)[0]  # -> numpy-like expected by LM helpers
+            logits_np = np.asarray(logits_np, dtype=np.float32)
+            if logits_np.ndim == 2:
+                logits_np = np.expand_dims(logits_np, axis=0)  # (1,T,C)
 
-                # reset LM
-                self._lm_last["reset"] = reset_remote_language_model(self._redis, self._lm_last["reset"])
+            logits_rearr = rearrange_speech_logits_pt(logits_np)[0]  # (T,C) numpy
 
-                # send logits
-                self._lm_last["partial"], _ = send_logits_to_remote_lm(
-                    self._redis,
-                    self._lm_streams["in"],
-                    self._lm_streams["out_partial"],
-                    self._lm_last["partial"],
-                    logits_rearr,
-                )
+            # reset LM
+            self._lm_last["reset"] = reset_remote_language_model(self._redis, self._lm_last["reset"])
 
-                # finalize
-                self._lm_last["final"], lm_out = finalize_remote_lm(
-                    self._redis,
-                    self._lm_streams["out_final"],
-                    self._lm_last["final"],
-                )
+            # send logits
+            self._lm_last["partial"], _ = send_logits_to_remote_lm(
+                self._redis,
+                self._lm_streams["in"],
+                self._lm_streams["out_partial"],
+                self._lm_last["partial"],
+                logits_rearr,
+            )
 
-                pred_sentence = lm_out["candidate_sentences"][0]
+            # finalize
+            self._lm_last["final"], lm_out = finalize_remote_lm(
+                self._redis,
+                self._lm_streams["out_final"],
+                self._lm_last["final"],
+            )
 
-                # WER computation (same normalization as your script)
-                true_clean = remove_punctuation(str(true_sentence)).strip()
-                pred_clean = remove_punctuation(str(pred_sentence)).strip()
+            pred_sentence = lm_out["candidate_sentences"][0]
 
-                true_words = true_clean.split()
-                pred_words = pred_clean.split()
+            # WER computation (same normalization as your script)
+            true_clean = remove_punctuation(str(true_sentence)).strip()
+            pred_clean = remove_punctuation(str(pred_sentence)).strip()
 
-                ed = editdistance.eval(true_words, pred_words)
-                total_true_words += len(true_words)
-                total_ed += ed
+            true_words = true_clean.split()
+            pred_words = pred_clean.split()
 
-            if total_true_words == 0:
-                return None
+            ed = editdistance.eval(true_words, pred_words)
+            total_true_words += len(true_words)
+            total_ed += ed
 
-            return 100.0 * float(total_ed) / float(total_true_words)
+        if total_true_words == 0:
+            return None
+
+        return 100.0 * float(total_ed) / float(total_true_words)
+
 
     def validation(self, loader, return_logits = False, return_data = False):
         '''
@@ -1135,30 +1140,31 @@ class BrainToTextDecoder_Trainer:
             if isinstance(total_seq_length, torch.Tensor):
                 total_seq_length = total_seq_length.item()
 
-            metrics['day_PERs'] = day_per
+        # --- finalize PER/loss ---
+        metrics["day_PERs"] = day_per
 
-            if total_seq_length == 0:
-                metrics['avg_PER'] = float("inf")  # o float("nan") si prefieres
-            else:
-                avg_PER = total_edit_distance / max(1.0, total_seq_length)
-                metrics["avg_PER"] = float(avg_PER)
+        if total_seq_length == 0:
+            metrics["avg_PER"] = float("nan")
+        else:
+            metrics["avg_PER"] = float(total_edit_distance / float(total_seq_length))
 
-            metrics['avg_loss'] = float(np.mean(metrics['losses']))
+        metrics["avg_loss"] = float(np.mean(metrics["losses"])) if len(metrics["losses"]) > 0 else float("nan")
 
+        # --- finalize WER (remote LM) ---
+        wer_tag = str(self.eval_cfg.get("wer_tag", "3gram"))
+        wer_key = f"avg_WER_{wer_tag}"
 
-                # Compute WER if requested (remote LM)
         if do_wer_now:
             try:
                 wer = self._compute_remote_lm_wer_from_val_batches(wer_collected)
-                if wer is not None:
-                    metrics["avg_WER"] = float(wer)
-                else:
-                    metrics["avg_WER"] = float("nan")
+                metrics[wer_key] = float(wer) if wer is not None else float("nan")
             except Exception as e:
-                self.logger.warning(f"WER computation failed ({e}). Setting avg_WER=nan.")
-                metrics["avg_WER"] = float("nan")
+                self.logger.warning(f"WER computation failed ({e}). Setting {wer_key}=nan.")
+                metrics[wer_key] = float("nan")
         else:
-            metrics["avg_WER"] = float("nan")
+            metrics[wer_key] = float("nan")
+
+        metrics["wer_num_trials"] = int(len(wer_collected)) if do_wer_now else 0
 
 
         return metrics
