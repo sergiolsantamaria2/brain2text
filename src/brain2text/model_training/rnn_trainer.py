@@ -738,12 +738,19 @@ class BrainToTextDecoder_Trainer:
 
                 # Skip step if gradients are non-finite (NaN/Inf)
                 if self.args["grad_norm_clip_value"] > 0:
-                    grad_norm = torch.nn.utils.clip_grad_norm_(
-                        self.model.parameters(),
-                        max_norm=self.args["grad_norm_clip_value"],
-                        error_if_nonfinite=False,   # don't crash
-                        foreach=True,
-                    )
+                    try:
+                        grad_norm = torch.nn.utils.clip_grad_norm_(
+                            self.model.parameters(),
+                            max_norm=self.args["grad_norm_clip_value"],
+                            error_if_nonfinite=False,
+                            foreach=True,   # solo si existe
+                        )
+                    except TypeError:
+                        grad_norm = torch.nn.utils.clip_grad_norm_(
+                            self.model.parameters(),
+                            max_norm=self.args["grad_norm_clip_value"],
+                            error_if_nonfinite=False,
+                        )
                 else:
                     grad_norm = torch.tensor(float("nan"), device=self.device)
 
