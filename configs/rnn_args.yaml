@@ -200,10 +200,8 @@ eval:
   wer_every_val_steps: 1
   wer_max_trials: 64
 
-  # IMPORTANT: set this to the directory that contains the LM assets expected by LocalNgramDecoder
-  lm_dir: "PATH/RELATIVE/TO/REPO_OR_ABSOLUTE/TO/LM_DIR"
+  lm_dir: "assets/lm/openwebtext_1gram_lm_sil"
 
-  # decoder knobs (you already read these)
   max_active: 7000
   min_active: 200
   beam: 15.0
