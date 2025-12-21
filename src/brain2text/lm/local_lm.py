@@ -47,11 +47,10 @@ def _decode_result_best_text(out: Any) -> str:
 
     # Many builds return list/tuple (nbest). Pick first non-empty.
     if isinstance(out, (list, tuple)):
-        for item in out:
-            txt = _decode_result_best_text(item)
-            if txt:
-                return txt
-        return ""
+        if len(out) == 0:
+            return ""
+        # en tu build suele venir list[DecodeResult]
+        return _decode_result_best_text(out[0])
 
     # bytes / str
     if isinstance(out, bytes):
