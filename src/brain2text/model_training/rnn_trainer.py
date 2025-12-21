@@ -141,10 +141,16 @@ class BrainToTextDecoder_Trainer:
         self._val_step_count = 0
         self._lm = None
 
+        from pathlib import Path
+
         if self.compute_wer:
             try:
+                repo_root = Path(__file__).resolve().parents[3]
+                lm_dir_path = Path(str(self.eval_cfg["lm_dir"]))
+                if not lm_dir_path.is_absolute():
+                    lm_dir_path = repo_root / lm_dir_path
                 cfg = LocalLMConfig(
-                    lm_dir=str(self.eval_cfg["lm_dir"]),
+                    lm_dir=str(lm_dir_path),
                     max_active=int(self.eval_cfg.get("max_active", 7000)),
                     min_active=int(self.eval_cfg.get("min_active", 200)),
                     beam=float(self.eval_cfg.get("beam", 15.0)),
@@ -826,10 +832,10 @@ class BrainToTextDecoder_Trainer:
 
                     wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
                     wer_key = f"avg_WER_{wer_tag}"
-                    wer_key = f"avg_WER_{wer_tag}"
-                    if wer_key in val_metrics and np.isfinite(val_metrics[wer_key]):
-                        log_payload[f"val/WER_{wer_tag}"] = float(val_metrics[wer_key])
-                        log_payload["val/WER_num_trials"] = int(val_metrics.get("wer_num_trials", 0))
+
+                    # Always log the key so it appears in W&B
+                    log_payload[f"val/WER_{wer_tag}"] = float(val_metrics.get(wer_key, float("nan")))
+                    log_payload["val/WER_num_trials"] = int(val_metrics.get("wer_num_trials", 0))
 
                     wandb.log(log_payload, step=i)
 
@@ -1078,16 +1084,21 @@ class BrainToTextDecoder_Trainer:
         wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
         wer_key = f"avg_WER_{wer_tag}"
 
-
         if do_wer_now and len(wer_collected) > 0:
             total_ed = 0
             total_words = 0
 
             for logits_tc, true_sentence in wer_collected:
-                log_probs_tc = torch.log_softmax(logits[b, :T, :], dim=-1).detach().cpu().float().numpy()
-                pred_sentence = self._lm.decode_from_logits(log_probs_tc, input_is_log_probs=True)
+                # logits_tc is a numpy array shaped (T, C); convert to log-probs
+                lp = torch.from_numpy(logits_tc).float()
+                log_probs_tc = torch.log_softmax(lp, dim=-1).cpu().numpy()
 
-                # Usa la MISMA normalización que ya tienes en helpers
+                pred_sentence = self._lm.decode_from_logits(
+                    log_probs_tc,
+                    input_is_log_probs=True,
+                )
+
+                # Normalize for WER
                 true_clean = remove_punctuation(str(true_sentence)).strip()
                 pred_clean = remove_punctuation(str(pred_sentence)).strip()
 
