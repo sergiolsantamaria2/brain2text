@@ -49,6 +49,49 @@ def _decode_result_best_text(out: Any) -> str:
             return str(v)
     return str(out)
 
+def _best_text_from_decoder(dec: Any) -> Optional[str]:
+    # Try attributes first
+    for k in ("best_sentence", "best_text", "sentence", "text"):
+        if hasattr(dec, k):
+            v = getattr(dec, k)
+            if v is None:
+                continue
+            if callable(v):
+                try:
+                    v = v()
+                except Exception:
+                    continue
+            if isinstance(v, bytes):
+                return v.decode("utf-8", errors="ignore")
+            return str(v)
+
+    # Try common methods (no-arg)
+    for m in ("GetBestSentence", "BestSentence", "GetBestText", "BestText", "GetSentence", "Sentence", "GetText", "Text"):
+        if hasattr(dec, m) and callable(getattr(dec, m)):
+            try:
+                v = getattr(dec, m)()
+                if v is None:
+                    continue
+                if isinstance(v, bytes):
+                    return v.decode("utf-8", errors="ignore")
+                return str(v)
+            except Exception:
+                pass
+
+    # Try nbest-style getters
+    for m in ("GetNBestSentences", "NBestSentences", "GetNBest", "NBest"):
+        if hasattr(dec, m) and callable(getattr(dec, m)):
+            try:
+                v = getattr(dec, m)(1)
+                if isinstance(v, (list, tuple)) and len(v) > 0:
+                    v0 = v[0]
+                    if isinstance(v0, bytes):
+                        return v0.decode("utf-8", errors="ignore")
+                    return str(v0)
+            except Exception:
+                pass
+
+    return None
 
 @dataclass
 class LocalLMConfig:
@@ -136,15 +179,11 @@ class LocalNgramDecoder:
         logits_btc = logits_tc[None, :, :]  # (1,T,C)
         logits_rearr_tc = _rearrange_logits_btc(logits_btc)[0]  # (T,C)
 
+            # run decode
         if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
-            # We can pass log-probs directly
-            if input_is_log_probs:
-                log_probs_tc = logits_rearr_tc
-            else:
-                log_probs_tc = _log_softmax_tc(logits_rearr_tc)
+            log_probs_tc = logits_rearr_tc if input_is_log_probs else _log_softmax_tc(logits_rearr_tc)
             out = lm_decoder.DecodeNumpyLogProbs(dec, log_probs_tc.astype(np.float32))
         else:
-            # Fallback expects probs (not log-probs)
             if input_is_log_probs:
                 probs_tc = np.exp(logits_rearr_tc).astype(np.float32)
             else:
@@ -152,6 +191,11 @@ class LocalNgramDecoder:
                 e = np.exp(logits_rearr_tc - m)
                 probs_tc = (e / (e.sum(axis=-1, keepdims=True) + 1e-8)).astype(np.float32)
             out = lm_decoder.DecodeNumpy(dec, probs_tc)
+
+        # Some builds return None; pull best sentence from decoder object
+        if out is None:
+            txt = _best_text_from_decoder(dec)
+            return "" if txt is None else txt
 
         return _decode_result_best_text(out)
 
