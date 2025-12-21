@@ -196,16 +196,20 @@ wandb:
 
 eval:
   compute_wer: true
-  wer_max_trials: 64     # para que no te mate el tiempo por validación
-  wer_every_val_steps: 1 # puedes poner 2 o 5 luego
-  lm_dir: "references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil"
-  acoustic_scale: 0.35
-  blank_penalty: 90.0
+  wer_tag: "1gram"
+  wer_every_val_steps: 1
+  wer_max_trials: 64
+
+  # IMPORTANT: set this to the directory that contains the LM assets expected by LocalNgramDecoder
+  lm_dir: "PATH/RELATIVE/TO/REPO_OR_ABSOLUTE/TO/LM_DIR"
+
+  # decoder knobs (you already read these)
   max_active: 7000
   min_active: 200
   beam: 15.0
   lattice_beam: 8.0
   ctc_blank_skip_threshold: 0.95
   length_penalty: 0.0
+  acoustic_scale: 0.35
   nbest: 50
-  wer_tag: "1gram"
+  blank_penalty: 90.0

@@ -810,10 +810,19 @@ class BrainToTextDecoder_Trainer:
 
 
                 # Log info 
-                self.logger.info(f'Val batch {i}: ' +
-                        f'PER (avg): {val_metrics["avg_PER"]:.4f} ' +
-                        f'CTC Loss (avg): {val_metrics["avg_loss"]:.4f} ' +
-                        f'time: {val_step_duration:.3f}')
+                wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
+                wer_key = f"avg_WER_{wer_tag}"
+                wer_val = val_metrics.get(wer_key, float("nan"))
+                wer_n = int(val_metrics.get("wer_num_trials", 0))
+
+                self.logger.info(
+                    f'Val batch {i}: '
+                    f'PER (avg): {val_metrics["avg_PER"]:.4f} '
+                    f'CTC Loss (avg): {val_metrics["avg_loss"]:.4f} '
+                    f'WER({wer_tag}): {wer_val:.2f}% (n={wer_n}) '
+                    f'time: {val_step_duration:.3f}'
+                )
+
                 
                 if self.args['log_individual_day_val_PER']:
                     for day in val_metrics['day_PERs'].keys():
