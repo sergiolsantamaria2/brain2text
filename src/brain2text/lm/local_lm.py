@@ -90,9 +90,71 @@ class LocalNgramDecoder:
 
         self._decoder = self._build_decoder()
 
-    def _build_decoder(self):
-        import lm_decoder
+    def _build_options(self):
+        """
+        Build lm_decoder.DecodeOptions in a way that is compatible with different bindings:
+        - some builds support DecodeOptions() + attribute assignment
+        - others require positional constructor args
+        """
+        lm_decoder = self._lm_decoder
+        cfg = self.cfg
 
+        # 1) Try no-arg constructor
+        try:
+            opts = lm_decoder.DecodeOptions()
+        except TypeError:
+            opts = None
+
+        # 2) If no-arg doesn't exist, try a few positional signatures
+        if opts is None:
+            candidates = [
+                # Common 8-arg form (your comment says 8-arg)
+                (cfg.max_active, cfg.min_active, cfg.beam, cfg.lattice_beam,
+                cfg.ctc_blank_skip_threshold, cfg.length_penalty, cfg.acoustic_scale, cfg.nbest),
+                # Some builds include blank_penalty as a 9th arg
+                (cfg.max_active, cfg.min_active, cfg.beam, cfg.lattice_beam,
+                cfg.ctc_blank_skip_threshold, cfg.length_penalty, cfg.acoustic_scale, cfg.nbest, cfg.blank_penalty),
+            ]
+            last_err = None
+            for args in candidates:
+                try:
+                    opts = lm_decoder.DecodeOptions(*args)
+                    break
+                except Exception as e:
+                    last_err = e
+            if opts is None:
+                raise RuntimeError(f"Could not construct DecodeOptions with known signatures. Last error: {last_err}") from last_err
+
+        # 3) Best-effort attribute assignment (covers no-arg builds and ignores missing attrs)
+        attr_map = {
+            "max_active": cfg.max_active,
+            "maxActive": cfg.max_active,
+            "min_active": cfg.min_active,
+            "minActive": cfg.min_active,
+            "beam": cfg.beam,
+            "lattice_beam": cfg.lattice_beam,
+            "latticeBeam": cfg.lattice_beam,
+            "ctc_blank_skip_threshold": cfg.ctc_blank_skip_threshold,
+            "ctcBlankSkipThreshold": cfg.ctc_blank_skip_threshold,
+            "length_penalty": cfg.length_penalty,
+            "lengthPenalty": cfg.length_penalty,
+            "acoustic_scale": cfg.acoustic_scale,
+            "acousticScale": cfg.acoustic_scale,
+            "nbest": cfg.nbest,
+            "blank_penalty": cfg.blank_penalty,
+            "blankPenalty": cfg.blank_penalty,
+        }
+        for k, v in attr_map.items():
+            if hasattr(opts, k):
+                try:
+                    setattr(opts, k, v)
+                except Exception:
+                    pass
+
+        return opts
+
+    def _build_decoder(self):
+        lm_decoder = self._lm_decoder
         cfg = self.cfg
         opts = self._build_options()
 
@@ -103,6 +165,7 @@ class LocalNgramDecoder:
             pass  # Fall back to DecodeResource API
 
         lm_dir = Path(cfg.lm_dir)
+        lm_dir = lm_dir.resolve()
         tlg = str(lm_dir / "TLG.fst")
         words = str(lm_dir / "words.txt")
 
