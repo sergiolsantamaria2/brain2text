@@ -109,34 +109,17 @@ class LocalNgramDecoder:
         cfg = self.cfg
         opts = self._build_options()
 
-        # Preferred path: some builds accept (lm_dir: str, opts)
         try:
             return lm_decoder.BrainSpeechDecoder(cfg.lm_dir, opts)
         except TypeError:
-            pass  # Fall back to DecodeResource API
+            pass
 
         lm_dir = Path(cfg.lm_dir).resolve()
         tlg = str(lm_dir / "TLG.fst")
         words = str(lm_dir / "words.txt")
 
-        # Your build expects:
-        #   arg0=fst, arg1=lm_fst, arg2=rescore_fst, arg3=symbol_table, arg4=optional/unused
         res = lm_decoder.DecodeResource(tlg, tlg, "", words, "")
         return lm_decoder.BrainSpeechDecoder(res, opts)
-
-        last_err = None
-        for args in candidates:
-            try:
-                res = lm_decoder.DecodeResource(*args)
-                return lm_decoder.BrainSpeechDecoder(res, opts)
-            except Exception as e:
-                last_err = e
-
-        raise RuntimeError(
-            f"Failed to initialize BrainSpeechDecoder via DecodeResource. "
-            f"lm_dir={cfg.lm_dir}, tried {len(candidates)} DecodeResource argument orders. "
-            f"Last error: {last_err}"
-        ) from last_err
 
     def decode_from_logits(
         self,
@@ -144,7 +127,7 @@ class LocalNgramDecoder:
         input_is_log_probs: bool = False,
     ) -> str:
         """
-        logits_tc: (T, C) float32, in acoustic model order [BLANK, phonemes..., SIL]
+        logits_tc: (T, C) float32, in acoustic model order [BLANK, phonemes..., SIL(last)]
         """
         lm_decoder = self._lm_decoder
         dec = self._decoder
@@ -153,21 +136,22 @@ class LocalNgramDecoder:
         logits_btc = logits_tc[None, :, :]  # (1,T,C)
         logits_rearr_tc = _rearrange_logits_btc(logits_btc)[0]  # (T,C)
 
-        if input_is_log_probs:
-            log_probs_tc = logits_rearr_tc
-            if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
-                log_probs_tc = _log_softmax_tc(logits_rearr_tc) if not input_is_log_probs else logits_rearr_tc
-                out = lm_decoder.DecodeNumpyLogProbs(dec, log_probs_tc.astype(np.float32))
+        if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
+            # We can pass log-probs directly
+            if input_is_log_probs:
+                log_probs_tc = logits_rearr_tc
             else:
-                # Fallback expects probs
-                if input_is_log_probs:
-                    probs_tc = np.exp(logits_rearr_tc).astype(np.float32)
-                else:
-                    # stable softmax
-                    m = logits_rearr_tc.max(axis=-1, keepdims=True)
-                    e = np.exp(logits_rearr_tc - m)
-                    probs_tc = (e / (e.sum(axis=-1, keepdims=True) + 1e-8)).astype(np.float32)
-                out = lm_decoder.DecodeNumpy(dec, probs_tc)
+                log_probs_tc = _log_softmax_tc(logits_rearr_tc)
+            out = lm_decoder.DecodeNumpyLogProbs(dec, log_probs_tc.astype(np.float32))
+        else:
+            # Fallback expects probs (not log-probs)
+            if input_is_log_probs:
+                probs_tc = np.exp(logits_rearr_tc).astype(np.float32)
+            else:
+                m = logits_rearr_tc.max(axis=-1, keepdims=True)
+                e = np.exp(logits_rearr_tc - m)
+                probs_tc = (e / (e.sum(axis=-1, keepdims=True) + 1e-8)).astype(np.float32)
+            out = lm_decoder.DecodeNumpy(dec, probs_tc)
 
         return _decode_result_best_text(out)
 
