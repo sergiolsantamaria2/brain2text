@@ -164,8 +164,8 @@ class BrainToTextDecoder_Trainer:
                 self._lm = LocalNgramDecoder(cfg)
                 self.logger.info(f"Local LM WER enabled. lm_dir={cfg.lm_dir}")
             except Exception as e:
-                self.logger.warning(f"Could not initialize local LM decoder. Disabling WER. Reason: {e}")
-                self.compute_wer = False
+                self.logger.error(f"LM init failed but eval.compute_wer=true. Reason: {e}")
+                raise
         # ------------------------------------------------
 
 

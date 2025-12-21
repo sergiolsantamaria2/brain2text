@@ -1,6 +1,7 @@
 # src/brain2text/lm/local_lm.py
 from __future__ import annotations
 
+from pathlib import Path
 from dataclasses import dataclass
 from typing import Any, Dict, Optional, Tuple, List
 import os
@@ -90,36 +91,46 @@ class LocalNgramDecoder:
         self._decoder = self._build_decoder()
 
     def _build_decoder(self):
-        lm_decoder = self._lm_decoder
+        import lm_decoder
+
         cfg = self.cfg
+        opts = self._build_options()
 
-        if not os.path.isdir(cfg.lm_dir):
-            raise FileNotFoundError(f"LM directory not found: {cfg.lm_dir}")
-
-        # Build DecodeOptions (your build requires 8 args)
-        opts = lm_decoder.DecodeOptions(
-            int(cfg.max_active),
-            int(cfg.min_active),
-            float(cfg.beam),
-            float(cfg.lattice_beam),
-            float(cfg.ctc_blank_skip_threshold),
-            float(cfg.length_penalty),
-            float(cfg.acoustic_scale),
-            int(cfg.nbest),
-        )
-        if hasattr(opts, "blank_penalty"):
-            opts.blank_penalty = float(cfg.blank_penalty)
-
-        # Most robust path: construct decoder directly from LM directory
+        # Preferred path: some builds accept (lm_dir: str, opts)
         try:
             return lm_decoder.BrainSpeechDecoder(cfg.lm_dir, opts)
-        except TypeError as e:
-            raise RuntimeError(
-                "BrainSpeechDecoder(lm_dir, opts) constructor is not compatible with your lm_decoder build. "
-                "We can support DecodeResource too, but we must match its 5-string argument order from "
-                "language-model-standalone.py. If you hit this, I will give you a small code patch that reads "
-                "that order directly from the file."
-            ) from e
+        except TypeError:
+            pass  # Fall back to DecodeResource API
+
+        lm_dir = Path(cfg.lm_dir)
+        tlg = str(lm_dir / "TLG.fst")
+        words = str(lm_dir / "words.txt")
+
+        # Some builds expect BrainSpeechDecoder(DecodeResource, DecodeOptions).
+        # DecodeResource is a 5-string constructor, but the argument order can differ across builds.
+        # We try a small set of plausible orders and pick the first that initializes successfully.
+        candidates = [
+            (tlg, words, "", "", ""),
+            (words, tlg, "", "", ""),
+            (str(lm_dir), tlg, words, "", ""),
+            (str(lm_dir), words, tlg, "", ""),
+            (tlg, words, str(lm_dir), "", ""),
+            (words, tlg, str(lm_dir), "", ""),
+        ]
+
+        last_err = None
+        for args in candidates:
+            try:
+                res = lm_decoder.DecodeResource(*args)
+                return lm_decoder.BrainSpeechDecoder(res, opts)
+            except Exception as e:
+                last_err = e
+
+        raise RuntimeError(
+            f"Failed to initialize BrainSpeechDecoder via DecodeResource. "
+            f"lm_dir={cfg.lm_dir}, tried {len(candidates)} DecodeResource argument orders. "
+            f"Last error: {last_err}"
+        ) from last_err
 
     def decode_from_logits(
         self,
