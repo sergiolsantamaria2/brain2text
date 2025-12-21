@@ -12,6 +12,8 @@ try:
 except Exception:  # pragma: no cover
     editdistance = None
 
+NEG_INF = np.float32(-1e9)
+
 
 def _remove_punctuation(sentence: str) -> str:
     import re
@@ -166,38 +168,43 @@ class LocalNgramDecoder:
         input_is_log_probs: bool = False,
     ) -> str:
         """
-        logits_tc: (T, C) float32, in acoustic model order [BLANK, phonemes..., SIL(last)]
+        logits_tc: (T, C=41) float32, en orden acústico [BLANK, phonemes..., SIL(last)]
+        El decoder (por tu TLG) necesita 42 ilabels porque incluye <eps>=0.
+        Nosotros construimos logprobs (T,42): [EPS, BLANK, SIL, phonemes...]
         """
         lm_decoder = self._lm_decoder
         dec = self._decoder
 
         logits_tc = np.asarray(logits_tc, dtype=np.float32)
-        logits_btc = logits_tc[None, :, :]  # (1,T,C)
-        logits_rearr_tc = _rearrange_logits_btc(logits_btc)[0]  # (T,C)
+        logits_btc = logits_tc[None, :, :]               # (1,T,41)
+        logits_rearr_tc = _rearrange_logits_btc(logits_btc)[0]  # (T,41) => [BLANK,SIL,phones...]
 
-            # run decode
-        if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
-            log_probs_tc = logits_rearr_tc if input_is_log_probs else _log_softmax_tc(logits_rearr_tc)
-            log_probs_tc = np.concatenate(
-                [np.full((log_probs_tc.shape[0], 1), NEG_INF, dtype=np.float32), log_probs_tc.astype(np.float32)],
-                axis=-1
-            )
-            out = lm_decoder.DecodeNumpyLogProbs(dec, log_probs_tc.astype(np.float32))
+        # A log-probs (T,41)
+        if input_is_log_probs:
+            lp41 = logits_rearr_tc.astype(np.float32)
         else:
-            if input_is_log_probs:
-                probs_tc = np.exp(logits_rearr_tc).astype(np.float32)
-            else:
-                m = logits_rearr_tc.max(axis=-1, keepdims=True)
-                e = np.exp(logits_rearr_tc - m)
-                probs_tc = (e / (e.sum(axis=-1, keepdims=True) + 1e-8)).astype(np.float32)
-            out = lm_decoder.DecodeNumpy(dec, probs_tc)
+            lp41 = _log_softmax_tc(logits_rearr_tc).astype(np.float32)
 
-        # Some builds return None; pull best sentence from decoder object
-        if out is None:
-            txt = _best_text_from_decoder(dec)
-            return "" if txt is None else txt
+        # PAD EPS -> (T,42) con <eps>=0 a -inf
+        lp42 = np.concatenate(
+            [np.full((lp41.shape[0], 1), NEG_INF, dtype=np.float32), lp41],
+            axis=-1,
+        )
 
-        return _decode_result_best_text(out)
+        # Decodifica (en tu build devuelve None, pero rellena dec.result())
+        if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
+            lm_decoder.DecodeNumpyLogProbs(dec, lp42)
+        else:
+            # fallback si alguna vez no existe LogProbs: pasamos probs
+            probs42 = np.exp(lp42).astype(np.float32)
+            lm_decoder.DecodeNumpy(dec, probs42)
+
+        # Lo correcto en tu build: leer del decoder
+        if hasattr(dec, "result") and callable(dec.result):
+            res = dec.result()
+            return _decode_result_best_text(res)
+
+        return ""
 
     def wer_percent(self, true_sentence: str, pred_sentence: str) -> Optional[float]:
         if editdistance is None:
