@@ -91,6 +91,16 @@ def _best_text_from_decoder(dec: Any) -> Optional[str]:
             except Exception:
                 pass
 
+    if hasattr(dec, "result"):
+        try:
+            r = getattr(dec, "result")
+            if callable(r):
+                r = r()
+            if r is not None:
+                return _decode_result_best_text(r)
+        except Exception:
+            pass
+
     return None
 
 @dataclass
