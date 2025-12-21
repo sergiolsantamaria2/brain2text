@@ -178,6 +178,10 @@ class LocalNgramDecoder:
             # run decode
         if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
             log_probs_tc = logits_rearr_tc if input_is_log_probs else _log_softmax_tc(logits_rearr_tc)
+            log_probs_tc = np.concatenate(
+                [np.full((log_probs_tc.shape[0], 1), NEG_INF, dtype=np.float32), log_probs_tc.astype(np.float32)],
+                axis=-1
+            )
             out = lm_decoder.DecodeNumpyLogProbs(dec, log_probs_tc.astype(np.float32))
         else:
             if input_is_log_probs:
