@@ -40,67 +40,53 @@ def _log_softmax_tc(x_tc: np.ndarray) -> np.ndarray:
 
 
 def _decode_result_best_text(out: Any) -> str:
-    # Different builds expose different attribute names
+    if out is None:
+        return ""
+
+    # Many builds return list/tuple (nbest). Pick first non-empty.
+    if isinstance(out, (list, tuple)):
+        for item in out:
+            txt = _decode_result_best_text(item)
+            if txt:
+                return txt
+        return ""
+
+    # bytes / str
+    if isinstance(out, bytes):
+        return out.decode("utf-8", errors="ignore")
+    if isinstance(out, str):
+        return out
+
+    # Different builds expose different attribute names on DecodeResult-like objects
     for k in ("best_sentence", "best_text", "sentence", "text", "decoded"):
         if hasattr(out, k):
             v = getattr(out, k)
-            if isinstance(v, bytes):
-                return v.decode("utf-8", errors="ignore")
-            return str(v)
-    return str(out)
-
-def _best_text_from_decoder(dec: Any) -> Optional[str]:
-    # Try attributes first
-    for k in ("best_sentence", "best_text", "sentence", "text"):
-        if hasattr(dec, k):
-            v = getattr(dec, k)
-            if v is None:
-                continue
             if callable(v):
                 try:
                     v = v()
                 except Exception:
                     continue
+            if v is None:
+                continue
             if isinstance(v, bytes):
                 return v.decode("utf-8", errors="ignore")
             return str(v)
 
-    # Try common methods (no-arg)
-    for m in ("GetBestSentence", "BestSentence", "GetBestText", "BestText", "GetSentence", "Sentence", "GetText", "Text"):
-        if hasattr(dec, m) and callable(getattr(dec, m)):
-            try:
-                v = getattr(dec, m)()
-                if v is None:
-                    continue
-                if isinstance(v, bytes):
-                    return v.decode("utf-8", errors="ignore")
-                return str(v)
-            except Exception:
-                pass
+    # Fallback
+    s = str(out)
+    # avoid returning noise-like "None" or "[]"
+    if s in ("None", "[]"):
+        return ""
+    return s
 
-    # Try nbest-style getters
-    for m in ("GetNBestSentences", "NBestSentences", "GetNBest", "NBest"):
-        if hasattr(dec, m) and callable(getattr(dec, m)):
-            try:
-                v = getattr(dec, m)(1)
-                if isinstance(v, (list, tuple)) and len(v) > 0:
-                    v0 = v[0]
-                    if isinstance(v0, bytes):
-                        return v0.decode("utf-8", errors="ignore")
-                    return str(v0)
-            except Exception:
-                pass
-
-    if hasattr(dec, "result"):
+def _best_text_from_decoder(dec: Any) -> Optional[str]:
+    if hasattr(dec, "result") and callable(getattr(dec, "result")):
         try:
-            r = getattr(dec, "result")
-            if callable(r):
-                r = r()
-            if r is not None:
-                return _decode_result_best_text(r)
+            r = dec.result()
+            txt = _decode_result_best_text(r)
+            return txt if txt else None
         except Exception:
-            pass
-
+            return None
     return None
 
 @dataclass
