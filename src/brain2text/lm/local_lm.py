@@ -91,67 +91,18 @@ class LocalNgramDecoder:
         self._decoder = self._build_decoder()
 
     def _build_options(self):
-        """
-        Build lm_decoder.DecodeOptions in a way that is compatible with different bindings:
-        - some builds support DecodeOptions() + attribute assignment
-        - others require positional constructor args
-        """
         lm_decoder = self._lm_decoder
         cfg = self.cfg
-
-        # 1) Try no-arg constructor
-        try:
-            opts = lm_decoder.DecodeOptions()
-        except TypeError:
-            opts = None
-
-        # 2) If no-arg doesn't exist, try a few positional signatures
-        if opts is None:
-            candidates = [
-                # Common 8-arg form (your comment says 8-arg)
-                (cfg.max_active, cfg.min_active, cfg.beam, cfg.lattice_beam,
-                cfg.ctc_blank_skip_threshold, cfg.length_penalty, cfg.acoustic_scale, cfg.nbest),
-                # Some builds include blank_penalty as a 9th arg
-                (cfg.max_active, cfg.min_active, cfg.beam, cfg.lattice_beam,
-                cfg.ctc_blank_skip_threshold, cfg.length_penalty, cfg.acoustic_scale, cfg.nbest, cfg.blank_penalty),
-            ]
-            last_err = None
-            for args in candidates:
-                try:
-                    opts = lm_decoder.DecodeOptions(*args)
-                    break
-                except Exception as e:
-                    last_err = e
-            if opts is None:
-                raise RuntimeError(f"Could not construct DecodeOptions with known signatures. Last error: {last_err}") from last_err
-
-        # 3) Best-effort attribute assignment (covers no-arg builds and ignores missing attrs)
-        attr_map = {
-            "max_active": cfg.max_active,
-            "maxActive": cfg.max_active,
-            "min_active": cfg.min_active,
-            "minActive": cfg.min_active,
-            "beam": cfg.beam,
-            "lattice_beam": cfg.lattice_beam,
-            "latticeBeam": cfg.lattice_beam,
-            "ctc_blank_skip_threshold": cfg.ctc_blank_skip_threshold,
-            "ctcBlankSkipThreshold": cfg.ctc_blank_skip_threshold,
-            "length_penalty": cfg.length_penalty,
-            "lengthPenalty": cfg.length_penalty,
-            "acoustic_scale": cfg.acoustic_scale,
-            "acousticScale": cfg.acoustic_scale,
-            "nbest": cfg.nbest,
-            "blank_penalty": cfg.blank_penalty,
-            "blankPenalty": cfg.blank_penalty,
-        }
-        for k, v in attr_map.items():
-            if hasattr(opts, k):
-                try:
-                    setattr(opts, k, v)
-                except Exception:
-                    pass
-
-        return opts
+        return lm_decoder.DecodeOptions(
+            int(cfg.max_active),
+            int(cfg.min_active),
+            float(cfg.beam),
+            float(cfg.lattice_beam),
+            float(cfg.ctc_blank_skip_threshold),
+            float(cfg.length_penalty),
+            float(cfg.acoustic_scale),
+            int(cfg.nbest),
+        )
 
     def _build_decoder(self):
         lm_decoder = self._lm_decoder
@@ -164,22 +115,14 @@ class LocalNgramDecoder:
         except TypeError:
             pass  # Fall back to DecodeResource API
 
-        lm_dir = Path(cfg.lm_dir)
-        lm_dir = lm_dir.resolve()
+        lm_dir = Path(cfg.lm_dir).resolve()
         tlg = str(lm_dir / "TLG.fst")
         words = str(lm_dir / "words.txt")
 
-        # Some builds expect BrainSpeechDecoder(DecodeResource, DecodeOptions).
-        # DecodeResource is a 5-string constructor, but the argument order can differ across builds.
-        # We try a small set of plausible orders and pick the first that initializes successfully.
-        candidates = [
-            (tlg, words, "", "", ""),
-            (words, tlg, "", "", ""),
-            (str(lm_dir), tlg, words, "", ""),
-            (str(lm_dir), words, tlg, "", ""),
-            (tlg, words, str(lm_dir), "", ""),
-            (words, tlg, str(lm_dir), "", ""),
-        ]
+        # Your build expects:
+        #   arg0=fst, arg1=lm_fst, arg2=rescore_fst, arg3=symbol_table, arg4=optional/unused
+        res = lm_decoder.DecodeResource(tlg, tlg, "", words, "")
+        return lm_decoder.BrainSpeechDecoder(res, opts)
 
         last_err = None
         for args in candidates:
@@ -213,16 +156,18 @@ class LocalNgramDecoder:
         if input_is_log_probs:
             log_probs_tc = logits_rearr_tc
             if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
-                out = lm_decoder.DecodeNumpyLogProbs(dec, log_probs_tc)
+                log_probs_tc = _log_softmax_tc(logits_rearr_tc) if not input_is_log_probs else logits_rearr_tc
+                out = lm_decoder.DecodeNumpyLogProbs(dec, log_probs_tc.astype(np.float32))
             else:
-                # fallback: some builds only have DecodeNumpy
-                out = lm_decoder.DecodeNumpy(dec, log_probs_tc)
-        else:
-            log_probs_tc = _log_softmax_tc(logits_rearr_tc)
-            if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
-                out = lm_decoder.DecodeNumpyLogProbs(dec, log_probs_tc)
-            else:
-                out = lm_decoder.DecodeNumpy(dec, logits_rearr_tc)
+                # Fallback expects probs
+                if input_is_log_probs:
+                    probs_tc = np.exp(logits_rearr_tc).astype(np.float32)
+                else:
+                    # stable softmax
+                    m = logits_rearr_tc.max(axis=-1, keepdims=True)
+                    e = np.exp(logits_rearr_tc - m)
+                    probs_tc = (e / (e.sum(axis=-1, keepdims=True) + 1e-8)).astype(np.float32)
+                out = lm_decoder.DecodeNumpy(dec, probs_tc)
 
         return _decode_result_best_text(out)
 
