@@ -161,48 +161,28 @@ class LocalNgramDecoder:
         res = lm_decoder.DecodeResource(tlg, tlg, "", words, "")
         return lm_decoder.BrainSpeechDecoder(res, opts)
 
-    def decode_from_logits(
-        self,
-        logits_tc: np.ndarray,
-        input_is_log_probs: bool = False,
-    ) -> str:
-        """
-        logits_tc: (T, C=41) float32, en orden acústico [BLANK, phonemes..., SIL(last)]
-        El decoder (por tu TLG) necesita 42 ilabels porque incluye <eps>=0.
-        Nosotros construimos logprobs (T,42): [EPS, BLANK, SIL, phonemes...]
-        """
+    def decode_from_logits(self, logits_tc: np.ndarray, input_is_log_probs: bool = False) -> str:
         lm_decoder = self._lm_decoder
         dec = self._decoder
 
-        logits_tc = np.asarray(logits_tc, dtype=np.float32)
-        logits_btc = logits_tc[None, :, :]               # (1,T,41)
-        logits_rearr_tc = _rearrange_logits_btc(logits_btc)[0]  # (T,41) => [BLANK,SIL,phones...]
+        logits_tc = np.asarray(logits_tc, dtype=np.float32)      # (T,41)
+        logits_rearr_tc = _rearrange_logits_btc(logits_tc[None, :, :])[0]  # (T,41) => [BLANK,SIL,phones...]
 
-        # A log-probs (T,41)
-        if input_is_log_probs:
-            lp41 = logits_rearr_tc.astype(np.float32)
-        else:
-            lp41 = _log_softmax_tc(logits_rearr_tc).astype(np.float32)
+        lp41 = logits_rearr_tc if input_is_log_probs else _log_softmax_tc(logits_rearr_tc)
+        lp41 = lp41.astype(np.float32)
 
-        # PAD EPS -> (T,42) con <eps>=0 a -inf
-        lp42 = np.concatenate(
-            [np.full((lp41.shape[0], 1), NEG_INF, dtype=np.float32), lp41],
-            axis=-1,
-        )
+        # (T,42) = [EPS, BLANK, SIL, phones...] donde EPS es imposible
+        lp42 = np.concatenate([np.full((lp41.shape[0], 1), NEG_INF, dtype=np.float32), lp41], axis=-1)
 
-        # Decodifica (en tu build devuelve None, pero rellena dec.result())
         if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
             lm_decoder.DecodeNumpyLogProbs(dec, lp42)
         else:
-            # fallback si alguna vez no existe LogProbs: pasamos probs
-            probs42 = np.exp(lp42).astype(np.float32)
-            lm_decoder.DecodeNumpy(dec, probs42)
+            lm_decoder.DecodeNumpy(dec, np.exp(lp42).astype(np.float32))
 
-        # Lo correcto en tu build: leer del decoder
-        if hasattr(dec, "result") and callable(dec.result):
-            res = dec.result()
-            return _decode_result_best_text(res)
-
+        res = dec.result() if hasattr(dec, "result") and callable(dec.result) else None
+        if isinstance(res, list) and len(res) > 0:
+            s = getattr(res[0], "sentence", "")
+            return "" if s is None else str(s)
         return ""
 
     def wer_percent(self, true_sentence: str, pred_sentence: str) -> Optional[float]:
