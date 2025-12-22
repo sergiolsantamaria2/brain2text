@@ -192,6 +192,8 @@ class BrainToTextDecoder_Trainer:
                     acoustic_scale=float(self.eval_cfg.get("acoustic_scale", 0.35)),
                     nbest=int(self.eval_cfg.get("nbest", 50)),
                     blank_penalty=float(self.eval_cfg.get("blank_penalty", 90.0)),
+                    sil_index=int(self.eval_cfg.get("sil_index", -1)),
+
                 )
                 self._lm = LocalNgramDecoder(cfg)
                 self.logger.info(f"Local LM WER enabled. lm_dir={cfg.lm_dir}")

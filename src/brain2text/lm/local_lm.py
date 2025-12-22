@@ -26,12 +26,24 @@ def _remove_punctuation(sentence: str) -> str:
     return sentence
 
 
-def _rearrange_logits_btc(logits_btc: np.ndarray) -> np.ndarray:
+def _rearrange_logits_to_lm_order(logits_tc: np.ndarray, sil_index: int) -> np.ndarray:
     """
-    Input order expected from your acoustic model: [BLANK, phonemes..., SIL(last)].
-    LM expects: [BLANK, SIL, phonemes...].
+    Reorder columns so LM sees: [BLANK, SIL, phonemes...].
+
+    Assumptions:
+      - BLANK is index 0 in the acoustic model output.
+      - SIL index is provided (or -1 meaning last).
+      - Remaining labels keep their original relative order.
     """
-    return np.concatenate((logits_btc[:, :, 0:1], logits_btc[:, :, -1:], logits_btc[:, :, 1:-1]), axis=-1)
+    C = int(logits_tc.shape[-1])
+    if sil_index < 0:
+        sil_index = C - 1
+    if sil_index == 0 or sil_index >= C:
+        raise ValueError(f"Invalid sil_index={sil_index} for C={C}. BLANK must be 0 and SIL != 0.")
+
+    idx = [0, sil_index] + [i for i in range(1, C) if i != sil_index]
+    return logits_tc[:, idx]
+
 
 
 def _log_softmax_tc(x_tc: np.ndarray) -> np.ndarray:
@@ -104,6 +116,8 @@ class LocalLMConfig:
     nbest: int = 50
     # optional
     blank_penalty: float = 90.0
+    sil_index: int = -1  # -1 means "last index"
+
 
 
 class LocalNgramDecoder:
@@ -166,7 +180,7 @@ class LocalNgramDecoder:
         dec = self._decoder
 
         logits_tc = np.asarray(logits_tc, dtype=np.float32)      # (T,41)
-        logits_rearr_tc = _rearrange_logits_btc(logits_tc[None, :, :])[0]  # (T,41) => [BLANK,SIL,phones...]
+        logits_rearr_tc = _rearrange_logits_to_lm_order(logits_tc, int(self.cfg.sil_index))
 
         lp41 = logits_rearr_tc if input_is_log_probs else _log_softmax_tc(logits_rearr_tc)
         lp41 = lp41.astype(np.float32)
