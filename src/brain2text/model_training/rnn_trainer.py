@@ -25,6 +25,17 @@ from .data_augmentations import gauss_smooth
 
 from omegaconf import OmegaConf
 
+def _normalize_for_wer(s: str) -> str:
+    import re
+    s = re.sub(r"[^a-zA-Z\- \']", "", s)
+    s = s.replace("- ", " ").lower()
+    s = s.replace("--", "").lower()
+    s = s.replace(" '", "'").lower()
+    s = s.strip()
+    s = " ".join([w for w in s.split() if w])
+    return s
+
+
 def _decode_transcription_to_str(x) -> str:
     """
     Decode an HDF5 transcription field into a Python string.
@@ -192,7 +203,6 @@ class BrainToTextDecoder_Trainer:
                     acoustic_scale=float(self.eval_cfg.get("acoustic_scale", 0.35)),
                     nbest=int(self.eval_cfg.get("nbest", 50)),
                     blank_penalty=float(self.eval_cfg.get("blank_penalty", 90.0)),
-                    sil_index=int(self.eval_cfg.get("sil_index", -1)),
 
                 )
                 self._lm = LocalNgramDecoder(cfg)
@@ -862,6 +872,13 @@ class BrainToTextDecoder_Trainer:
                     f'time: {val_step_duration:.3f}'
                 )
 
+                self.logger.info(
+                    f'WER lens: avg_true_words={val_metrics.get("wer_avg_true_words", float("nan")):.2f} '
+                    f'avg_pred_words={val_metrics.get("wer_avg_pred_words", float("nan")):.2f} '
+                    f'max_pred_words={int(val_metrics.get("wer_max_pred_words", 0))}'
+                )
+
+
                 
                 if self.args['log_individual_day_val_PER']:
                     for day in val_metrics['day_PERs'].keys():
@@ -884,6 +901,10 @@ class BrainToTextDecoder_Trainer:
                     # Always log the key so it appears in W&B
                     log_payload[f"val/WER_{wer_tag}"] = float(val_metrics.get(wer_key, float("nan")))
                     log_payload["val/WER_num_trials"] = int(val_metrics.get("wer_num_trials", 0))
+                    log_payload["val/WER_avg_true_words"] = float(val_metrics.get("wer_avg_true_words", float("nan")))
+                    log_payload["val/WER_avg_pred_words"] = float(val_metrics.get("wer_avg_pred_words", float("nan")))
+                    log_payload["val/WER_max_pred_words"] = int(val_metrics.get("wer_max_pred_words", 0))
+
 
                     wandb.log(log_payload, step=i)
 
@@ -923,7 +944,13 @@ class BrainToTextDecoder_Trainer:
                     if save_best_checkpoint:
                         self.logger.info(f"Checkpointing model")
                         best_wer_to_save = self.best_val_WER if np.isfinite(self.best_val_WER) else None
-                        self.save_model_checkpoint(..., self.best_val_PER, self.best_val_loss, best_wer_to_save)
+                        self.save_model_checkpoint(
+                            f'{self.args["checkpoint_dir"]}/best_checkpoint',
+                            self.best_val_PER,
+                            self.best_val_loss,
+                            best_wer_to_save,
+                        )
+
 
 
                     # save validation metrics to pickle file
@@ -1144,12 +1171,18 @@ class BrainToTextDecoder_Trainer:
         metrics["avg_loss"] = float(np.mean(metrics["losses"])) if len(metrics["losses"]) > 0 else float("nan")
 
         # --- finalize WER (local LM) ---
+        pred_lens = []
+        true_lens = []
         wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
         wer_key = f"avg_WER_{wer_tag}"
 
         if do_wer_now and len(wer_collected) > 0:
             total_ed = 0
             total_words = 0
+
+
+            debug_examples = int(self.eval_cfg.get("wer_debug_examples", 2))
+
 
             for logits_tc, true_sentence in wer_collected:
                 # logits_tc is a numpy array shaped (T, C); convert to log-probs
@@ -1162,11 +1195,24 @@ class BrainToTextDecoder_Trainer:
                 )
 
                 # Normalize for WER
-                true_clean = remove_punctuation(str(true_sentence)).strip()
-                pred_clean = remove_punctuation(str(pred_sentence)).strip()
+                true_clean = _normalize_for_wer(true_sentence)
+                pred_clean = _normalize_for_wer(pred_sentence)
+
 
                 true_words = true_clean.split()
                 pred_words = pred_clean.split()
+
+                true_lens.append(len(true_words))
+                pred_lens.append(len(pred_words))
+
+                # Optional small debug print (first N examples)
+                if debug_examples > 0:
+                    self.logger.info(
+                        f"WER debug example | true_words={len(true_words)} pred_words={len(pred_words)}\n"
+                        f"  GT : {true_clean}\n"
+                        f"  PRD: {pred_clean}"
+                    )
+                    debug_examples -= 1
 
                 if len(true_words) == 0:
                     continue
@@ -1179,6 +1225,11 @@ class BrainToTextDecoder_Trainer:
         else:
             metrics[wer_key] = float("nan")
             metrics["wer_num_trials"] = 0
+
+        metrics["wer_avg_true_words"] = float(np.mean(true_lens)) if true_lens else float("nan")
+        metrics["wer_avg_pred_words"] = float(np.mean(pred_lens)) if pred_lens else float("nan")
+        metrics["wer_max_pred_words"] = int(np.max(pred_lens)) if pred_lens else 0
+
 
 
         return metrics
