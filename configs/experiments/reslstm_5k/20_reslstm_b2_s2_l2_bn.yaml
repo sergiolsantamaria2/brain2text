@@ -27,7 +27,6 @@ wandb:
   project: brain2text
   run_name: reslstm5k_b2_s2_l2_bn
   tags: ["reslstm_5k", "reslstm"]
-  group: reslstm_5k
 
 eval:
   compute_wer: true

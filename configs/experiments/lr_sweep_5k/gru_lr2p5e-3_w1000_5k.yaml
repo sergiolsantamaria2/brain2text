@@ -18,7 +18,6 @@ wandb:
   project: brain2text
   run_name: gru_lr2p5e-3_w1000_5k
   tags: ["lr_sweep_5k", "gru"]
-  group: lr_sweep_5k
 
 eval:
   compute_wer: true
