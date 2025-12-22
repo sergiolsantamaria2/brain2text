@@ -123,10 +123,9 @@ class LocalLMConfig:
     nbest: int = 50
     blank_penalty: float = 90.0
 
-    # NEW
-    reorder_mode: str = "identity"   # "identity" or "sil_to_pos1"
-    sil_index: int = -1             # usado solo si reorder_mode="sil_to_pos1"
-
+    # Usa estos dos (y olvida sil_to_pos1 para no liarte)
+    reorder_mode: str = "identity"        # "identity" o "blank_sil_phones"
+    sil_index: int = -1                  # usado si reorder_mode="blank_sil_phones"
 
 
 
@@ -206,25 +205,17 @@ class LocalNgramDecoder:
                     pass
         return False
 
-    def _reorder_for_lm(logits_tc: np.ndarray, cfg: LocalLMConfig) -> np.ndarray:
-        if cfg.reorder_mode == "identity":
-            return logits_tc
-        if cfg.reorder_mode == "sil_to_pos1":
-            return _rearrange_logits_to_lm_order(logits_tc, int(cfg.sil_index))
-        raise ValueError(f"Unknown reorder_mode={cfg.reorder_mode}")
-
 
     def decode_from_logits(self, logits_tc: np.ndarray, input_is_log_probs: bool = False) -> str:
         lm_decoder = self._lm_decoder
         dec = self._decoder
 
+        # Reset (en tu build existe)
         if not self._maybe_reset_decoder(dec):
-            # Fallback: rebuild decoder if no reset API exists
             dec = self._build_decoder()
             self._decoder = dec
 
-        logits_tc = np.asarray(logits_tc, dtype=np.float32)
-        logits_tc = _reorder_for_lm(logits_tc, self.cfg)
+        logits_tc = np.asarray(logits_tc, dtype=np.float32)  # (T,41)
 
         logits_rearr_tc = _rearrange_logits_to_lm_order(
             logits_tc,
@@ -235,7 +226,6 @@ class LocalNgramDecoder:
         lp41 = logits_rearr_tc if input_is_log_probs else _log_softmax_tc(logits_rearr_tc)
         lp41 = lp41.astype(np.float32)
 
-        # (T,42) = [EPS, BLANK, SIL, phones...] donde EPS es imposible
         lp42 = np.concatenate([np.full((lp41.shape[0], 1), NEG_INF, dtype=np.float32), lp41], axis=-1)
 
         if hasattr(lm_decoder, "DecodeNumpyLogProbs"):
@@ -248,6 +238,7 @@ class LocalNgramDecoder:
             s = getattr(res[0], "sentence", "")
             return "" if s is None else str(s)
         return ""
+
 
     def wer_percent(self, true_sentence: str, pred_sentence: str) -> Optional[float]:
         if editdistance is None:
