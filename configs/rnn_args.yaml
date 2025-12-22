@@ -197,8 +197,8 @@ wandb:
 eval:
   compute_wer: true
   wer_tag: "1gram"
-  wer_every_val_steps: 1
-  wer_max_trials: 64
+  wer_every_val_steps: 5
+  wer_max_trials: 128
 
   lm_dir: "assets/lm/openwebtext_1gram_lm_sil"
 

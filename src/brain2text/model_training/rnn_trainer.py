@@ -25,6 +25,36 @@ from .data_augmentations import gauss_smooth
 
 from omegaconf import OmegaConf
 
+def _decode_transcription_to_str(x) -> str:
+    """
+    Decode an HDF5 transcription field into a Python string.
+    The dataset stores g['transcription'] as a numeric array (typically uint8 ASCII).
+    After torch.stack it becomes a torch.Tensor of bytes. Convert to bytes->utf-8.
+    """
+    import numpy as np
+    import torch
+
+    if isinstance(x, str):
+        return x
+
+    if isinstance(x, (bytes, np.bytes_)):
+        b = bytes(x)
+        return b.split(b"\x00", 1)[0].decode("utf-8", errors="ignore")
+
+    if torch.is_tensor(x):
+        arr = x.detach().cpu().numpy().reshape(-1)
+        b = arr.astype(np.uint8, copy=False).tobytes()
+        return b.split(b"\x00", 1)[0].decode("utf-8", errors="ignore")
+
+    if isinstance(x, np.ndarray):
+        arr = np.asarray(x).reshape(-1)
+        b = arr.astype(np.uint8, copy=False).tobytes()
+        return b.split(b"\x00", 1)[0].decode("utf-8", errors="ignore")
+
+    return str(x)
+
+
+
 torch.set_float32_matmul_precision('high') # makes float32 matmuls faster on some GPUs
 torch.backends.cudnn.deterministic = True # makes training more reproducible
 # --- opcional: solo Torch >= 2 ---
@@ -60,6 +90,8 @@ class BrainToTextDecoder_Trainer:
 
         self.best_val_PER = torch.inf # track best PER for checkpointing
         self.best_val_loss = torch.inf # track best loss for checkpointing
+        self.best_val_WER = float("inf")  # track best WER for checkpointing (lower is better)
+
 
         self.train_dataset = None 
         self.val_dataset = None 
@@ -549,6 +581,8 @@ class BrainToTextDecoder_Trainer:
         self.learning_rate_scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
         self.best_val_PER = checkpoint['val_PER'] # best phoneme error rate
         self.best_val_loss = checkpoint['val_loss'] if 'val_loss' in checkpoint.keys() else torch.inf
+        self.best_val_WER = checkpoint.get('val_WER', float("inf"))
+
 
         self.model.to(self.device)
         
@@ -560,18 +594,21 @@ class BrainToTextDecoder_Trainer:
 
         self.logger.info("Loaded model from checkpoint: " + load_path)
 
-    def save_model_checkpoint(self, save_path, PER, loss):
+    def save_model_checkpoint(self, save_path, PER, loss, WER=None):
+
         '''
         Save a training checkpoint
         '''
 
         checkpoint = {
-            'model_state_dict' : self.model.state_dict(),
-            'optimizer_state_dict' : self.optimizer.state_dict(),
-            'scheduler_state_dict' : self.learning_rate_scheduler.state_dict(),
-            'val_PER' : PER,
-            'val_loss' : loss
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'scheduler_state_dict': self.learning_rate_scheduler.state_dict(),
+            'val_PER': PER,
+            'val_loss': loss,
+            'val_WER': WER,
         }
+
         
         torch.save(checkpoint, save_path)
         
@@ -850,23 +887,42 @@ class BrainToTextDecoder_Trainer:
 
 
                 # Determine if new best day. Based on if PER is lower, or in the case of a PER tie, if loss is lower
+                # Prefer WER-based checkpointing when available; fallback to PER/loss otherwise
+                wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
+                wer_key = f"avg_WER_{wer_tag}"
+                cur_wer = float(val_metrics.get(wer_key, float("nan")))
+                use_wer = self.compute_wer and np.isfinite(cur_wer)
+
                 new_best = False
-                if val_metrics['avg_PER'] < self.best_val_PER:
-                    self.logger.info(f"New best test PER {self.best_val_PER:.4f} --> {val_metrics['avg_PER']:.4f}")
-                    self.best_val_PER = val_metrics['avg_PER']
-                    self.best_val_loss = val_metrics['avg_loss']
-                    new_best = True
-                elif val_metrics['avg_PER'] == self.best_val_PER and (val_metrics['avg_loss'] < self.best_val_loss): 
-                    self.logger.info(f"New best test loss {self.best_val_loss:.4f} --> {val_metrics['avg_loss']:.4f}")
-                    self.best_val_loss = val_metrics['avg_loss']
-                    new_best = True
+                if use_wer:
+                    if cur_wer < self.best_val_WER:
+                        self.logger.info(f"New best val WER({wer_tag}) {self.best_val_WER:.2f}% --> {cur_wer:.2f}%")
+                        self.best_val_WER = cur_wer
+                        # keep these for reference
+                        self.best_val_PER = float(val_metrics["avg_PER"])
+                        self.best_val_loss = float(val_metrics["avg_loss"])
+                        new_best = True
+                else:
+                    # fallback: PER primary, loss as tie-break
+                    if val_metrics['avg_PER'] < self.best_val_PER:
+                        self.logger.info(f"New best val PER {self.best_val_PER:.4f} --> {val_metrics['avg_PER']:.4f}")
+                        self.best_val_PER = float(val_metrics['avg_PER'])
+                        self.best_val_loss = float(val_metrics['avg_loss'])
+                        new_best = True
+                    elif val_metrics['avg_PER'] == self.best_val_PER and (val_metrics['avg_loss'] < self.best_val_loss):
+                        self.logger.info(f"New best val loss {self.best_val_loss:.4f} --> {val_metrics['avg_loss']:.4f}")
+                        self.best_val_loss = float(val_metrics['avg_loss'])
+                        new_best = True
+
 
                 if new_best:
 
                     # Checkpoint if metrics have improved 
                     if save_best_checkpoint:
                         self.logger.info(f"Checkpointing model")
-                        self.save_model_checkpoint(f'{self.args["checkpoint_dir"]}/best_checkpoint', self.best_val_PER, self.best_val_loss)
+                        best_wer_to_save = self.best_val_WER if np.isfinite(self.best_val_WER) else None
+                        self.save_model_checkpoint(..., self.best_val_PER, self.best_val_loss, best_wer_to_save)
+
 
                     # save validation metrics to pickle file
                     if self.args['save_val_metrics']:
@@ -878,13 +934,16 @@ class BrainToTextDecoder_Trainer:
                 else:
                     val_steps_since_improvement +=1
 
-                # Optionally save this validation checkpoint, regardless of performance
-                if self.args['save_all_val_steps']:
-                    self.save_model_checkpoint(
-                        f'{self.args["checkpoint_dir"]}/checkpoint_batch_{i}',
-                        val_metrics['avg_PER'],
-                        val_metrics['avg_loss'],
-                    )
+                cur_wer_to_save = float(val_metrics.get(wer_key, float("nan")))
+                cur_wer_to_save = cur_wer_to_save if np.isfinite(cur_wer_to_save) else None
+
+                self.save_model_checkpoint(
+                    f'{self.args["checkpoint_dir"]}/checkpoint_batch_{i}',
+                    val_metrics['avg_PER'],
+                    val_metrics['avg_loss'],
+                    cur_wer_to_save,
+                )
+
 
 
                 # Early stopping 
@@ -1008,19 +1067,12 @@ class BrainToTextDecoder_Trainer:
                             T = int(adjusted_lens[b].item())
                             logits_tc = logits[b, :T, :].detach().cpu().float().numpy()
 
-                            true_sentence = batch["transcriptions"][b]
-                            # normaliza bytes/numpy scalars
-                            try:
-                                if isinstance(true_sentence, (bytes, np.bytes_)):
-                                    true_sentence = true_sentence.decode("utf-8")
-                                elif hasattr(true_sentence, "item"):
-                                    true_sentence = true_sentence.item()
-                                    if isinstance(true_sentence, (bytes, np.bytes_)):
-                                        true_sentence = true_sentence.decode("utf-8")
-                            except Exception:
-                                true_sentence = str(true_sentence)
+                            true_sentence = _decode_transcription_to_str(batch["transcriptions"][b])
+                            wer_collected.append((logits_tc, true_sentence))
 
-                            wer_collected.append((logits_tc, str(true_sentence)))
+                            if len(wer_collected) == 1:
+                                self.logger.info(f"WER debug GT example: {true_sentence}")
+
     
                     loss = self.ctc_loss(
                         torch.permute(logits.log_softmax(2), [1, 0, 2]),
