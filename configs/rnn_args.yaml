@@ -212,6 +212,5 @@ eval:
   acoustic_scale: 0.35
   nbest: 50
   blank_penalty: 90.0
-  eval:
   sil_index: 40   # si confirmas que SIL es 40
 

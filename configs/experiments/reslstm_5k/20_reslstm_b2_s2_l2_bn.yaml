@@ -35,3 +35,6 @@ eval:
   wer_every_val_steps: 1
   wer_tag: "1gram"
   lm_dir: "assets/lm/openwebtext_1gram_lm_sil"
+
+
+use_amp: false
