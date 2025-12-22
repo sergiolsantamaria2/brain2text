@@ -196,6 +196,7 @@ wandb:
 
 eval:
   compute_wer: true
+  reorder_mode: identity
   wer_tag: "1gram"
   wer_every_val_steps: 5
   wer_max_trials: 128

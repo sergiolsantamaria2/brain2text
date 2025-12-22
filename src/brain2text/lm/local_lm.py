@@ -113,7 +113,6 @@ def _best_text_from_decoder(dec: Any) -> Optional[str]:
 @dataclass
 class LocalLMConfig:
     lm_dir: str
-    # DecodeOptions (8-arg constructor in your build)
     max_active: int = 7000
     min_active: int = 200
     beam: float = 15.0
@@ -122,10 +121,12 @@ class LocalLMConfig:
     length_penalty: float = 0.0
     acoustic_scale: float = 0.35
     nbest: int = 50
-    # optional
     blank_penalty: float = 90.0
-    sil_index: int = -1  # -1 means "last index"
-    reorder_mode: str = "identity"
+
+    # NEW
+    reorder_mode: str = "identity"   # "identity" or "sil_to_pos1"
+    sil_index: int = -1             # usado solo si reorder_mode="sil_to_pos1"
+
 
 
 
@@ -205,6 +206,13 @@ class LocalNgramDecoder:
                     pass
         return False
 
+    def _reorder_for_lm(logits_tc: np.ndarray, cfg: LocalLMConfig) -> np.ndarray:
+        if cfg.reorder_mode == "identity":
+            return logits_tc
+        if cfg.reorder_mode == "sil_to_pos1":
+            return _rearrange_logits_to_lm_order(logits_tc, int(cfg.sil_index))
+        raise ValueError(f"Unknown reorder_mode={cfg.reorder_mode}")
+
 
     def decode_from_logits(self, logits_tc: np.ndarray, input_is_log_probs: bool = False) -> str:
         lm_decoder = self._lm_decoder
@@ -215,7 +223,9 @@ class LocalNgramDecoder:
             dec = self._build_decoder()
             self._decoder = dec
 
-        logits_tc = np.asarray(logits_tc, dtype=np.float32)      # (T,41)
+        logits_tc = np.asarray(logits_tc, dtype=np.float32)
+        logits_tc = _reorder_for_lm(logits_tc, self.cfg)
+
         logits_rearr_tc = _rearrange_logits_to_lm_order(
             logits_tc,
             int(self.cfg.sil_index),
