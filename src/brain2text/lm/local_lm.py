@@ -26,15 +26,22 @@ def _remove_punctuation(sentence: str) -> str:
     return sentence
 
 
-def _rearrange_logits_to_lm_order(logits_tc: np.ndarray, sil_index: int) -> np.ndarray:
+# --- reemplaza tu función por esta ---
+def _rearrange_logits_to_lm_order(logits_tc: np.ndarray, sil_index: int, mode: str = "identity") -> np.ndarray:
     """
-    Reorder columns so LM sees: [BLANK, SIL, phonemes...].
+    Reorder columns for LM if needed.
 
-    Assumptions:
-      - BLANK is index 0 in the acoustic model output.
-      - SIL index is provided (or -1 meaning last).
-      - Remaining labels keep their original relative order.
+    mode:
+      - "identity": do not reorder (LM expects same order as acoustic model)
+      - "blank_sil_phones": LM expects [BLANK, SIL, phones...]
     """
+    mode = str(mode).lower().strip()
+    if mode in ("identity", "none", "acoustic"):
+        return logits_tc
+
+    if mode not in ("blank_sil_phones", "bsph"):
+        raise ValueError(f"Unknown reorder mode: {mode}")
+
     C = int(logits_tc.shape[-1])
     if sil_index < 0:
         sil_index = C - 1
@@ -43,6 +50,7 @@ def _rearrange_logits_to_lm_order(logits_tc: np.ndarray, sil_index: int) -> np.n
 
     idx = [0, sil_index] + [i for i in range(1, C) if i != sil_index]
     return logits_tc[:, idx]
+
 
 
 
@@ -117,6 +125,8 @@ class LocalLMConfig:
     # optional
     blank_penalty: float = 90.0
     sil_index: int = -1  # -1 means "last index"
+    reorder_mode: str = "identity"
+
 
 
 
@@ -174,13 +184,43 @@ class LocalNgramDecoder:
 
         res = lm_decoder.DecodeResource(tlg, tlg, "", words, "")
         return lm_decoder.BrainSpeechDecoder(res, opts)
+    
+    def _maybe_reset_decoder(self, dec: Any) -> bool:
+        # Try common reset/clear methods exposed by bindings
+        for name in ("Reset", "reset", "Clear", "clear", "ResetDecoding", "reset_decoding", "ClearResult", "clear_result"):
+            if hasattr(dec, name) and callable(getattr(dec, name)):
+                try:
+                    getattr(dec, name)()
+                    return True
+                except Exception:
+                    pass
+
+        # Some bindings expose reset as a function on lm_decoder module
+        for name in ("Reset", "ResetDecoder", "ResetDecoding"):
+            if hasattr(self._lm_decoder, name) and callable(getattr(self._lm_decoder, name)):
+                try:
+                    getattr(self._lm_decoder, name)(dec)
+                    return True
+                except Exception:
+                    pass
+        return False
+
 
     def decode_from_logits(self, logits_tc: np.ndarray, input_is_log_probs: bool = False) -> str:
         lm_decoder = self._lm_decoder
         dec = self._decoder
 
+        if not self._maybe_reset_decoder(dec):
+            # Fallback: rebuild decoder if no reset API exists
+            dec = self._build_decoder()
+            self._decoder = dec
+
         logits_tc = np.asarray(logits_tc, dtype=np.float32)      # (T,41)
-        logits_rearr_tc = _rearrange_logits_to_lm_order(logits_tc, int(self.cfg.sil_index))
+        logits_rearr_tc = _rearrange_logits_to_lm_order(
+            logits_tc,
+            int(self.cfg.sil_index),
+            mode=str(getattr(self.cfg, "reorder_mode", "identity")),
+        )
 
         lp41 = logits_rearr_tc if input_is_log_probs else _log_softmax_tc(logits_rearr_tc)
         lp41 = lp41.astype(np.float32)
