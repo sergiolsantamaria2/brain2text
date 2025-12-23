@@ -1,4 +1,4 @@
-output_dir: trained_models/lr_sweep_5k/gru_lr3e-3_w500_5k
+output_dir: trained_models/lr_sweep_10k/gru_lr3e-3_w500_10k_wer256
 checkpoint_dir: ${output_dir}/checkpoint
 
 num_training_batches: 10000
@@ -14,11 +14,15 @@ batches_per_val_step: 500
 save_val_logits: false
 save_all_val_steps: false
 
+# Optional: avoid crashes on checkpoint I/O during sweeps
+save_best_checkpoint: false
+save_final_model: false
+
 wandb:
   enabled: true
   project: brain2text
-  run_name: gru_lr3e-3_w500_5k
-  tags: ["lr_sweep_5k", "gru", "cosine", "warmup500"]
+  run_name: gru_lr3e-3_w500_10k_wer256
+  tags: ["lr_sweep_10k", "gru", "cosine", "warmup500", "wer256"]
 
 eval:
   compute_wer: true

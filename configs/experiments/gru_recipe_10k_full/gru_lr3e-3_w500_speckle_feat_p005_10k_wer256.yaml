@@ -1,4 +1,4 @@
-output_dir: trained_models/gru_speckle_5k/gru_lr3e-3_w500_speckle_feat_p02_5k
+output_dir: trained_models/gru_speckle_10k/gru_lr3e-3_w500_speckle_feat_p005_10k_wer256
 checkpoint_dir: ${output_dir}/checkpoint
 
 num_training_batches: 10000
@@ -14,6 +14,9 @@ batches_per_val_step: 500
 save_val_logits: false
 save_all_val_steps: false
 
+save_best_checkpoint: false
+save_final_model: false
+
 model:
   input_speckle_p: 0.05
   input_speckle_mode: feature
@@ -21,8 +24,8 @@ model:
 wandb:
   enabled: true
   project: brain2text
-  run_name: gru_lr3e-3_w500_speckle_feat_p02_5k
-  tags: ["gru_speckle_5k", "gru", "cosine", "warmup500", "speckle", "feature", "p02"]
+  run_name: gru_lr3e-3_w500_speckle_feat_p005_10k_wer256
+  tags: ["gru_speckle_10k", "gru", "cosine", "warmup500", "speckle", "feature", "p005", "wer256"]
 
 eval:
   compute_wer: true
