@@ -8,16 +8,26 @@ class GRUDecoder(nn.Module):
     This class combines day-specific input layers, a GRU, and an output classification layer
     '''
     def __init__(self,
-                 neural_dim,
-                 n_units,
-                 n_days,
-                 n_classes,
-                 rnn_dropout = 0.0,
-                 input_dropout = 0.0,
-                 n_layers = 5, 
-                 patch_size = 0,
-                 patch_stride = 0,
-                 ):
+                neural_dim,
+                n_units,
+                n_days,
+                n_classes,
+                rnn_dropout=0.0,
+                input_dropout=0.0,
+                n_layers=5,
+                patch_size=0,
+                patch_stride=0,
+                # New: post-RNN head (training improvement)
+                head_type: str = "none",          # "none" | "resffn"
+                head_num_blocks: int = 0,         # e.g., 1 or 2
+                head_norm: str = "none",          # "bn" | "layernorm" | "rmsnorm" | "none"
+                head_dropout: float = 0.0,
+                head_activation: str = "gelu",
+                # New: speckled masking (coordinated dropout)
+                input_speckle_p: float = 0.0,
+                input_speckle_mode: str = "feature",
+                ):
+
         '''
         neural_dim  (int)      - number of channels in a single timestep (e.g. 512)
         n_units     (int)      - number of hidden units in each recurrent layer - equal to the size of the hidden state
@@ -42,6 +52,15 @@ class GRUDecoder(nn.Module):
         
         self.patch_size = patch_size
         self.patch_stride = patch_stride
+        self.head_type = str(head_type)
+        self.head_num_blocks = int(head_num_blocks)
+        self.head_norm = str(head_norm)
+        self.head_dropout = float(head_dropout)
+        self.head_activation = str(head_activation)
+
+        self.input_speckle_p = float(input_speckle_p)
+        self.input_speckle_mode = str(input_speckle_mode)
+
 
         # Parameters for the day-specific input layers
         self.day_layer_activation = nn.Softsign() # basically a shallower tanh 
@@ -77,6 +96,23 @@ class GRUDecoder(nn.Module):
                 nn.init.orthogonal_(param)
             if "weight_ih" in name:
                 nn.init.xavier_uniform_(param)
+
+        # Optional post-GRU head
+        ht = self.head_type.lower()
+        if ht == "none" or self.head_num_blocks <= 0:
+            self.head = nn.Identity()
+        elif ht in ("resffn", "ffn"):
+            self.head = nn.Sequential(*[
+                ResidualFFNBlock(
+                    d=self.n_units,
+                    norm_type=self.head_norm,
+                    dropout=self.head_dropout,
+                    activation=self.head_activation,
+                )
+                for _ in range(self.head_num_blocks)
+            ])
+        else:
+            raise ValueError(f"Unknown head_type={self.head_type}. Use: none, resffn.")
 
         # Prediciton head. Weight init to xavier
         self.out = nn.Linear(self.n_units, self.n_classes)
@@ -122,11 +158,20 @@ class GRUDecoder(nn.Module):
         if states is None:
             states = self.h0.expand(self.n_layers, x.shape[0], self.n_units).contiguous()
 
+        # Speckled masking (training only)
+        if self.training and self.input_speckle_p > 0:
+            x = speckle_mask(x, self.input_speckle_p, self.input_speckle_mode)
+
+        
         # Pass input through RNN 
         output, hidden_states = self.gru(x, states)
 
+        # Optional post-GRU head
+        output = self.head(output)
+
         # Compute logits
         logits = self.out(output)
+
         
         if return_state:
             return logits, hidden_states
@@ -177,6 +222,62 @@ def build_time_norm(norm_type: str, d: int) -> nn.Module:
     if norm_type == "none":
         return nn.Identity()
     raise ValueError(f"Unknown norm_type={norm_type}. Use one of: bn, layernorm, rmsnorm, none.")
+
+def get_activation(name: str) -> nn.Module:
+    name = (name or "gelu").lower()
+    if name == "gelu":
+        return nn.GELU()
+    if name == "relu":
+        return nn.ReLU()
+    if name == "silu":
+        return nn.SiLU()
+    raise ValueError(f"Unknown activation={name}. Use one of: gelu, relu, silu.")
+
+
+def speckle_mask(x: torch.Tensor, p: float, mode: str) -> torch.Tensor:
+    """
+    Coordinated dropout / speckled masking.
+    x: (B,T,D)
+    mode:
+      - 'feature': drop entire features across all timesteps (mask shape Bx1xD)
+      - 'time':    drop entire timesteps across all features (mask shape BxTx1)
+      - 'both':    elementwise (BxTxD)  (usually less stable; keep for ablation)
+    """
+    if p <= 0.0:
+        return x
+    mode = (mode or "feature").lower()
+    B, T, D = x.shape
+    if mode == "feature":
+        mask = torch.rand(B, 1, D, device=x.device) < p
+    elif mode == "time":
+        mask = torch.rand(B, T, 1, device=x.device) < p
+    elif mode == "both":
+        mask = torch.rand(B, T, D, device=x.device) < p
+    else:
+        raise ValueError(f"Unknown speckle mode={mode}. Use: feature, time, both.")
+    return x.masked_fill(mask, 0.0)
+
+
+class ResidualFFNBlock(nn.Module):
+    """
+    Simple GPT-style MLP block without attention:
+      x <- x + Dropout(Act(Linear(Norm(x))))
+    Works on (B,T,D).
+    """
+    def __init__(self, d: int, norm_type: str, dropout: float, activation: str):
+        super().__init__()
+        self.norm = build_time_norm(norm_type, d)
+        self.lin = nn.Linear(d, d)
+        nn.init.xavier_uniform_(self.lin.weight)
+        self.act = get_activation(activation)
+        self.drop = nn.Dropout(p=float(dropout))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        y = self.lin(self.norm(x))
+        y = self.act(y)
+        y = self.drop(y)
+        return x + y
+
 
 class ResLSTMSublayer(nn.Module):
     """
