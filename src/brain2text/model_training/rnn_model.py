@@ -65,13 +65,15 @@ class GRUDecoder(nn.Module):
         # Parameters for the day-specific input layers
         self.day_layer_activation = nn.Softsign() # basically a shallower tanh 
 
-        # Set weights for day layers to be identity matrices so the model can learn its own day-specific transformations
-        self.day_weights = nn.ParameterList(
-            [nn.Parameter(torch.eye(self.neural_dim)) for _ in range(self.n_days)]
-        )
-        self.day_biases = nn.ParameterList(
-            [nn.Parameter(torch.zeros(1, self.neural_dim)) for _ in range(self.n_days)]
-        )
+       # Day-specific affine parameters (vectorized, compile-friendly)
+        self.day_weights = nn.Parameter(
+            torch.eye(self.neural_dim).unsqueeze(0).repeat(self.n_days, 1, 1)
+        )  # (n_days, D, D)
+
+        self.day_biases = nn.Parameter(
+            torch.zeros(self.n_days, self.neural_dim)
+        )  # (n_days, D)
+
 
         self.day_layer_dropout = nn.Dropout(input_dropout)
         
@@ -128,11 +130,14 @@ class GRUDecoder(nn.Module):
         '''
 
         # Apply day-specific layer to (hopefully) project neural data from the different days to the same latent space
-        day_weights = torch.stack([self.day_weights[i] for i in day_idx], dim=0)
-        day_biases = torch.cat([self.day_biases[i] for i in day_idx], dim=0).unsqueeze(1)
+        day_ids = day_idx.view(-1).long()  # (B,)
+
+        day_weights = self.day_weights.index_select(0, day_ids)          # (B, D, D)
+        day_biases  = self.day_biases.index_select(0, day_ids).unsqueeze(1)  # (B, 1, D)
 
         x = torch.einsum("btd,bdk->btk", x, day_weights) + day_biases
         x = self.day_layer_activation(x)
+
 
         # Apply dropout to the ouput of the day specific layer
         if self.input_dropout > 0:
@@ -397,8 +402,10 @@ class ResLSTMDecoder(nn.Module):
         self.day_layer_activation = nn.Softsign()
         self.day_layer_dropout = nn.Dropout(p=float(input_dropout))
 
-        self.day_weights = nn.Parameter(torch.eye(neural_dim).unsqueeze(0).repeat(n_days, 1, 1))
-        self.day_biases = nn.Parameter(torch.zeros(n_days, neural_dim))
+        # en __init__
+        self.day_weights = nn.Parameter(torch.eye(self.neural_dim).unsqueeze(0).repeat(self.n_days, 1, 1))
+        self.day_biases  = nn.Parameter(torch.zeros(self.n_days, self.neural_dim))
+
 
         # Patching => flatten => proj
         in_dim = neural_dim * self.patch_size if self.patch_size > 0 else neural_dim
@@ -425,13 +432,14 @@ class ResLSTMDecoder(nn.Module):
 
     def forward(self, features: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
         # Vectorized day indexing (no .tolist() sync)
-        day_ids = day_indicies.view(-1).long()
-        W = self.day_weights.index_select(0, day_ids)                 # (B, D, D)
-        b = self.day_biases.index_select(0, day_ids).unsqueeze(1)     # (B, 1, D)
+        day_ids = day_idx.view(-1).long()                       # (B,)
+        W = self.day_weights.index_select(0, day_ids)           # (B,D,D)
+        b = self.day_biases.index_select(0, day_ids).unsqueeze(1)  # (B,1,D)
 
-        x = torch.einsum("btd,bdk->btk", features, W) + b
+        x = torch.einsum("btd,bdk->btk", x, W) + b
         x = self.day_layer_activation(x)
-        x = self.day_layer_dropout(x)
+        x = self.day_layer_dropout(x)  # si input_dropout>0
+
 
         # patching
         if self.patch_size > 0:
@@ -492,9 +500,16 @@ class XLSTMDecoder(nn.Module):
 
         # Day-specific input layers (mismo patrón que tus modelos)
         self.day_layer_activation = nn.Softsign()
-        self.day_weights = nn.ParameterList([nn.Parameter(torch.eye(neural_dim)) for _ in range(n_days)])
-        self.day_biases = nn.ParameterList([nn.Parameter(torch.zeros(1, neural_dim)) for _ in range(n_days)])
+        self.day_weights = nn.Parameter(
+            torch.eye(neural_dim).unsqueeze(0).repeat(n_days, 1, 1)
+        )  # (n_days, D, D)
+
+        self.day_biases = nn.Parameter(
+            torch.zeros(n_days, neural_dim)
+        )  # (n_days, D)
+
         self.day_layer_dropout = nn.Dropout(p=float(input_dropout))
+
 
         # Patching: (B,T,C) -> (B,T', patch_size*C)
         if self.patch_size > 0:
@@ -529,15 +544,16 @@ class XLSTMDecoder(nn.Module):
 
     def _apply_day_layer(self, x: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
         # day_indicies: (B,) o (B,1) -> lo aplanamos
-        day_ids = day_indicies.view(-1).tolist()  # lista de ints, len=B
+        day_ids = day_indicies.view(-1).long()  # (B,)
 
-        day_weights = torch.stack([self.day_weights[i] for i in day_ids], dim=0)  # (B, D, D)
-        day_biases  = torch.cat([self.day_biases[i] for i in day_ids], dim=0).unsqueeze(1)  # (B, 1, D)
+        W = self.day_weights.index_select(0, day_ids)                 # (B, D, D)
+        b = self.day_biases.index_select(0, day_ids).unsqueeze(1)     # (B, 1, D)
 
-        x = torch.einsum("btd,bdk->btk", x, day_weights) + day_biases
+        x = torch.einsum("btd,bdk->btk", x, W) + b
         x = self.day_layer_activation(x)
         x = self.day_layer_dropout(x)
         return x
+
 
 
     def _patchify(self, x: torch.Tensor) -> torch.Tensor:

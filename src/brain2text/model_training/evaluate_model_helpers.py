@@ -94,7 +94,7 @@ def runSingleDecodingStep(x, input_layer, model, model_args, device):
             device = device,
             smooth_kernel_std = model_args['dataset']['data_transforms']['smooth_kernel_std'],
             smooth_kernel_size = model_args['dataset']['data_transforms']['smooth_kernel_size'],
-            padding = 'valid',
+            padding = 'same',
         )
 
         with torch.no_grad():

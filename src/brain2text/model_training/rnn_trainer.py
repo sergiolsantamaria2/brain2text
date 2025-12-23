@@ -733,14 +733,6 @@ class BrainToTextDecoder_Trainer:
 
         train_start_time = time.time()
 
-        # Prime LR scheduler so the very first optimizer update uses warmup LR.
-        if (
-            str(self.args.get("lr_scheduler_type", "")).lower() == "cosine"
-            and (not bool(self.args.get("init_from_checkpoint", False)))
-            and int(self.args.get("lr_warmup_steps", 0)) > 0
-        ):
-            self.learning_rate_scheduler.step()
-
 
         # train for specified number of batches
         for i, batch in enumerate(self.train_loader):
@@ -818,8 +810,10 @@ class BrainToTextDecoder_Trainer:
 
                 used_lrs = [pg["lr"] for pg in self.optimizer.param_groups]
 
-                self.optimizer.step()
+
+                # Advance LR schedule for THIS optimizer step (so the current update uses the intended LR)
                 self.learning_rate_scheduler.step()
+                self.optimizer.step()
 
 
             # Log to wandb (per step)

@@ -32,6 +32,19 @@ def gauss_smooth(inputs, device, smooth_kernel_std=2, smooth_kernel_size=100,  p
     inputs = inputs.permute(0, 2, 1)  # [B, C, T]
     gaussKernel = gaussKernel.repeat(C, 1, 1)  # [C, 1, kernel_size]
 
-    # Perform convolution
-    smoothed = F.conv1d(inputs, gaussKernel, padding=padding, groups=C)
+    # Perform convolution (make padding robust across torch versions)
+    k = int(gaussKernel.shape[-1])
+
+    if isinstance(padding, str):
+        pad_mode = padding.lower()
+        if pad_mode == "same":
+            pad = k // 2
+        elif pad_mode == "valid":
+            pad = 0
+        else:
+            raise ValueError(f"Unknown padding='{padding}'. Use 'same' or 'valid' or an int.")
+    else:
+        pad = int(padding)
+
+    smoothed = F.conv1d(inputs, gaussKernel, padding=pad, groups=C)
     return smoothed.permute(0, 2, 1)  # [B, T, C]
