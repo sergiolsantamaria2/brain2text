@@ -1,26 +1,31 @@
-model:
-  input_speckle_p: 0.2
-  input_speckle_mode: feature
-
-wandb:
-  run_name: gru5k_speckle_feat_p02
-  tags: ["gru_recipe_5k", "gru", "speckle", "feature", "p02"]
-
-# Shared settings for 5k runs (matches your style)
-output_dir: trained_models/gru_recipe_5k/${wandb.run_name}
+output_dir: trained_models/gru_head_5k/gru_lr3e-3_w500_head_ln2_5k
 checkpoint_dir: ${output_dir}/checkpoint
 
 num_training_batches: 5000
+lr_scheduler_type: cosine
 lr_decay_steps: ${num_training_batches}
 lr_decay_steps_day: ${num_training_batches}
+
+lr_max: 0.003
+lr_warmup_steps: 500
+lr_warmup_steps_day: 500
 
 batches_per_val_step: 500
 save_val_logits: false
 save_all_val_steps: false
 
+model:
+  head_type: resffn
+  head_num_blocks: 2
+  head_norm: layernorm
+  head_dropout: 0.1
+  head_activation: gelu
+
 wandb:
   enabled: true
   project: brain2text
+  run_name: gru_lr3e-3_w500_head_ln2_5k
+  tags: ["gru_head_5k", "gru", "cosine", "warmup500", "head", "resffn", "layernorm", "b2"]
 
 eval:
   compute_wer: true

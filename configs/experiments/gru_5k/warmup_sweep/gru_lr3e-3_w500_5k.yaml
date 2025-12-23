@@ -1,19 +1,14 @@
-lr_scheduler_type: cosine
-lr_max: 0.003
-lr_warmup_steps: 500
-lr_warmup_steps_day: 500
-
-wandb:
-  run_name: gru5k_lr3e-3_w500_cosine
-  tags: ["gru_recipe_5k", "gru", "lr", "warmup500", "cosine"]
-
-# Shared settings for 5k runs (matches your style)
-output_dir: trained_models/gru_recipe_5k/${wandb.run_name}
+output_dir: trained_models/lr_sweep_5k/gru_lr3e-3_w500_5k
 checkpoint_dir: ${output_dir}/checkpoint
 
 num_training_batches: 5000
+lr_scheduler_type: cosine
 lr_decay_steps: ${num_training_batches}
 lr_decay_steps_day: ${num_training_batches}
+
+lr_max: 0.003
+lr_warmup_steps: 500
+lr_warmup_steps_day: 500
 
 batches_per_val_step: 500
 save_val_logits: false
@@ -22,6 +17,8 @@ save_all_val_steps: false
 wandb:
   enabled: true
   project: brain2text
+  run_name: gru_lr3e-3_w500_5k
+  tags: ["lr_sweep_5k", "gru", "cosine", "warmup500"]
 
 eval:
   compute_wer: true
