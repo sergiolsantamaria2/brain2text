@@ -1,7 +1,7 @@
-output_dir: trained_models/gru_speckle_10k/gru_lr3e-3_w500_speckle_feat_p010_10k_wer256
+output_dir: ${oc.env:TMPDIR}/brain2text/trained_models/lr_sweep_10k/gru_lr3e-3_w500_10k_wer256_tmp
 checkpoint_dir: ${output_dir}/checkpoint
 
-num_training_batches: 10000
+num_training_batches: 20000
 lr_scheduler_type: cosine
 lr_decay_steps: ${num_training_batches}
 lr_decay_steps_day: ${num_training_batches}
@@ -11,21 +11,18 @@ lr_warmup_steps: 500
 lr_warmup_steps_day: 500
 
 batches_per_val_step: 500
+
+# Disable heavy writes
 save_val_logits: false
 save_all_val_steps: false
-
 save_best_checkpoint: false
 save_final_model: false
-
-model:
-  input_speckle_p: 0.10
-  input_speckle_mode: feature
 
 wandb:
   enabled: true
   project: brain2text
-  run_name: gru_lr3e-3_w500_speckle_feat_p010_10k_wer256
-  tags: ["gru_speckle_10k", "gru", "cosine", "warmup500", "speckle", "feature", "p010", "wer256"]
+  run_name: gru_lr3e-3_w500_10k_wer256_tmp
+  tags: ["lr_sweep_10k", "gru", "cosine", "warmup500", "wer256", "tmpdir"]
 
 eval:
   compute_wer: true
