@@ -1,4 +1,4 @@
-output_dir: ${oc.env:TMPDIR}/brain2text/trained_models/lr_sweep_10k/gru_lr3e-3_w500_10k_wer256_tmp
+output_dir: ${oc.env:TMPDIR}/brain2text/trained_models/compare_seed_10k/gru_base_seed10_wer1024
 checkpoint_dir: ${output_dir}/checkpoint
 
 num_training_batches: 20000
@@ -12,17 +12,20 @@ lr_warmup_steps_day: 500
 
 batches_per_val_step: 500
 
-# Disable heavy writes
 save_val_logits: false
 save_all_val_steps: false
 save_best_checkpoint: false
 save_final_model: false
 
+seed: 10
+dataset:
+  seed: 10
+
 wandb:
   enabled: true
   project: brain2text
-  run_name: gru_lr3e-3_w500_10k_wer256_tmp
-  tags: ["lr_sweep_10k", "gru", "cosine", "warmup500", "wer256", "tmpdir"]
+  run_name: gru_base_seed10_wer1024
+  tags: ["compare_seed_10k", "gru", "baseline", "seed10", "wer1024", "tmpdir"]
 
 eval:
   compute_wer: true
@@ -39,7 +42,3 @@ eval:
   ctc_blank_skip_threshold: 0.95
   length_penalty: 0.0
   nbest: 50
-
-seed: 11
-dataset:
-  seed: 11

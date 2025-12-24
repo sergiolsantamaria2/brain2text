@@ -29,7 +29,7 @@ wandb:
 
 eval:
   compute_wer: true
-  wer_max_trials: 256
+  wer_max_trials: 1024
   wer_every_val_steps: 1
   wer_tag: "1gram"
   lm_dir: "assets/lm/openwebtext_1gram_lm_sil"
@@ -42,3 +42,8 @@ eval:
   ctc_blank_skip_threshold: 0.95
   length_penalty: 0.0
   nbest: 50
+
+seed: 11
+dataset:
+  seed: 11
+
