@@ -1,7 +1,7 @@
 output_dir: ${oc.env:TMPDIR}/brain2text/trained_models/compare_seed_10k/gru_speckle_feat_p010_seed12_wer1024
 checkpoint_dir: ${output_dir}/checkpoint
 
-num_training_batches: 20000
+num_training_batches: 10000
 lr_scheduler_type: cosine
 lr_decay_steps: ${num_training_batches}
 lr_decay_steps_day: ${num_training_batches}
@@ -12,6 +12,7 @@ lr_warmup_steps_day: 500
 
 batches_per_val_step: 500
 
+# Disable heavy writes (avoid quota issues)
 save_val_logits: false
 save_all_val_steps: false
 save_best_checkpoint: false
