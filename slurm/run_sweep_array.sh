@@ -7,6 +7,8 @@
 #SBATCH --array=0-2%3
 #SBATCH --output=slurm_logs/%x_%A_%a.out
 #SBATCH --error=slurm_logs/%x_%A_%a.err
+#SBATCH --exclude=a-l40s-o-2
+
 
 set -euo pipefail
 mkdir -p slurm_logs
