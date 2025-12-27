@@ -12,8 +12,7 @@ set -euo pipefail
 
 # --- EDIT THESE TWO LINES PER SWEEP ---
 BASE_CFG="configs/rnn_args_best.yaml"
-DIR_CFG="configs/experiments/sweep_speckle_feature_hiP_10k_tmp"
-
+DIR_CFG="configs/experiments/sweep_speckle_time_hiP_10k_tmp"
 # -------------------------------------
 
 mkdir -p slurm_logs
