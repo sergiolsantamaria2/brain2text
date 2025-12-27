@@ -19,7 +19,7 @@ export TMPDIR="${SLURM_TMPDIR:-/tmp}"
 export WANDB_DIR="${TMPDIR}/wandb"
 mkdir -p logs "$WANDB_DIR"
 
-BASE="configs/rnn_args_best.yaml"
+BASE="configs/rnn_args.yaml"
 DIR="configs/experiments/sweep_speckle_feature_hiP_10k_tmp"
 
 for CFG in "$DIR"/*.yaml; do
