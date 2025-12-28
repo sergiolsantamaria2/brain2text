@@ -1,12 +1,38 @@
 model:
-  n_input_features: 512  # number of input features in the neural data. (2 features per electrode, 256 electrodes)
-  n_units: 768           # number of units per GRU layer
-  rnn_dropout: 0.4       # dropout rate for the GRU layers
-  rnn_trainable: true    # whether the GRU layers are trainable
-  n_layers: 5            # number of GRU layers
+  n_input_features: 512 # number of input features in the neural data. (2 features per electrode, 256 electrodes)
+  n_units: 768 # number of units per GRU layer
+  rnn_dropout: 0.2 # <-- OPTIMAL from our sweeps
+  rnn_trainable: true # whether the GRU layers are trainable
+  n_layers: 5 # number of GRU layers
   decoder_type: gru
 
-  # ResLSTM knobs (kept for compatibility; decoder_type controls actual use)
+  patch_size: 14 # size of the input patches (14 time steps)
+  patch_stride: 4 # stride for the input patches (4 time steps)
+
+  # Input network (day-specific)
+  input_network:
+    n_input_layers: 1 # number of input layers per network (one network for each day)
+    input_layer_sizes:
+    - 512 # size of the input layer (number of input features)
+    input_trainable: true # whether the input layer is trainable
+    input_layer_dropout: 0.2 # dropout rate for the input layer
+
+  # --- Explicit "new" model params (to avoid relying on constructor defaults) ---
+  # Optional head (kept OFF in baseline)
+  head_type: "none"        # "none" | "resffn"
+  head_num_blocks: 0
+  head_norm: "none"        # "bn" | "layernorm" | "rmsnorm" | "none"
+  head_dropout: 0.0
+  head_activation: "gelu"
+
+  # Speckled masking (coordinated dropout) - OPTIMAL setting you reported
+  input_speckle_p: 0.10
+  input_speckle_mode: "feature"
+
+  # If present in your GRU signature (otherwise harmless if ignored by OmegaConf in your setup)
+  d_model: 0
+
+  # ResLSTM knobs (unused when decoder_type=gru, kept for compatibility)
   reslstm_num_blocks: 1
   reslstm_sublayers_per_block: 2
   reslstm_lstm_layers: 2
@@ -15,36 +41,24 @@ model:
   reslstm_pre_norm: false
   reslstm_residual_dropout: 0.0
 
-  patch_size: 14   # size of the input patches (14 time steps)
-  patch_stride: 4  # stride for the input patches (4 time steps)
-
-  input_network:
-    n_input_layers: 1
-    input_layer_sizes:
-    - 512
-    input_trainable: true
-    input_layer_dropout: 0.2
-
-gpu_number: '0'
+gpu_number: '0' # GPU number to use for training, formatted as a string (e.g., '0', '1', etc.)
 mode: train
-use_amp: true
+use_amp: true # whether to use automatic mixed precision (AMP) for training
 
-# Safer defaults for cluster runs (override per experiment if you want persistent storage)
-output_dir: ${oc.env:SLURM_TMPDIR,/tmp}/brain2text/trained_models/dev_run
-checkpoint_dir: ${output_dir}/checkpoint
+output_dir: trained_models/dev_run # directory to save the trained model and logs
+checkpoint_dir: ${output_dir}/checkpoint # directory to save checkpoints during training
+init_from_checkpoint: false # whether to initialize the model from a checkpoint
+init_checkpoint_path: None # path of the checkpoint to initialize the model from, if any
 
-init_from_checkpoint: false
-init_checkpoint_path: null
-
-# Avoid disk quota issues by default
+# Keep disk usage conservative by default
 save_best_checkpoint: false
-save_all_val_steps: false
+save_all_val_steps: true
 save_final_model: false
 save_val_metrics: true
 early_stopping: false
 early_stopping_val_steps: 20
 
-# Training schedule (best known recipe)
+# --- OPTIMAL LR regime from sweeps ---
 num_training_batches: 10000
 lr_scheduler_type: cosine
 lr_max: 0.003
@@ -61,9 +75,7 @@ beta0: 0.9
 beta1: 0.999
 epsilon: 0.1
 weight_decay: 0.001
-weight_decay_day: 0.0
-
-# Reproducibility
+weight_decay_day: 0
 seed: 10
 grad_norm_clip_value: 5
 
@@ -73,9 +85,7 @@ batches_per_val_step: 500
 batches_per_save: 0
 log_individual_day_val_PER: true
 log_val_skip_logs: false
-
-# Reduce storage by default
-save_val_logits: false
+save_val_logits: true
 save_val_data: false
 
 dataset:
@@ -95,10 +105,7 @@ dataset:
   n_classes: 41
   max_seq_elements: 500
   days_per_batch: 4
-
-  # Align with main seed for reproducibility
   seed: 10
-
   num_dataloader_workers: 1
   loader_shuffle: false
   must_include_days: null
@@ -203,17 +210,17 @@ dataset:
   - 1
 
 wandb:
-  enabled: true
+  enabled: false
   project: brain2text
-  run_name: gru_best_current_seed10
-  tags: ["gru", "cosine", "warmup500", "seed10", "baseline_best_current"]
+  run_name: gru_baseline
+  tags: ["gru", "baseline_opt", "cosine", "warmup500", "dropout0p2", "speckleFeat_p010", "seed10", "wer1024"]
 
 eval:
   compute_wer: true
   reorder_mode: identity
   wer_tag: "1gram"
   wer_every_val_steps: 1
-  wer_max_trials: 256
+  wer_max_trials: 1024
 
   lm_dir: "assets/lm/openwebtext_1gram_lm_sil"
 
