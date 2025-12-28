@@ -59,7 +59,7 @@ early_stopping: false
 early_stopping_val_steps: 20
 
 # --- OPTIMAL LR regime from sweeps ---
-num_training_batches: 10000
+num_training_batches: 100000
 lr_scheduler_type: cosine
 lr_max: 0.003
 lr_min: 0.0001
