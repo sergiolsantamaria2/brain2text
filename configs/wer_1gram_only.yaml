@@ -1,0 +1,5 @@
+eval:
+  lm_dir_5gram: null
+  wer_tag: "1gram"
+  wer_max_trials: 64
+  wer_every_val_steps: 1
