@@ -212,10 +212,11 @@ dataset:
   - 1
 
 wandb:
-  enabled: false
+  enabled: true
   project: brain2text
-  run_name: gru_baseline
-  tags: ["gru", "baseline_opt", "cosine", "warmup500", "dropout0p2", "speckleFeat_p010", "seed10", "wer1024"]
+  group: ${oc.env:WANDB_RUN_GROUP,null}
+  job_type: ${oc.env:WANDB_JOB_TYPE,null}
+  run_name: ${oc.env:WANDB_RUN_NAME,null}
 
 eval:
   compute_wer: true
