@@ -224,7 +224,8 @@ eval:
   wer_every_val_steps: 1
   wer_max_trials: 1024
 
-  lm_dir: "assets/lm/openwebtext_1gram_lm_sil"
+  lm_dir_1gram: "data/lm/openwebtext_1gram_lm_sil"
+  lm_dir_5gram: "data/lm/5gram"
 
   max_active: 7000
   min_active: 200

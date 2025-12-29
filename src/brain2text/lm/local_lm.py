@@ -233,11 +233,15 @@ class LocalNgramDecoder:
         else:
             lm_decoder.DecodeNumpy(dec, np.exp(lp42).astype(np.float32))
 
+        # Robust extraction across bindings/builds
+        txt = _best_text_from_decoder(dec)
+        if txt:
+            return txt
+
         res = dec.result() if hasattr(dec, "result") and callable(dec.result) else None
-        if isinstance(res, list) and len(res) > 0:
-            s = getattr(res[0], "sentence", "")
-            return "" if s is None else str(s)
-        return ""
+        txt2 = _decode_result_best_text(res)
+        return txt2 or ""
+
 
 
     def wer_percent(self, true_sentence: str, pred_sentence: str) -> Optional[float]:

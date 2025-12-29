@@ -208,6 +208,38 @@ class BrainToTextDecoder_Trainer:
                     sil_index=int(self.eval_cfg.get("sil_index", -1)),
                 )
                 self._lm = LocalNgramDecoder(cfg)
+
+                # --- Optional 5-gram decoder (safe: does not affect existing 1-gram path) ---
+                self._lm_5gram = None
+                lm_dir_5gram = self.eval_cfg.get("lm_dir_5gram", None)
+
+                if lm_dir_5gram:
+                    try:
+                        lm_dir_5gram_path = Path(str(lm_dir_5gram))
+                        if not lm_dir_5gram_path.is_absolute():
+                            lm_dir_5gram_path = repo_root / lm_dir_5gram_path
+
+                        cfg5 = LocalLMConfig(
+                            lm_dir=str(lm_dir_5gram_path),
+                            max_active=cfg.max_active,
+                            min_active=cfg.min_active,
+                            beam=cfg.beam,
+                            lattice_beam=cfg.lattice_beam,
+                            ctc_blank_skip_threshold=cfg.ctc_blank_skip_threshold,
+                            length_penalty=cfg.length_penalty,
+                            acoustic_scale=cfg.acoustic_scale,
+                            nbest=cfg.nbest,
+                            blank_penalty=cfg.blank_penalty,
+                            reorder_mode=cfg.reorder_mode,
+                            sil_index=cfg.sil_index,
+                        )
+                        self._lm_5gram = LocalNgramDecoder(cfg5)
+                        self.logger.info(f"Local LM 5-gram enabled. lm_dir_5gram={cfg5.lm_dir}")
+                    except Exception as e:
+                        self.logger.warning(f"Could not init 5-gram LM decoder from eval.lm_dir_5gram={lm_dir_5gram!r}: {e}")
+                        self._lm_5gram = None
+
+
                 self.logger.info(f"Local LM WER enabled. lm_dir={cfg.lm_dir}")
             except Exception as e:
                 self.logger.error(f"LM init failed but eval.compute_wer=true. Reason: {e}")
@@ -920,6 +952,9 @@ class BrainToTextDecoder_Trainer:
                     log_payload["val/WER_avg_true_words"] = float(val_metrics.get("wer_avg_true_words", float("nan")))
                     log_payload["val/WER_avg_pred_words"] = float(val_metrics.get("wer_avg_pred_words", float("nan")))
                     log_payload["val/WER_max_pred_words"] = int(val_metrics.get("wer_max_pred_words", 0))
+                    # Also log both 1-gram and 5-gram explicitly (for comparison)
+                    log_payload["val/WER_1gram"] = float(val_metrics.get("avg_WER_1gram", float("nan")))
+                    log_payload["val/WER_5gram"] = float(val_metrics.get("avg_WER_5gram", float("nan")))
 
 
                     wandb.log(log_payload, step=i)
@@ -1189,58 +1224,108 @@ class BrainToTextDecoder_Trainer:
         # --- finalize WER (local LM) ---
         pred_lens = []
         true_lens = []
+        
         wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
-        wer_key = f"avg_WER_{wer_tag}"
+        wer_key_1 = "avg_WER_1gram"
+        wer_key_5 = "avg_WER_5gram"
 
         if do_wer_now and len(wer_collected) > 0:
-            total_ed = 0
+            total_ed_1 = 0
+            total_ed_5 = 0
             total_words = 0
-
 
             debug_examples = int(self.eval_cfg.get("wer_debug_examples", 2))
 
+            pred_lens_1 = []
+            pred_lens_5 = []
+            true_lens = []
 
             for logits_tc, true_sentence in wer_collected:
-                # logits_tc is a numpy array shaped (T, C); convert to log-probs
                 lp = torch.from_numpy(logits_tc).float()
                 log_probs_tc = torch.log_softmax(lp, dim=-1).cpu().numpy()
 
-                pred_sentence = self._lm.decode_from_logits(
+                # 1-gram (or primary LM in eval.lm_dir)
+                pred_sentence_1 = self._lm.decode_from_logits(
                     log_probs_tc,
                     input_is_log_probs=True,
                 )
 
-                # Normalize for WER
-                true_clean = _normalize_for_wer(true_sentence)
-                pred_clean = _normalize_for_wer(pred_sentence)
+                # 5-gram (optional)
+                pred_sentence_5 = None
+                if self._lm_5gram is not None:
+                    pred_sentence_5 = self._lm_5gram.decode_from_logits(
+                        log_probs_tc,
+                        input_is_log_probs=True,
+                    )
 
+                true_clean = _normalize_for_wer(true_sentence)
+                pred_clean_1 = _normalize_for_wer(pred_sentence_1)
+                pred_clean_5 = _normalize_for_wer(pred_sentence_5) if pred_sentence_5 is not None else ""
 
                 true_words = true_clean.split()
-                pred_words = pred_clean.split()
+                pred_words_1 = pred_clean_1.split()
+                pred_words_5 = pred_clean_5.split() if pred_sentence_5 is not None else None
 
                 true_lens.append(len(true_words))
-                pred_lens.append(len(pred_words))
+                pred_lens_1.append(len(pred_words_1))
+                if pred_words_5 is not None:
+                    pred_lens_5.append(len(pred_words_5))
 
-                # Optional small debug print (first N examples)
                 if debug_examples > 0:
-                    self.logger.info(
-                        f"WER debug example | true_words={len(true_words)} pred_words={len(pred_words)}\n"
-                        f"  GT : {true_clean}\n"
-                        f"  PRD: {pred_clean}"
-                    )
+                    if pred_sentence_5 is not None:
+                        self.logger.info(
+                            f"WER debug example\n"
+                            f"  GT : {true_clean}\n"
+                            f"  1G : {pred_clean_1}\n"
+                            f"  5G : {pred_clean_5}"
+                        )
+                    else:
+                        self.logger.info(
+                            f"WER debug example\n"
+                            f"  GT : {true_clean}\n"
+                            f"  PRD: {pred_clean_1}"
+                        )
                     debug_examples -= 1
 
                 if len(true_words) == 0:
                     continue
 
-                total_ed += editdistance.eval(true_words, pred_words)
+                total_ed_1 += editdistance.eval(true_words, pred_words_1)
+                if pred_words_5 is not None:
+                    total_ed_5 += editdistance.eval(true_words, pred_words_5)
+
                 total_words += len(true_words)
 
-            metrics[wer_key] = (100.0 * float(total_ed) / float(total_words)) if total_words > 0 else float("nan")
+            metrics[wer_key_1] = (100.0 * float(total_ed_1) / float(total_words)) if total_words > 0 else float("nan")
+            metrics[wer_key_5] = (100.0 * float(total_ed_5) / float(total_words)) if (total_words > 0 and self._lm_5gram is not None) else float("nan")
             metrics["wer_num_trials"] = int(len(wer_collected))
+
+            # keep your existing lens stats (default to 1-gram for backward compatibility)
+            metrics["wer_avg_true_words"] = float(np.mean(true_lens)) if true_lens else float("nan")
+            metrics["wer_avg_pred_words"] = float(np.mean(pred_lens_1)) if pred_lens_1 else float("nan")
+            metrics["wer_max_pred_words"] = int(np.max(pred_lens_1)) if pred_lens_1 else 0
+
+            # optional extra lens stats for 5-gram
+            metrics["wer_avg_pred_words_5gram"] = float(np.mean(pred_lens_5)) if pred_lens_5 else float("nan")
+            metrics["wer_max_pred_words_5gram"] = int(np.max(pred_lens_5)) if pred_lens_5 else 0
+
         else:
-            metrics[wer_key] = float("nan")
+            metrics[wer_key_1] = float("nan")
+            metrics[wer_key_5] = float("nan")
             metrics["wer_num_trials"] = 0
+
+            metrics["wer_avg_true_words"] = float("nan")
+            metrics["wer_avg_pred_words"] = float("nan")
+            metrics["wer_max_pred_words"] = 0
+            metrics["wer_avg_pred_words_5gram"] = float("nan")
+            metrics["wer_max_pred_words_5gram"] = 0
+
+        # Maintain existing "selected" key logic for downstream code:
+        # if eval.wer_tag is "1gram" or "5gram", downstream expects avg_WER_{wer_tag}.
+        wer_key = f"avg_WER_{wer_tag}"
+        if wer_key not in metrics:
+            metrics[wer_key] = metrics.get(wer_key_1, float("nan"))
+
 
         metrics["wer_avg_true_words"] = float(np.mean(true_lens)) if true_lens else float("nan")
         metrics["wer_avg_pred_words"] = float(np.mean(pred_lens)) if pred_lens else float("nan")

@@ -1,15 +1,18 @@
-# data
+# ----------------
+# Data (local only)
+# ----------------
 data/
-!data/.gitkeep
-data/hdf5_data_final/
-data/*.zip
 
-# outputs
+# ---------------
+# Outputs / logs
+# ---------------
 trained_models/
 wandb/
 *.log
 
-# python
+# ----------------
+# Python artifacts
+# ----------------
 __pycache__/
 *.pyc
 .venv/
