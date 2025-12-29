@@ -5,6 +5,8 @@ num_training_batches: 10000
 seed: 10
 dataset:
   seed: 10
+  data_transforms:
+    feature_norm: "none"
 
 wandb:
   enabled: true
@@ -16,6 +18,3 @@ wandb:
 model:
   head_type: "none"
 
-dataset:
-  data_transforms:
-    feature_norm: "none"
