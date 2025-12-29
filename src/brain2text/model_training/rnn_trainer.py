@@ -21,13 +21,8 @@ import editdistance
 from .evaluate_model_helpers import remove_punctuation
 
 from .dataset import BrainToTextDataset, train_test_split_indicies
-if self.transform_args['smooth_data']:
-             features = gauss_smooth(
-                 inputs = features, 
-                 device = self.device,
-                 smooth_kernel_std = self.transform_args['smooth_kernel_std'],
-                 smooth_kernel_size= self.transform_args['smooth_kernel_size'],
-                 )
+from .data_augmentations import gauss_smooth
+
 
 from omegaconf import OmegaConf
 
@@ -268,7 +263,8 @@ class BrainToTextDecoder_Trainer:
 
 
         # Initialize the model (selectable via config)
-        decoder_type = str(self.args.get("model", {}).get("decoder_type", "gru")).lower()
+        mcfg = self.args.get("model", {})
+        decoder_type = str(mcfg.get("decoder_type", "gru")).lower()
 
         if decoder_type == "gru":
             DecoderCls = GRUDecoder
@@ -277,46 +273,22 @@ class BrainToTextDecoder_Trainer:
         elif decoder_type == "xlstm":
             DecoderCls = XLSTMDecoder
         else:
-            raise ValueError(f"Invalid model.decoder_type: {decoder_type}. Use 'gru' or 'reslstm'.")
+            raise ValueError(f"Invalid model.decoder_type: {decoder_type}. Use 'gru', 'reslstm', or 'xlstm'.")
 
         decoder_kwargs = dict(
-            neural_dim=self.args["model"]["n_input_features"],
-            n_units=self.args["model"]["n_units"],
+            neural_dim=mcfg["n_input_features"],
+            n_units=mcfg["n_units"],
             n_days=len(self.args["dataset"]["sessions"]),
             n_classes=self.args["dataset"]["n_classes"],
-            rnn_dropout=self.args["model"]["rnn_dropout"],
-            input_dropout=self.args["model"]["input_network"]["input_layer_dropout"],
-            n_layers=self.args["model"]["n_layers"],
-            patch_size=self.args["model"]["patch_size"],
-            patch_stride=self.args["model"]["patch_stride"],
+            rnn_dropout=mcfg["rnn_dropout"],
+            input_dropout=mcfg["input_network"]["input_layer_dropout"],
+            n_layers=mcfg["n_layers"],
+            patch_size=mcfg["patch_size"],
+            patch_stride=mcfg["patch_stride"],
         )
-
-        # Pass GRU-only knobs (post-RNN head + speckled masking) from config
-        # Important: only for GRUDecoder so other decoders don't receive unknown kwargs
-        if DecoderCls is GRUDecoder:
-            decoder_kwargs.update(
-                dict(
-                    head_type=str(mcfg.get("head_type", "none")),
-                    head_num_blocks=int(mcfg.get("head_num_blocks", 0)),
-                    head_norm=str(mcfg.get("head_norm", "none")),
-                    head_dropout=float(mcfg.get("head_dropout", 0.0)),
-                    head_activation=str(mcfg.get("head_activation", "gelu")),
-                    input_speckle_p=float(mcfg.get("input_speckle_p", 0.0)),
-                    input_speckle_mode=str(mcfg.get("input_speckle_mode", "feature")),
-                )
-            )
-        
-        if DecoderCls is XLSTMDecoder:
-            decoder_kwargs.update(dict(
-                xlstm_num_blocks=int(self.args["model"].get("xlstm_num_blocks", self.args["model"]["n_layers"])),
-                xlstm_num_heads=int(self.args["model"].get("xlstm_num_heads", 4)),
-                xlstm_conv1d_kernel_size=int(self.args["model"].get("xlstm_conv1d_kernel_size", 4)),
-                xlstm_dropout=float(self.args["model"].get("xlstm_dropout", self.args["model"]["rnn_dropout"])),
-            ))
 
         # Extra args only for ResLSTMDecoder (safe defaults if not present)
         if DecoderCls is ResLSTMDecoder:
-            mcfg = self.args.get("model", {})
             decoder_kwargs.update(dict(
                 reslstm_num_blocks=int(mcfg.get("reslstm_num_blocks", 1)),
                 reslstm_sublayers_per_block=int(mcfg.get("reslstm_sublayers_per_block", 2)),
@@ -327,8 +299,35 @@ class BrainToTextDecoder_Trainer:
                 reslstm_residual_dropout=float(mcfg.get("reslstm_residual_dropout", 0.0)),
             ))
 
+        # Extra args only for XLSTMDecoder
+        if DecoderCls is XLSTMDecoder:
+            decoder_kwargs.update(dict(
+                xlstm_num_blocks=int(mcfg.get("xlstm_num_blocks", mcfg["n_layers"])),
+                xlstm_num_heads=int(mcfg.get("xlstm_num_heads", 4)),
+                xlstm_conv1d_kernel_size=int(mcfg.get("xlstm_conv1d_kernel_size", 4)),
+                xlstm_dropout=float(mcfg.get("xlstm_dropout", mcfg["rnn_dropout"])),
+            ))
+
+        # GRU-only knobs (ONLY keep this block if your GRUDecoder __init__ supports these kwargs)
+        if DecoderCls is GRUDecoder:
+            decoder_kwargs.update(dict(
+                head_type=str(mcfg.get("head_type", "none")),
+                head_num_blocks=int(mcfg.get("head_num_blocks", 0)),
+                head_norm=str(mcfg.get("head_norm", "none")),
+                head_dropout=float(mcfg.get("head_dropout", 0.0)),
+                head_activation=str(mcfg.get("head_activation", "gelu")),
+                input_speckle_p=float(mcfg.get("input_speckle_p", 0.0)),
+                input_speckle_mode=str(mcfg.get("input_speckle_mode", "feature")),
+            ))
+
+        # Make it robust: drop any kwargs not accepted by the selected decoder
+        import inspect
+        allowed = set(inspect.signature(DecoderCls.__init__).parameters.keys())
+        allowed.discard("self")
+        decoder_kwargs = {k: v for k, v in decoder_kwargs.items() if k in allowed}
 
         self.model = DecoderCls(**decoder_kwargs)
+
 
 
         # Call torch.compile to speed up training
