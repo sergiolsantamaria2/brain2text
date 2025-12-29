@@ -99,6 +99,8 @@ dataset:
     smooth_kernel_size: 100
     smooth_data: true
     smooth_kernel_std: 2
+    feature_norm: "none"          # none | batch_zscore | instance_zscore
+    feature_norm_eps: 1e-5
 
   neural_dim: 512
   batch_size: 32

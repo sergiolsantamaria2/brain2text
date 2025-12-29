@@ -21,7 +21,13 @@ import editdistance
 from .evaluate_model_helpers import remove_punctuation
 
 from .dataset import BrainToTextDataset, train_test_split_indicies
-from .data_augmentations import gauss_smooth
+if self.transform_args['smooth_data']:
+             features = gauss_smooth(
+                 inputs = features, 
+                 device = self.device,
+                 smooth_kernel_std = self.transform_args['smooth_kernel_std'],
+                 smooth_kernel_size= self.transform_args['smooth_kernel_size'],
+                 )
 
 from omegaconf import OmegaConf
 
@@ -284,6 +290,22 @@ class BrainToTextDecoder_Trainer:
             patch_size=self.args["model"]["patch_size"],
             patch_stride=self.args["model"]["patch_stride"],
         )
+
+        # Pass GRU-only knobs (post-RNN head + speckled masking) from config
+        # Important: only for GRUDecoder so other decoders don't receive unknown kwargs
+        if DecoderCls is GRUDecoder:
+            decoder_kwargs.update(
+                dict(
+                    head_type=str(mcfg.get("head_type", "none")),
+                    head_num_blocks=int(mcfg.get("head_num_blocks", 0)),
+                    head_norm=str(mcfg.get("head_norm", "none")),
+                    head_dropout=float(mcfg.get("head_dropout", 0.0)),
+                    head_activation=str(mcfg.get("head_activation", "gelu")),
+                    input_speckle_p=float(mcfg.get("input_speckle_p", 0.0)),
+                    input_speckle_mode=str(mcfg.get("input_speckle_mode", "feature")),
+                )
+            )
+        
         if DecoderCls is XLSTMDecoder:
             decoder_kwargs.update(dict(
                 xlstm_num_blocks=int(self.args["model"].get("xlstm_num_blocks", self.args["model"]["n_layers"])),

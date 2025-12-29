@@ -48,3 +48,46 @@ def gauss_smooth(inputs, device, smooth_kernel_std=2, smooth_kernel_size=100,  p
 
     smoothed = F.conv1d(inputs, gaussKernel, padding=pad, groups=C)
     return smoothed.permute(0, 2, 1)  # [B, T, C]
+
+import torch
+
+def masked_batch_zscore(x: torch.Tensor, lengths: torch.Tensor, eps: float = 1e-5) -> torch.Tensor:
+    """
+    x: (B,T,C), lengths: (B,)
+    Normalizes each channel using mean/std computed over valid (non-padded) time steps across the batch.
+    """
+    B, T, C = x.shape
+    t = torch.arange(T, device=x.device).unsqueeze(0)                  # (1,T)
+    mask = (t < lengths.unsqueeze(1)).unsqueeze(-1).to(x.dtype)        # (B,T,1)
+
+    denom = mask.sum(dim=(0, 1)).clamp_min(1.0)                        # (1,)
+    mean = (x * mask).sum(dim=(0, 1)) / denom                          # (C,)
+    var = ((x - mean) * mask).pow(2).sum(dim=(0, 1)) / denom           # (C,)
+    std = (var + eps).sqrt()
+    return (x - mean) / std
+
+
+def masked_instance_zscore(x: torch.Tensor, lengths: torch.Tensor, eps: float = 1e-5) -> torch.Tensor:
+    """
+    Per-sample z-score: normalize each (sample, channel) over valid time steps.
+    """
+    B, T, C = x.shape
+    t = torch.arange(T, device=x.device).unsqueeze(0)
+    mask = (t < lengths.unsqueeze(1)).unsqueeze(-1).to(x.dtype)        # (B,T,1)
+
+    denom = mask.sum(dim=1).clamp_min(1.0)                             # (B,1)
+    mean = (x * mask).sum(dim=1) / denom                               # (B,C)
+    var = ((x - mean.unsqueeze(1)) * mask).pow(2).sum(dim=1) / denom   # (B,C)
+    std = (var + eps).sqrt()
+    return (x - mean.unsqueeze(1)) / std
+
+
+def apply_feature_norm(x: torch.Tensor, lengths: torch.Tensor, norm: str, eps: float = 1e-5) -> torch.Tensor:
+    norm = (norm or "none").lower()
+    if norm == "none":
+        return x
+    if norm == "batch_zscore":
+        return masked_batch_zscore(x, lengths, eps=eps)
+    if norm == "instance_zscore":
+        return masked_instance_zscore(x, lengths, eps=eps)
+    raise ValueError(f"Unknown feature_norm='{norm}'. Use: none, batch_zscore, instance_zscore.")
