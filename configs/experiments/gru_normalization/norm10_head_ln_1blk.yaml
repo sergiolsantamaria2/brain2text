@@ -1,7 +1,7 @@
 output_dir: ${oc.env:SLURM_TMPDIR,/tmp}/brain2text/trained_models/sweep_normalization_10k/norm10_head_ln_1blk
 checkpoint_dir: ${output_dir}/checkpoint
 
-num_training_batches: 10000
+num_training_batches: 120000
 seed: 10
 dataset:
   seed: 10
