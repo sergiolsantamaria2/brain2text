@@ -1,0 +1,12 @@
+# patch_size=14 (fixed), patch_stride=6
+num_training_batches: 20000
+lr_decay_steps: ${num_training_batches}
+lr_decay_steps_day: ${num_training_batches}
+
+model:
+  patch_stride: 6
+
+wandb:
+  group: patch_stride
+  run_name: ps14_st6
+  tags: ["patch_stride", "ps14", "st6"]

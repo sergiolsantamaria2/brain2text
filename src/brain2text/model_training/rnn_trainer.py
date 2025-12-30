@@ -881,19 +881,21 @@ class BrainToTextDecoder_Trainer:
 
             # Log to wandb (per step)
             if self.use_wandb:
-                lrs = self.learning_rate_scheduler.get_last_lr()  # lista, una LR por param group
+                lrs = self.learning_rate_scheduler.get_last_lr()  # one per param group
 
+                # Keep only the useful ones:
+                # - main: usually the "other" weights group (last group)
+                # - day: optional, if you care about the day-specific group (typically index 1)
                 log_dict = {
                     "train/loss": float(loss.detach().item()),
                     "train/grad_norm": float(grad_norm),
-                    "lr/group0": float(lrs[0]),
+                    "lr/main": float(lrs[-1]),
                 }
                 if len(lrs) > 1:
-                    log_dict["lr/group1"] = float(lrs[1])
-                if len(lrs) > 2:
-                    log_dict["lr/group2"] = float(lrs[2])
+                    log_dict["lr/day"] = float(lrs[1])
 
                 wandb.log(log_dict, step=i)
+
             
             # Save training metrics 
             train_step_duration = time.time() - start_time
@@ -948,26 +950,18 @@ class BrainToTextDecoder_Trainer:
                 val_results.append(val_metrics)
 
                 if self.use_wandb:
-                    log_payload = {
-                        "val/PER": float(val_metrics["avg_PER"]),
-                        "val/loss": float(val_metrics["avg_loss"]),
-                    }
-
                     wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
                     wer_key = f"avg_WER_{wer_tag}"
 
-                    # Always log the key so it appears in W&B
-                    log_payload[f"val/WER_{wer_tag}"] = float(val_metrics.get(wer_key, float("nan")))
-                    log_payload["val/WER_num_trials"] = int(val_metrics.get("wer_num_trials", 0))
-                    log_payload["val/WER_avg_true_words"] = float(val_metrics.get("wer_avg_true_words", float("nan")))
-                    log_payload["val/WER_avg_pred_words"] = float(val_metrics.get("wer_avg_pred_words", float("nan")))
-                    log_payload["val/WER_max_pred_words"] = int(val_metrics.get("wer_max_pred_words", 0))
-                    # Also log both 1-gram and 5-gram explicitly (for comparison)
-                    log_payload["val/WER_1gram"] = float(val_metrics.get("avg_WER_1gram", float("nan")))
-                    log_payload["val/WER_5gram"] = float(val_metrics.get("avg_WER_5gram", float("nan")))
-
+                    log_payload = {
+                        "val/PER": float(val_metrics["avg_PER"]),
+                        "val/loss": float(val_metrics["avg_loss"]),
+                        # Single unified metric name across runs (1-gram or 5-gram)
+                        "val/WER": float(val_metrics.get(wer_key, float("nan"))),
+                    }
 
                     wandb.log(log_payload, step=i)
+
 
 
                 # Determine if new best day. Based on if PER is lower, or in the case of a PER tie, if loss is lower

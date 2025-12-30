@@ -1,0 +1,11 @@
+# weight_decay=0
+num_training_batches: 20000
+lr_decay_steps: ${num_training_batches}
+lr_decay_steps_day: ${num_training_batches}
+
+weight_decay: 0.0
+
+wandb:
+  group: weight_decay
+  run_name: wd0
+  tags: ["weight_decay", "wd_0"]

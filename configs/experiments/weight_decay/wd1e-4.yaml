@@ -1,0 +1,11 @@
+# weight_decay=1e-4
+num_training_batches: 20000
+lr_decay_steps: ${num_training_batches}
+lr_decay_steps_day: ${num_training_batches}
+
+weight_decay: 0.0001
+
+wandb:
+  group: weight_decay
+  run_name: wd1e-4
+  tags: ["weight_decay", "wd_1e-4"]
