@@ -1,0 +1,44 @@
+# Best-combo from your latest sweeps (run overnight with 5-gram eval)
+
+num_training_batches: 120000
+
+# --- LR: winner from lr_cosine (lr40) ---
+lr_scheduler_type: cosine
+lr_max: 0.0040
+lr_min: 0.0001333
+lr_decay_steps: ${num_training_batches}
+lr_warmup_steps: 500
+
+lr_max_day: 0.0013333
+lr_min_day: 0.0001333
+lr_decay_steps_day: ${num_training_batches}
+lr_warmup_steps_day: 500
+
+model:
+  # --- winner from rnn_dropout (d10) ---
+  rnn_dropout: 0.10
+
+  # --- winner from input_dropout (id00) ---
+  input_network:
+    input_layer_dropout: 0.0
+
+  # --- keep head OFF (head sweeps looked harmful) ---
+  head_type: "none"
+  head_num_blocks: 0
+  head_norm: "none"
+  head_dropout: 0.0
+
+  # --- winner from speckleFeat_p (p10) ---
+  input_speckle_p: 0.10
+  input_speckle_mode: "feature"
+
+wandb:
+  group: winner_combo_5gram
+  run_name: best_combo_lr40_do010_id00_sp10_120k
+  tags: ["combo", "lr40", "rnn_do_0.10", "in_do_0.00", "speckle_0.10", "120k", "5gram"]
+
+eval:
+  # ensure you're evaluating the 5-gram path
+  wer_tag: "5gram"
+  wer_max_trials: 1024
+  wer_every_val_steps: 1
