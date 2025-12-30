@@ -19,10 +19,10 @@ model:
 
   # --- Explicit "new" model params (to avoid relying on constructor defaults) ---
   # Optional head (kept OFF in baseline)
-  head_type: "none"        # "none" | "resffn"
-  head_num_blocks: 0
-  head_norm: "none"        # "bn" | "layernorm" | "rmsnorm" | "none"
-  head_dropout: 0.0
+  head_type: "resffn"
+  head_num_blocks: 1
+  head_norm: "layernorm"
+  head_dropout: 0.1
   head_activation: "gelu"
 
   # Speckled masking (coordinated dropout) - OPTIMAL setting you reported
