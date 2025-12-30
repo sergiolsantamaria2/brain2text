@@ -8,7 +8,7 @@ seed: 10
 wandb:
   enabled: true
   project: brain2text
-  group: sweep_normalization_10k
+  group: gru_normalization
   run_name: norm21_data_instance_zscore_seed10_10k
   tags: ["norm_sweep", "data", "instance_zscore", "seed10", "10k"]
 

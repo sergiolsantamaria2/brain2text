@@ -1,0 +1,11 @@
+# input_speckle_p=0.20
+num_training_batches: 20000
+
+model:
+  input_speckle_mode: "feature"
+  input_speckle_p: 0.20
+
+wandb:
+  group: speckleFeat_p
+  run_name: p20
+  tags: ["speckle_sweep", "feature", "p20"]

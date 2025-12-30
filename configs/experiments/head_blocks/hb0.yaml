@@ -9,6 +9,6 @@ model:
   head_num_blocks: 0
 
 wandb:
-  group: sweep_head_blocks
+  group: head_blocks
   run_name: hb0
   tags: ["head_sweep", "resffn", "layernorm", "hb0"]

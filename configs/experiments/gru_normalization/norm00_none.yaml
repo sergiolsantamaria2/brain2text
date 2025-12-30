@@ -11,7 +11,7 @@ dataset:
 wandb:
   enabled: true
   project: brain2text
-  group: sweep_normalization_10k
+  group: gru_normalization
   run_name: norm00_none_seed10_10k
   tags: ["norm_sweep", "none", "seed10", "10k"]
 

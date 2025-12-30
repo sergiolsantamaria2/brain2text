@@ -9,7 +9,7 @@ dataset:
 wandb:
   enabled: true
   project: brain2text
-  group: sweep_normalization_10k
+  group: gru_normalization
   run_name: norm10_head_ln_1blk_seed10_10k
   tags: ["norm_sweep", "head", "layernorm", "1blk", "seed10", "10k"]
 

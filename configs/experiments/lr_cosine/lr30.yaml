@@ -13,6 +13,6 @@ lr_decay_steps_day: ${num_training_batches}
 lr_warmup_steps_day: 500
 
 wandb:
-  group: sweep_lr_cosine
-  run_name: lr30_base
+  group: lr_cosine
+  run_name: lr30
   tags: ["lr_sweep", "cosine", "lr_max_0.0030", "baseline"]

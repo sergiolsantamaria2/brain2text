@@ -1,4 +1,4 @@
-# head_num_blocks=1
+# head_num_blocks=2
 num_training_batches: 20000
 
 model:
@@ -6,9 +6,9 @@ model:
   head_norm: "layernorm"
   head_dropout: 0.1
   head_activation: "gelu"
-  head_num_blocks: 1
+  head_num_blocks: 2
 
 wandb:
-  group: sweep_head_blocks
-  run_name: hb1
-  tags: ["head_sweep", "resffn", "layernorm", "hb1"]
+  group: head_blocks
+  run_name: hb2
+  tags: ["head_sweep", "resffn", "layernorm", "hb2"]
