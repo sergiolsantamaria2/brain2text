@@ -476,16 +476,21 @@ class BrainToTextDecoder_Trainer:
 
         if self.args['lr_scheduler_type'] == 'linear':
             self.learning_rate_scheduler = torch.optim.lr_scheduler.LinearLR(
-                optimizer = self.optimizer,
-                start_factor = 1.0,
-                end_factor = self.args['lr_min'] / self.args['lr_max'],
-                total_iters = self.args['lr_decay_steps'],
+                optimizer=self.optimizer,
+                start_factor=1.0,
+                end_factor=self.args['lr_min'] / self.args['lr_max'],
+                total_iters=self.args['lr_decay_steps'],
             )
+
         elif self.args['lr_scheduler_type'] == 'cosine':
             self.learning_rate_scheduler = self.create_cosine_lr_scheduler(self.optimizer)
-        
+
+        elif self.args['lr_scheduler_type'] == 'cosine_stepdrop':
+            self.learning_rate_scheduler = self.create_cosine_lr_scheduler(self.optimizer, use_stepdrop=True)
+
         else:
             raise ValueError(f"Invalid learning rate scheduler type: {self.args['lr_scheduler_type']}")
+
         
         self.ctc_loss = torch.nn.CTCLoss(blank = 0, reduction = 'none', zero_infinity = False)
 
@@ -565,7 +570,8 @@ class BrainToTextDecoder_Trainer:
 
         return optim 
 
-    def create_cosine_lr_scheduler(self, optim):
+    def create_cosine_lr_scheduler(self, optim, use_stepdrop: bool = False):
+
         lr_max = self.args['lr_max']
         lr_min = self.args['lr_min']
         lr_decay_steps = self.args['lr_decay_steps']
@@ -577,27 +583,31 @@ class BrainToTextDecoder_Trainer:
         lr_warmup_steps = self.args['lr_warmup_steps']
         lr_warmup_steps_day = self.args['lr_warmup_steps_day']
 
-        def lr_lambda(current_step, min_lr_ratio, decay_steps, warmup_steps):
-            '''
-            Create lr lambdas for each param group that implement cosine decay
+        # Optional step-drop params (only used if use_stepdrop=True)
+        stepdrop_step = int(self.args.get("lr_stepdrop_step", -1))
+        stepdrop_factor = float(self.args.get("lr_stepdrop_factor", 1.0))
+        if use_stepdrop and (stepdrop_step < 0 or stepdrop_factor <= 0):
+            raise ValueError(f"Invalid stepdrop config: lr_stepdrop_step={stepdrop_step}, lr_stepdrop_factor={stepdrop_factor}")
 
-            Different lr lambda decaying for day params vs rest of the model
-            '''
-            # Warmup phase
+
+        def lr_lambda(current_step, min_lr_ratio, decay_steps, warmup_steps):
+            # Warmup
             if current_step < warmup_steps:
-                return float(current_step + 1) / float(max(1, warmup_steps))
-            
-            # Cosine decay phase
-            if current_step < decay_steps:
-                progress = float(current_step - warmup_steps) / float(
-                    max(1, decay_steps - warmup_steps)
-                )
+                base = float(current_step + 1) / float(max(1, warmup_steps))
+            # Cosine decay
+            elif current_step < decay_steps:
+                progress = float(current_step - warmup_steps) / float(max(1, decay_steps - warmup_steps))
                 cosine_decay = 0.5 * (1 + math.cos(math.pi * progress))
-                # Scale from 1.0 to min_lr_ratio
-                return max(min_lr_ratio, min_lr_ratio + (1 - min_lr_ratio) * cosine_decay)
-            
-            # After cosine decay is complete, maintain min_lr_ratio
-            return min_lr_ratio
+                base = max(min_lr_ratio, min_lr_ratio + (1 - min_lr_ratio) * cosine_decay)
+            else:
+                base = min_lr_ratio
+
+            # Apply stepdrop (multiplicative) if enabled
+            if use_stepdrop and current_step >= stepdrop_step:
+                base = base * stepdrop_factor
+
+            return base
+
 
         if len(optim.param_groups) == 3:
             lr_lambdas = [
