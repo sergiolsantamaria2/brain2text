@@ -1,5 +1,5 @@
 # lr_max=0.0020
-num_training_batches: 30000
+num_training_batches: 20000
 lr_scheduler_type: cosine
 
 lr_max: 0.0020
