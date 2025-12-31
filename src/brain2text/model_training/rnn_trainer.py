@@ -1226,114 +1226,98 @@ class BrainToTextDecoder_Trainer:
         metrics["avg_loss"] = float(np.mean(metrics["losses"])) if len(metrics["losses"]) > 0 else float("nan")
 
         # --- finalize WER (local LM) ---
-        pred_lens = []
-        true_lens = []
-        
         wer_tag = str(self.eval_cfg.get("wer_tag", "1gram"))
-        wer_key_1 = "avg_WER_1gram"
-        wer_key_5 = "avg_WER_5gram"
+        primary_key = f"avg_WER_{wer_tag}"
 
-        if do_wer_now and len(wer_collected) > 0:
-            total_ed_1 = 0
-            total_ed_5 = 0
+        # Defaults
+        metrics[primary_key] = float("nan")
+        metrics["avg_WER_1gram"] = float("nan")
+        metrics["avg_WER_5gram"] = float("nan")
+        metrics["wer_num_trials"] = 0
+        metrics["wer_avg_true_words"] = float("nan")
+        metrics["wer_avg_pred_words"] = float("nan")
+        metrics["wer_max_pred_words"] = 0
+
+        if do_wer_now and len(wer_collected) > 0 and (self._lm is not None):
+            # Decide which decoder is PRIMARY:
+            # - if wer_tag==5gram and _lm_5gram exists => primary is 5gram decoder
+            # - else => primary is _lm (whatever lm_dir points to)
+            use_5_as_primary = (wer_tag == "5gram") and (self._lm_5gram is not None)
+            primary_dec = self._lm_5gram if use_5_as_primary else self._lm
+            secondary_dec = self._lm if use_5_as_primary else self._lm_5gram
+            secondary_key = "avg_WER_1gram" if use_5_as_primary else "avg_WER_5gram"
+
+            total_ed_primary = 0
+            total_ed_secondary = 0
             total_words = 0
 
-            debug_examples = int(self.eval_cfg.get("wer_debug_examples", 2))
-
-            pred_lens_1 = []
-            pred_lens_5 = []
             true_lens = []
+            pred_lens_primary = []
+
+            debug_examples = int(self.eval_cfg.get("wer_debug_examples", 2))
 
             for logits_tc, true_sentence in wer_collected:
                 lp = torch.from_numpy(logits_tc).float()
                 log_probs_tc = torch.log_softmax(lp, dim=-1).cpu().numpy()
 
-                # 1-gram (or primary LM in eval.lm_dir)
-                pred_sentence_1 = self._lm.decode_from_logits(
-                    log_probs_tc,
-                    input_is_log_probs=True,
-                )
+                pred_primary = primary_dec.decode_from_logits(log_probs_tc, input_is_log_probs=True)
 
-                # 5-gram (optional)
-                pred_sentence_5 = None
-                if self._lm_5gram is not None:
-                    pred_sentence_5 = self._lm_5gram.decode_from_logits(
-                        log_probs_tc,
-                        input_is_log_probs=True,
-                    )
+                pred_secondary = None
+                if secondary_dec is not None:
+                    pred_secondary = secondary_dec.decode_from_logits(log_probs_tc, input_is_log_probs=True)
 
                 true_clean = _normalize_for_wer(true_sentence)
-                pred_clean_1 = _normalize_for_wer(pred_sentence_1)
-                pred_clean_5 = _normalize_for_wer(pred_sentence_5) if pred_sentence_5 is not None else ""
+                pred_clean_primary = _normalize_for_wer(pred_primary)
+                pred_clean_secondary = _normalize_for_wer(pred_secondary) if pred_secondary is not None else ""
 
                 true_words = true_clean.split()
-                pred_words_1 = pred_clean_1.split()
-                pred_words_5 = pred_clean_5.split() if pred_sentence_5 is not None else None
+                pred_words_primary = pred_clean_primary.split()
+                pred_words_secondary = pred_clean_secondary.split() if pred_secondary is not None else None
 
                 true_lens.append(len(true_words))
-                pred_lens_1.append(len(pred_words_1))
-                if pred_words_5 is not None:
-                    pred_lens_5.append(len(pred_words_5))
+                pred_lens_primary.append(len(pred_words_primary))
 
                 if debug_examples > 0:
-                    if pred_sentence_5 is not None:
+                    if pred_secondary is not None:
                         self.logger.info(
                             f"WER debug example\n"
                             f"  GT : {true_clean}\n"
-                            f"  1G : {pred_clean_1}\n"
-                            f"  5G : {pred_clean_5}"
+                            f"  PR : {pred_clean_primary}\n"
+                            f"  SC : {pred_clean_secondary}"
                         )
                     else:
                         self.logger.info(
                             f"WER debug example\n"
                             f"  GT : {true_clean}\n"
-                            f"  PRD: {pred_clean_1}"
+                            f"  PR : {pred_clean_primary}"
                         )
                     debug_examples -= 1
 
                 if len(true_words) == 0:
                     continue
 
-                total_ed_1 += editdistance.eval(true_words, pred_words_1)
-                if pred_words_5 is not None:
-                    total_ed_5 += editdistance.eval(true_words, pred_words_5)
-
+                total_ed_primary += editdistance.eval(true_words, pred_words_primary)
+                if pred_words_secondary is not None:
+                    total_ed_secondary += editdistance.eval(true_words, pred_words_secondary)
                 total_words += len(true_words)
 
-            metrics[wer_key_1] = (100.0 * float(total_ed_1) / float(total_words)) if total_words > 0 else float("nan")
-            metrics[wer_key_5] = (100.0 * float(total_ed_5) / float(total_words)) if (total_words > 0 and self._lm_5gram is not None) else float("nan")
+            if total_words > 0:
+                primary_wer = 100.0 * float(total_ed_primary) / float(total_words)
+                metrics[primary_key] = primary_wer
+
+                # Also fill convenience slots when they match reality
+                if wer_tag == "1gram":
+                    metrics["avg_WER_1gram"] = primary_wer
+                if wer_tag == "5gram":
+                    metrics["avg_WER_5gram"] = primary_wer
+
+                if secondary_dec is not None:
+                    metrics[secondary_key] = 100.0 * float(total_ed_secondary) / float(total_words)
+
             metrics["wer_num_trials"] = int(len(wer_collected))
-
-            # keep your existing lens stats (default to 1-gram for backward compatibility)
             metrics["wer_avg_true_words"] = float(np.mean(true_lens)) if true_lens else float("nan")
-            metrics["wer_avg_pred_words"] = float(np.mean(pred_lens_1)) if pred_lens_1 else float("nan")
-            metrics["wer_max_pred_words"] = int(np.max(pred_lens_1)) if pred_lens_1 else 0
-
-            # optional extra lens stats for 5-gram
-            metrics["wer_avg_pred_words_5gram"] = float(np.mean(pred_lens_5)) if pred_lens_5 else float("nan")
-            metrics["wer_max_pred_words_5gram"] = int(np.max(pred_lens_5)) if pred_lens_5 else 0
-
-        else:
-            metrics[wer_key_1] = float("nan")
-            metrics[wer_key_5] = float("nan")
-            metrics["wer_num_trials"] = 0
-
-            metrics["wer_avg_true_words"] = float("nan")
-            metrics["wer_avg_pred_words"] = float("nan")
-            metrics["wer_max_pred_words"] = 0
-            metrics["wer_avg_pred_words_5gram"] = float("nan")
-            metrics["wer_max_pred_words_5gram"] = 0
-
-        # Maintain existing "selected" key logic for downstream code:
-        # if eval.wer_tag is "1gram" or "5gram", downstream expects avg_WER_{wer_tag}.
-        wer_key = f"avg_WER_{wer_tag}"
-        if wer_key not in metrics:
-            metrics[wer_key] = metrics.get(wer_key_1, float("nan"))
-
-
-        metrics["wer_avg_true_words"] = float(np.mean(true_lens)) if true_lens else float("nan")
-        metrics["wer_avg_pred_words"] = float(np.mean(pred_lens)) if pred_lens else float("nan")
-        metrics["wer_max_pred_words"] = int(np.max(pred_lens)) if pred_lens else 0
+            metrics["wer_avg_pred_words"] = float(np.mean(pred_lens_primary)) if pred_lens_primary else float("nan")
+            metrics["wer_max_pred_words"] = int(np.max(pred_lens_primary)) if pred_lens_primary else 0
 
 
 
