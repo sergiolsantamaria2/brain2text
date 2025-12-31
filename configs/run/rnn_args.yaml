@@ -60,11 +60,11 @@ early_stopping_val_steps: 20
 
 # --- OPTIMAL LR regime from sweeps ---
 num_training_batches: 100000
-lr_scheduler_type: cosine_stepdrop
+lr_scheduler_type: cosine
 lr_stepdrop_step: 18000
 lr_stepdrop_factor: 0.1
-lr_max: 0.004
-lr_min: 0.0001333
+lr_max: 0.0035
+lr_min: 0.00001
 lr_decay_steps: ${num_training_batches}
 lr_warmup_steps: 500
 
