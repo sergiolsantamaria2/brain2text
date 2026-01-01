@@ -1,0 +1,6 @@
+num_training_batches: 20000
+
+wandb:
+  group: speckleFeat_p
+  run_name: base
+  tags: ["speckle_sweep", "base"]
