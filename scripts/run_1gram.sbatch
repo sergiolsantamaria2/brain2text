@@ -22,28 +22,47 @@ fi
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text
-# ---- Runtime linking for lm_decoder (libtorch + OpenFST) ----
+# ---- Runtime linking for lm_decoder (Torch + NEJM OpenFST v8 runtime) ----
+# Ensure we DO NOT have a wrong conda-level libfst.so.8 shim (ABI mismatch).
+rm -f "${CONDA_PREFIX}/lib/libfst.so.8" 2>/dev/null || true
+
 TORCH_LIB=$(python - <<'PY'
 import torch, os
 print(os.path.join(os.path.dirname(torch.__file__), "lib"))
 PY
 )
 
-# lm_decoder was built against libfst.so.8, but conda-forge openfst provides libfst.so.26.*
-# Provide a compatibility symlink (best-effort).
-if [[ ! -e "${CONDA_PREFIX}/lib/libfst.so.8" && -e "${CONDA_PREFIX}/lib/libfst.so.26.0.0" ]]; then
-  ln -sf "${CONDA_PREFIX}/lib/libfst.so.26.0.0" "${CONDA_PREFIX}/lib/libfst.so.8"
+LM_RT="/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime"
+
+# Find OpenFST v8 runtime library
+FST_SO=$(find "$LM_RT" -type f -name "libfst.so.8.0.0" 2>/dev/null | head -n 1)
+
+if [[ -z "$FST_SO" ]]; then
+  echo "ERROR: libfst.so.8.0.0 not found under $LM_RT"
+  echo "       Make sure the NEJM language model runtime has been built/downloaded."
+  exit 1
 fi
 
-export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${TORCH_LIB}:${LD_LIBRARY_PATH:-}"
+FST_DIR=$(dirname "$FST_SO")
+
+# Create the exact SONAME expected by lm_decoder (libfst.so.8) in job-local temp dir
+TMP_LIB="${SLURM_TMPDIR:-/tmp}/lm_runtime_libs"
+mkdir -p "$TMP_LIB"
+ln -sf "$FST_SO" "$TMP_LIB/libfst.so.8"
+
+# Prepend: job-local shim dir, then the NEJM dir, then conda + torch
+export LD_LIBRARY_PATH="${TMP_LIB}:${FST_DIR}:${CONDA_PREFIX}/lib:${TORCH_LIB}:${LD_LIBRARY_PATH:-}"
 
 echo "CONDA_PREFIX=$CONDA_PREFIX"
 echo "TORCH_LIB=$TORCH_LIB"
+echo "FST_SO=$FST_SO"
 echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
-ls -lah "${CONDA_PREFIX}/lib/libfst.so.8" || true
+ls -lah "$TMP_LIB/libfst.so.8" || true
 
+# Fail early if decoder cannot import
 python -c "import lm_decoder; print('lm_decoder import: OK')"
-# -----------------------------------------------------------
+# ------------------------------------------------------------------------
+
 
 
 cd /home/e12511253/Brain2Text/brain2text
