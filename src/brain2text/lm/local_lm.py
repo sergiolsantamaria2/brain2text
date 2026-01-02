@@ -148,9 +148,12 @@ class LocalNgramDecoder:
             self._lm_decoder = lm_decoder
         except Exception as e:
             raise RuntimeError(
-                "lm_decoder is not available in this environment. "
-                "This is expected on Mac. Run on the cluster where lm_decoder is installed."
+                "lm_decoder import failed in this environment. "
+                "If you're on the cluster, it usually means the package is not installed in the active conda env "
+                "or a required shared library/toolchain is missing. "
+                f"Underlying error: {type(e).__name__}: {e}"
             ) from e
+
 
         self._decoder = self._build_decoder()
 

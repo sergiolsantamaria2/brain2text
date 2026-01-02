@@ -22,6 +22,11 @@ fi
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text
+echo "Python exe: $(which python)"
+python -V
+python -c "import sys; print('sys.executable:', sys.executable)"
+python -c "import lm_decoder; print('lm_decoder OK:', lm_decoder.__file__)"
+
 
 cd /home/e12511253/Brain2Text/brain2text
 
