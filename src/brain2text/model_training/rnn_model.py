@@ -431,29 +431,34 @@ class ResLSTMDecoder(nn.Module):
         nn.init.xavier_uniform_(self.out.weight)
 
     def forward(self, features: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
+        # Usar las variables que realmente entran a la función
+        x = features
+
         # Vectorized day indexing (no .tolist() sync)
-        day_ids = day_idx.view(-1).long()                       # (B,)
-        W = self.day_weights.index_select(0, day_ids)           # (B,D,D)
+        day_ids = day_indicies.view(-1).long()                 # (B,)
+        W = self.day_weights.index_select(0, day_ids)          # (B,D,D)
         b = self.day_biases.index_select(0, day_ids).unsqueeze(1)  # (B,1,D)
 
+        # Day-specific affine
         x = torch.einsum("btd,bdk->btk", x, W) + b
         x = self.day_layer_activation(x)
-        x = self.day_layer_dropout(x)  # si input_dropout>0
+        x = self.day_layer_dropout(x)  # dropout(p=0) => identity
 
-
-        # patching
+        # Patching
         if self.patch_size > 0:
             ps = self.patch_size
             st = self.patch_stride
-            x = x.unfold(dimension=1, size=ps, step=st)               # (B, T', C, ps)
-            x = x.permute(0, 1, 3, 2).contiguous()                    # (B, T', ps, C)
-            x = x.view(x.size(0), x.size(1), -1)                      # (B, T', ps*C)
+            x = x.unfold(dimension=1, size=ps, step=st)        # (B, T', C, ps)
+            x = x.permute(0, 1, 3, 2).contiguous()             # (B, T', ps, C)
+            x = x.view(x.size(0), x.size(1), -1)               # (B, T', ps*C)
 
-        x = self.in_proj(x)                                           # (B, T', n_units)
-        x = self.reslstm(x)                                           # (B, T', n_units)
+        # Project + ResLSTM blocks + head
+        x = self.in_proj(x)                                    # (B, T', n_units)
+        x = self.reslstm(x)                                    # (B, T', n_units)
         x = self.dropout(x)
-        logits = self.out(x)                                          # (B, T', n_classes)
+        logits = self.out(x)                                   # (B, T', n_classes)
         return logits
+
 
 
 from brain2text.xlstm.xlstm_block_stack import xLSTMBlockStack, xLSTMBlockStackConfig
@@ -480,13 +485,22 @@ class XLSTMDecoder(nn.Module):
         xlstm_num_heads: int = 4,
         xlstm_conv1d_kernel_size: int = 4,
         xlstm_dropout: float = None,
+        # --- NEW: post-backbone head (match GRU feature set) ---
+        head_type: str = "none",          # "none" | "resffn"
+        head_num_blocks: int = 0,
+        head_norm: str = "none",          # "bn" | "layernorm" | "rmsnorm" | "none"
+        head_dropout: float = 0.0,
+        head_activation: str = "gelu",
+        # --- NEW: speckled masking (match GRU feature set) ---
+        input_speckle_p: float = 0.0,
+        input_speckle_mode: str = "feature",
     ):
         super().__init__()
 
-        self.neural_dim = neural_dim
-        self.n_units = n_units
-        self.n_days = n_days
-        self.n_classes = n_classes
+        self.neural_dim = int(neural_dim)
+        self.n_units = int(n_units)
+        self.n_days = int(n_days)
+        self.n_classes = int(n_classes)
         self.patch_size = int(patch_size)
         self.patch_stride = int(patch_stride)
 
@@ -495,34 +509,43 @@ class XLSTMDecoder(nn.Module):
         if xlstm_dropout is None:
             xlstm_dropout = float(rnn_dropout)
 
-        if n_units % xlstm_num_heads != 0:
-            raise ValueError(f"xlstm_num_heads must divide n_units. Got n_units={n_units}, heads={xlstm_num_heads}")
+        self.xlstm_num_blocks = int(xlstm_num_blocks)
+        self.xlstm_num_heads = int(xlstm_num_heads)
+        self.xlstm_conv1d_kernel_size = int(xlstm_conv1d_kernel_size)
+        self.xlstm_dropout = float(xlstm_dropout)
 
-        # Day-specific input layers (mismo patrón que tus modelos)
+        # Head + speckle knobs
+        self.head_type = str(head_type)
+        self.head_num_blocks = int(head_num_blocks)
+        self.head_norm = str(head_norm)
+        self.head_dropout = float(head_dropout)
+        self.head_activation = str(head_activation)
+
+        self.input_speckle_p = float(input_speckle_p)
+        self.input_speckle_mode = str(input_speckle_mode)
+
+        if self.n_units % self.xlstm_num_heads != 0:
+            raise ValueError(
+                f"xlstm_num_heads must divide n_units. Got n_units={self.n_units}, heads={self.xlstm_num_heads}"
+            )
+
+        # Day-specific affine (same pattern as GRU)
         self.day_layer_activation = nn.Softsign()
-        self.day_weights = nn.Parameter(
-            torch.eye(neural_dim).unsqueeze(0).repeat(n_days, 1, 1)
-        )  # (n_days, D, D)
-
-        self.day_biases = nn.Parameter(
-            torch.zeros(n_days, neural_dim)
-        )  # (n_days, D)
-
+        self.day_weights = nn.Parameter(torch.eye(self.neural_dim).unsqueeze(0).repeat(self.n_days, 1, 1))
+        self.day_biases = nn.Parameter(torch.zeros(self.n_days, self.neural_dim))
         self.day_layer_dropout = nn.Dropout(p=float(input_dropout))
 
+        # Patching projection: (B,T,C) -> (B,T', patch_size*C) then -> n_units
+        in_dim = (self.patch_size * self.neural_dim) if self.patch_size > 0 else self.neural_dim
+        self.in_proj = nn.Linear(in_dim, self.n_units, bias=True)
+        nn.init.xavier_uniform_(self.in_proj.weight)
 
-        # Patching: (B,T,C) -> (B,T', patch_size*C)
-        if self.patch_size > 0:
-            self.in_proj = nn.Linear(self.patch_size * neural_dim, n_units, bias=True)
-        else:
-            self.in_proj = nn.Linear(neural_dim, n_units, bias=True)
-
-        # sLSTM-only stack (evita mLSTM y “context_length” dinámico para empezar)
+        # sLSTM-only stack
         slstm_layer_cfg = sLSTMLayerConfig(
-            embedding_dim=n_units,
-            num_heads=int(xlstm_num_heads),
-            conv1d_kernel_size=int(xlstm_conv1d_kernel_size),
-            dropout=float(xlstm_dropout),
+            embedding_dim=self.n_units,
+            num_heads=self.xlstm_num_heads,
+            conv1d_kernel_size=self.xlstm_conv1d_kernel_size,
+            dropout=self.xlstm_dropout,
         )
         slstm_block_cfg = sLSTMBlockConfig(slstm=slstm_layer_cfg, feedforward=None)
 
@@ -530,55 +553,72 @@ class XLSTMDecoder(nn.Module):
             mlstm_block=None,
             slstm_block=slstm_block_cfg,
             context_length=-1,
-            num_blocks=int(xlstm_num_blocks),
-            embedding_dim=int(n_units),
+            num_blocks=self.xlstm_num_blocks,
+            embedding_dim=self.n_units,
             add_post_blocks_norm=True,
             bias=False,
-            dropout=float(xlstm_dropout),
+            dropout=self.xlstm_dropout,
             slstm_at="all",
         )
         self.xlstm = xLSTMBlockStack(stack_cfg)
 
+        # Optional post-xLSTM head (same design as your GRU head)
+        ht = self.head_type.lower()
+        if ht == "none" or self.head_num_blocks <= 0:
+            self.head = nn.Identity()
+        elif ht in ("resffn", "ffn"):
+            self.head = nn.Sequential(*[
+                ResidualFFNBlock(
+                    d=self.n_units,
+                    norm_type=self.head_norm,
+                    dropout=self.head_dropout,
+                    activation=self.head_activation,
+                )
+                for _ in range(self.head_num_blocks)
+            ])
+        else:
+            raise ValueError(f"Unknown head_type={self.head_type}. Use: none, resffn.")
+
         self.dropout = nn.Dropout(p=float(rnn_dropout))
-        self.out = nn.Linear(n_units, n_classes, bias=True)
+        self.out = nn.Linear(self.n_units, self.n_classes, bias=True)
+        nn.init.xavier_uniform_(self.out.weight)
 
     def _apply_day_layer(self, x: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
-        # day_indicies: (B,) o (B,1) -> lo aplanamos
         day_ids = day_indicies.view(-1).long()  # (B,)
-
-        W = self.day_weights.index_select(0, day_ids)                 # (B, D, D)
-        b = self.day_biases.index_select(0, day_ids).unsqueeze(1)     # (B, 1, D)
+        W = self.day_weights.index_select(0, day_ids)              # (B, D, D)
+        b = self.day_biases.index_select(0, day_ids).unsqueeze(1)  # (B, 1, D)
 
         x = torch.einsum("btd,bdk->btk", x, W) + b
         x = self.day_layer_activation(x)
-        x = self.day_layer_dropout(x)
+        x = self.day_layer_dropout(x)  # dropout(p=0) is identity
         return x
 
-
-
     def _patchify(self, x: torch.Tensor) -> torch.Tensor:
-        # x: (B,T,C)
         if self.patch_size <= 0:
             return x
-
         B, T, C = x.shape
         ps = self.patch_size
         st = self.patch_stride
         if st <= 0:
-            raise ValueError(f"Invalid patch_stride={st}")
+            raise ValueError(f"Invalid patch_stride={st} with patch_size={ps}")
 
-        # unfold temporal
-        x = x.unfold(dimension=1, size=ps, step=st)          # (B, T', C, ps)
-        x = x.permute(0, 1, 3, 2).contiguous()               # (B, T', ps, C)
-        x = x.view(B, x.shape[1], ps * C)                    # (B, T', ps*C)
+        x = x.unfold(dimension=1, size=ps, step=st)     # (B, T', C, ps)
+        x = x.permute(0, 1, 3, 2).contiguous()          # (B, T', ps, C)
+        x = x.view(B, x.shape[1], ps * C)               # (B, T', ps*C)
         return x
 
     def forward(self, features: torch.Tensor, day_indicies: torch.Tensor) -> torch.Tensor:
         # features: (B,T,C)
         x = self._apply_day_layer(features, day_indicies)
         x = self._patchify(x)
-        x = self.in_proj(x)
-        x = self.xlstm(x)
+
+        # Speckled masking (training only) - applied on the (possibly patched) input sequence
+        if self.training and self.input_speckle_p > 0:
+            x = speckle_mask(x, self.input_speckle_p, self.input_speckle_mode)
+
+        x = self.in_proj(x)      # (B, T', n_units)
+        x = self.xlstm(x)        # (B, T', n_units)
+        x = self.head(x)         # optional residual FFN blocks
         x = self.dropout(x)
-        logits = self.out(x)
+        logits = self.out(x)     # (B, T', n_classes)
         return logits

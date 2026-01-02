@@ -338,7 +338,17 @@ class BrainToTextDecoder_Trainer:
                 xlstm_num_heads=int(mcfg.get("xlstm_num_heads", 4)),
                 xlstm_conv1d_kernel_size=int(mcfg.get("xlstm_conv1d_kernel_size", 4)),
                 xlstm_dropout=float(mcfg.get("xlstm_dropout", mcfg["rnn_dropout"])),
+
+                # Match GRU feature set (head + speckle)
+                head_type=str(mcfg.get("head_type", "none")),
+                head_num_blocks=int(mcfg.get("head_num_blocks", 0)),
+                head_norm=str(mcfg.get("head_norm", "none")),
+                head_dropout=float(mcfg.get("head_dropout", 0.0)),
+                head_activation=str(mcfg.get("head_activation", "gelu")),
+                input_speckle_p=float(mcfg.get("input_speckle_p", 0.0)),
+                input_speckle_mode=str(mcfg.get("input_speckle_mode", "feature")),
             ))
+
 
         # GRU-only knobs (ONLY keep this block if your GRUDecoder __init__ supports these kwargs)
         if DecoderCls is GRUDecoder:
@@ -365,9 +375,14 @@ class BrainToTextDecoder_Trainer:
         # Call torch.compile to speed up training
         self.logger.info("Using torch.compile (if available)")
         if hasattr(torch, "compile"):
-            self.model = torch.compile(self.model)
+            try:
+                self.model = torch.compile(self.model)
+                self.logger.info("torch.compile enabled.")
+            except Exception as e:
+                self.logger.warning(f"torch.compile failed; falling back to eager. Reason: {e}")
         else:
             self.logger.info("torch.compile not available (torch<2.0). Skipping.")
+
 
         self.logger.info(f"Initialized RNN decoding model")
 
