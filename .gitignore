@@ -17,6 +17,3 @@ __pycache__/
 *.pyc
 .venv/
 .conda/
-
-
-slurm/
