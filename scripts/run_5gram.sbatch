@@ -22,11 +22,28 @@ fi
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text
-echo "Python exe: $(which python)"
-python -V
-python -c "import sys; print('sys.executable:', sys.executable)"
-python -c "import lm_decoder; print('lm_decoder OK:', lm_decoder.__file__)"
+# ---- Runtime linking for lm_decoder (libtorch + OpenFST) ----
+TORCH_LIB=$(python - <<'PY'
+import torch, os
+print(os.path.join(os.path.dirname(torch.__file__), "lib"))
+PY
+)
 
+# lm_decoder was built against libfst.so.8, but conda-forge openfst provides libfst.so.26.*
+# Provide a compatibility symlink (best-effort).
+if [[ ! -e "${CONDA_PREFIX}/lib/libfst.so.8" && -e "${CONDA_PREFIX}/lib/libfst.so.26.0.0" ]]; then
+  ln -sf "${CONDA_PREFIX}/lib/libfst.so.26.0.0" "${CONDA_PREFIX}/lib/libfst.so.8"
+fi
+
+export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${TORCH_LIB}:${LD_LIBRARY_PATH:-}"
+
+echo "CONDA_PREFIX=$CONDA_PREFIX"
+echo "TORCH_LIB=$TORCH_LIB"
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+ls -lah "${CONDA_PREFIX}/lib/libfst.so.8" || true
+
+python -c "import lm_decoder; print('lm_decoder import: OK')"
+# -----------------------------------------------------------
 
 cd /home/e12511253/Brain2Text/brain2text
 
