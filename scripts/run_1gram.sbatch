@@ -22,6 +22,13 @@ fi
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text
+
+# ---- Force CUDA toolkit that matches torch (cu117 => CUDA 11.7) ----
+export CUDA_HOME=/usr/local/cuda-11.7
+export PATH="${CUDA_HOME}/bin:${PATH}"
+export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${LD_LIBRARY_PATH:-}"
+# --------------------------------------------------------------------
+
 # ---- Runtime linking for lm_decoder (Torch + NEJM OpenFST v8 runtime) ----
 # Ensure we DO NOT have a wrong conda-level libfst.so.8 shim (ABI mismatch).
 rm -f "${CONDA_PREFIX}/lib/libfst.so.8" 2>/dev/null || true
