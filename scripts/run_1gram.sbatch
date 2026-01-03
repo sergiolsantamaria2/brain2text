@@ -23,6 +23,13 @@ fi
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text
 
+python - <<'PY'
+import torch, subprocess
+print("torch:", torch.__version__)
+print("torch cuda:", torch.version.cuda)
+subprocess.run(["nvcc","--version"])
+PY
+
 # ---- Force CUDA toolkit that matches torch (cu117 => CUDA 11.7) ----
 export CUDA_HOME=/usr/local/cuda-11.7
 export PATH="${CUDA_HOME}/bin:${PATH}"
