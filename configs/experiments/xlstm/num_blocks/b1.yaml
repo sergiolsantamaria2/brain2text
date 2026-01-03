@@ -1,5 +1,6 @@
 # xLSTM sweep: number of blocks
 num_training_batches: 20000
+use_amp: false
 
 lr_scheduler_type: cosine
 lr_decay_steps: ${num_training_batches}
