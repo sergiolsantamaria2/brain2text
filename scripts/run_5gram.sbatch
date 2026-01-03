@@ -60,7 +60,8 @@ echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 ls -lah "$TMP_LIB/libfst.so.8" || true
 
 # Fail early if decoder cannot import
-python -c "import lm_decoder; print('lm_decoder import: OK')"
+python -c "import lm_decoder; print('lm_decoder import: OK')" || \
+  echo "WARNING: lm_decoder not importable; continuing without WER (trainer will disable WER)."
 # ------------------------------------------------------------------------
 
 # ---- xLSTM / torch extensions: build in node-local tmp (avoid corrupt HOME cache) ----

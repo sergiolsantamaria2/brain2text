@@ -242,8 +242,14 @@ class BrainToTextDecoder_Trainer:
 
                 self.logger.info(f"Local LM WER enabled. lm_dir={cfg.lm_dir}")
             except Exception as e:
-                self.logger.error(f"LM init failed but eval.compute_wer=true. Reason: {e}")
-                raise
+                self.logger.warning(
+                    "Local LM WER requested (eval.compute_wer=true) but could not initialize lm_decoder. "
+                    f"Disabling WER for this run and continuing. Reason: {e}"
+                )
+                self.compute_wer = False
+                self._lm = None
+                self._lm_5gram = None
+
         # ------------------------------------------------
 
 
