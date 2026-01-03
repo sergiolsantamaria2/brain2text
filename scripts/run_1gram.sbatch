@@ -9,7 +9,7 @@
 #SBATCH --no-requeue
 #SBATCH --exclude=a-l40s-o-2
 
-set -euo pipefail
+set -eo pipefail
 
 if [[ $# -lt 1 ]]; then
   echo "ERROR: Missing experiment folder argument(s)."
