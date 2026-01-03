@@ -127,6 +127,34 @@ echo "TORCH_CUDA_ARCH_LIST=$TORCH_CUDA_ARCH_LIST"
 echo "WANDB_DIR=$WANDB_DIR"
 # -------------------------------------------------------------------------------
 
+# ---- Fix __cudaLaunchKernel: LD_PRELOAD libcudart matching torch CUDA ----
+CUDART_SO="$(python - <<'PY'
+import os, glob, torch
+ver = torch.version.cuda or ""
+cp = os.environ.get("CONDA_PREFIX","")
+cands = []
+if cp and ver:
+    cands += glob.glob(f"{cp}/pkgs/**/libcudart.so.{ver}*", recursive=True)
+    cands += glob.glob(f"{cp}/**/libcudart.so.{ver}*", recursive=True)
+cands = [c for c in cands if ".a" not in c]
+print(cands[0] if cands else "")
+PY
+)"
+
+if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
+  echo "ERROR: Could not locate libcudart matching torch CUDA (${TORCH_CUDA})."
+  exit 1
+fi
+
+export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
+export LD_LIBRARY_PATH="$(dirname "${CUDART_SO}"):${LD_LIBRARY_PATH:-}"
+export TORCH_USE_RTLD_GLOBAL=1
+
+echo "CUDART_SO=${CUDART_SO}"
+echo "LD_PRELOAD=${LD_PRELOAD}"
+echo "TORCH_USE_RTLD_GLOBAL=${TORCH_USE_RTLD_GLOBAL}"
+# -------------------------------------------------------------------------------
+
 # ---- Repo + data ----
 cd /home/e12511253/Brain2Text/brain2text
 export B2T_DATA_DIR="${PWD}/data/hdf5_data_final"
@@ -141,34 +169,6 @@ rm -rf trained_models
 ln -s "${JOB_TMP}/trained_models" trained_models
 echo "trained_models -> $(readlink -f trained_models)"
 # ---------------------------------------------
-
-# ---- Preload libcudart with RTLD_GLOBAL (mitigates __cudaLaunchKernel issues) ----
-python - <<'PY'
-import os, ctypes, glob
-
-candidates = []
-cuda_home = os.environ.get("CUDA_HOME", "")
-if cuda_home:
-    candidates += glob.glob(os.path.join(cuda_home, "lib64", "libcudart.so*"))
-
-conda_prefix = os.environ.get("CONDA_PREFIX", "")
-if conda_prefix:
-    candidates += glob.glob(os.path.join(conda_prefix, "**", "libcudart.so*"), recursive=True)
-
-lib = None
-for c in candidates:
-    if c.endswith(".a"):
-        continue
-    lib = c
-    break
-
-if lib:
-    ctypes.CDLL(lib, mode=ctypes.RTLD_GLOBAL)
-    print("Preloaded libcudart:", lib)
-else:
-    print("WARNING: could not find libcudart to preload")
-PY
-# -------------------------------------------------------------------------------
 
 BASE="configs/rnn_args.yaml"
 OVR1="configs/overrides/wer_1gram_only.yaml"
