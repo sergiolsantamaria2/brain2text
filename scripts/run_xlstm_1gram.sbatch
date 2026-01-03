@@ -142,16 +142,15 @@ export PYTHONUNBUFFERED=1
 
 mkdir -p logs
 
-# ---- Make lm_decoder importable (compiled .so is in NEJM runtime build dir) ----
-LM_SO=$(find references/nejm-brain-to-text/language_model/runtime/server/x86/build \
-  -name "lm_decoder.cpython-*.so" 2>/dev/null | head -n 1 || true)
-
-if [[ -z "${LM_SO}" || ! -f "${LM_SO}" ]]; then
-  echo "ERROR: lm_decoder .so not found under references/nejm-brain-to-text/language_model/runtime/server/x86/build"
+# ---- Make lm_decoder importable (built .so) ----
+LM_SO=$(find references/nejm-brain-to-text/language_model/runtime/server/x86 -name "lm_decoder.cpython-*.so" | head -n 1)
+echo "lm_decoder .so: ${LM_SO:-<not found>}"
+if [[ -z "${LM_SO}" ]]; then
+  echo "ERROR: lm_decoder .so not found. Did you build/install it in brain2text_cu126?"
   exit 1
 fi
+export PYTHONPATH="$(dirname "$LM_SO"):${PYTHONPATH:-}"
 
-export PYTHONPATH="$(dirname "${LM_SO}"):${PYTHONPATH:-}"
 echo "lm_decoder .so: ${LM_SO}"
 python -c "import lm_decoder; print('lm_decoder import: OK ->', lm_decoder.__file__)"
 # ---------------------------------------------------------------------------
