@@ -20,7 +20,7 @@ fi
 
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
-conda activate brain2text
+conda activate brain2text_cu126
 set -u
 
 
@@ -44,15 +44,13 @@ fi
 TORCH_CUDA_MAJOR="${TORCH_CUDA%%.*}"
 
 CUDA_HOME_CANDIDATE=""
-if [[ -d "/usr/local/cuda-${TORCH_CUDA}" ]]; then
-  CUDA_HOME_CANDIDATE="/usr/local/cuda-${TORCH_CUDA}"
+if [[ -d "/usr/local/cuda" ]]; then
+  export CUDA_HOME="/usr/local/cuda"
 else
-  # Prefer any /usr/local/cuda-<major>.* (e.g., cuda-11.8) when torch expects 11.x
-  BEST="$(ls -d /usr/local/cuda-${TORCH_CUDA_MAJOR}.* 2>/dev/null | sort -V | tail -n 1 || true)"
-  if [[ -n "${BEST}" ]]; then
-    CUDA_HOME_CANDIDATE="${BEST}"
-  fi
+  echo "ERROR: /usr/local/cuda not found."
+  exit 1
 fi
+
 
 # Fallback: generic /usr/local/cuda symlink (ONLY if major matches)
 if [[ -z "${CUDA_HOME_CANDIDATE}" && -d "/usr/local/cuda" ]]; then
