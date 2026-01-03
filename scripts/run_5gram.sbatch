@@ -65,6 +65,9 @@ python -c "import lm_decoder; print('lm_decoder import: OK')"
 
 
 cd /home/e12511253/Brain2Text/brain2text
+export B2T_DATA_DIR="${PWD}/data/hdf5_data_final"
+echo "B2T_DATA_DIR=$B2T_DATA_DIR"
+
 
 export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
 export PYTHONUNBUFFERED=1
