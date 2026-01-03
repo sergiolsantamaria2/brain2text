@@ -40,46 +40,82 @@ if [[ -z "${TORCH_CUDA}" ]]; then
   exit 1
 fi
 
-# ---- Pick CUDA toolkit matching torch ----
+# ---- Pick a usable CUDA toolkit ----
+TORCH_CUDA_MAJOR="${TORCH_CUDA%%.*}"
+
+CUDA_HOME_CANDIDATE=""
 if [[ -d "/usr/local/cuda-${TORCH_CUDA}" ]]; then
-  export CUDA_HOME="/usr/local/cuda-${TORCH_CUDA}"
+  CUDA_HOME_CANDIDATE="/usr/local/cuda-${TORCH_CUDA}"
 else
-  echo "ERROR: /usr/local/cuda-${TORCH_CUDA} not found."
+  # Prefer any /usr/local/cuda-<major>.* (e.g., cuda-11.8) when torch expects 11.x
+  BEST="$(ls -d /usr/local/cuda-${TORCH_CUDA_MAJOR}.* 2>/dev/null | sort -V | tail -n 1 || true)"
+  if [[ -n "${BEST}" ]]; then
+    CUDA_HOME_CANDIDATE="${BEST}"
+  fi
+fi
+
+# Fallback: generic /usr/local/cuda symlink
+if [[ -z "${CUDA_HOME_CANDIDATE}" && -d "/usr/local/cuda" ]]; then
+  CUDA_HOME_CANDIDATE="/usr/local/cuda"
+fi
+
+# Fallback: derive from nvcc if available
+if [[ -z "${CUDA_HOME_CANDIDATE}" && -n "$(command -v nvcc 2>/dev/null || true)" ]]; then
+  CUDA_HOME_CANDIDATE="$(dirname "$(dirname "$(command -v nvcc)")")"
+fi
+
+if [[ -z "${CUDA_HOME_CANDIDATE}" || ! -d "${CUDA_HOME_CANDIDATE}" ]]; then
+  echo "ERROR: No usable CUDA toolkit found (no /usr/local/cuda* and no nvcc in PATH)."
   exit 1
 fi
+
+export CUDA_HOME="${CUDA_HOME_CANDIDATE}"
 export PATH="${CUDA_HOME}/bin:${PATH}"
 export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${CUDA_HOME}/lib:${LD_LIBRARY_PATH:-}"
 
 echo "CUDA_HOME=${CUDA_HOME}"
 nvcc --version || true
 
-# ---- Locate libcudart matching torch.version.cuda and PRELOAD it ----
-export CUDART_SO="$(python - <<'PY'
-import os, glob, torch
-ver = torch.version.cuda or ""
-cuda_home = os.environ.get("CUDA_HOME","")
-cp = os.environ.get("CONDA_PREFIX","")
+# Optional sanity: warn if major mismatches
+NVCC_REL="$(nvcc --version 2>/dev/null | sed -n 's/.*release \([0-9]\+\)\..*/\1/p' | tail -n 1)"
+if [[ -n "${NVCC_REL}" && "${NVCC_REL}" != "${TORCH_CUDA_MAJOR}" ]]; then
+  echo "WARNING: nvcc major (${NVCC_REL}) != torch CUDA major (${TORCH_CUDA_MAJOR}). Build may fail."
+fi
 
-cands = []
-# Prefer system toolkit
-cands += glob.glob(os.path.join(cuda_home, "lib64", f"libcudart.so.{ver}*"))
-cands += glob.glob(os.path.join(cuda_home, "lib",   f"libcudart.so.{ver}*"))
+echo "CUDA_HOME=${CUDA_HOME}"
+nvcc --version || true
 
-# Fallback: conda env/pkgs
-cands += glob.glob(f"{cp}/pkgs/**/libcudart.so.{ver}*", recursive=True)
-cands += glob.glob(f"{cp}/**/libcudart.so.{ver}*", recursive=True)
+# ---- Locate libcudart (match MAJOR) and PRELOAD it ----
+TORCH_CUDA_MAJOR="${TORCH_CUDA%%.*}"
 
-cands = [c for c in cands if c and (not c.endswith(".a"))]
-print(cands[0] if cands else "")
-PY
-)"
-
-if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
-  echo "ERROR: Could not locate libcudart matching torch CUDA (${TORCH_CUDA})."
+# Prefer toolkit libs (CUDA_HOME) first
+if [[ -d "${CUDA_HOME}/lib64" ]]; then
+  export CUDA_LIB="${CUDA_HOME}/lib64"
+elif [[ -d "${CUDA_HOME}/lib" ]]; then
+  export CUDA_LIB="${CUDA_HOME}/lib"
+else
+  echo "ERROR: Could not find ${CUDA_HOME}/lib64 or ${CUDA_HOME}/lib"
   exit 1
 fi
 
-export CUDA_LIB="$(dirname "${CUDART_SO}")"
+# Find a libcudart with the same MAJOR as torch (e.g., 11 -> libcudart.so.11*)
+CUDART_SO="$(ls -1 "${CUDA_LIB}/libcudart.so.${TORCH_CUDA_MAJOR}"* 2>/dev/null | head -n 1 || true)"
+
+if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
+  echo "ERROR: Could not locate libcudart in ${CUDA_LIB} for major ${TORCH_CUDA_MAJOR}."
+  echo "Contents of ${CUDA_LIB}:"
+  ls -lah "${CUDA_LIB}" | head -n 50
+  exit 1
+fi
+
+export CUDART_SO
+export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
+export LD_LIBRARY_PATH="${CUDA_LIB}:${LD_LIBRARY_PATH:-}"
+
+echo "CUDA_LIB=${CUDA_LIB}"
+echo "CUDART_SO=${CUDART_SO}"
+echo "LD_PRELOAD=${LD_PRELOAD}"
+
 export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
 export LD_LIBRARY_PATH="${CUDA_LIB}:${LD_LIBRARY_PATH:-}"
 
