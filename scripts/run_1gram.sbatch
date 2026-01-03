@@ -146,13 +146,16 @@ if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
   exit 1
 fi
 
+export CUDA_LIB="$(dirname "${CUDART_SO}")"
 export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
-export LD_LIBRARY_PATH="$(dirname "${CUDART_SO}"):${LD_LIBRARY_PATH:-}"
+export LD_LIBRARY_PATH="${CUDA_LIB}:${LD_LIBRARY_PATH:-}"
 export TORCH_USE_RTLD_GLOBAL=1
 
 echo "CUDART_SO=${CUDART_SO}"
+echo "CUDA_LIB=${CUDA_LIB}"
 echo "LD_PRELOAD=${LD_PRELOAD}"
 echo "TORCH_USE_RTLD_GLOBAL=${TORCH_USE_RTLD_GLOBAL}"
+
 # -------------------------------------------------------------------------------
 
 # ---- Repo + data ----
