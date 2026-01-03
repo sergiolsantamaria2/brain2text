@@ -437,12 +437,12 @@ class BrainToTextDecoder_Trainer:
             bad_trials_dict = None,
             )
         
-        # --- ensure output/checkpoint dirs exist ---
-        self.args["output_dir"] = str(self.args["output_dir"])
+        # --- ensure output/checkpoint dirs exist (symlink-safe) ---
+        self.args["output_dir"] = os.path.realpath(str(self.args["output_dir"]))
         if "checkpoint_dir" in self.args and self.args["checkpoint_dir"] is not None:
-            self.args["checkpoint_dir"] = str(self.args["checkpoint_dir"])
+            self.args["checkpoint_dir"] = os.path.realpath(str(self.args["checkpoint_dir"]))
         else:
-            self.args["checkpoint_dir"] = os.path.join(self.args["output_dir"], "checkpoint")
+            self.args["checkpoint_dir"] = os.path.realpath(os.path.join(self.args["output_dir"], "checkpoint"))
 
         os.makedirs(self.args["output_dir"], exist_ok=True)
         os.makedirs(self.args["checkpoint_dir"], exist_ok=True)
@@ -714,8 +714,10 @@ class BrainToTextDecoder_Trainer:
         }
 
         
-        os.makedirs(os.path.dirname(str(save_path)), exist_ok=True)
+        save_dir = os.path.dirname(os.path.realpath(save_path))
+        os.makedirs(save_dir, exist_ok=True)
         torch.save(checkpoint, save_path)
+
 
         
         self.logger.info("Saved model to checkpoint: " + save_path)
@@ -1040,9 +1042,11 @@ class BrainToTextDecoder_Trainer:
 
                     # save validation metrics to pickle file
                     if self.args.get("save_val_metrics", False):
-                        os.makedirs(self.args["checkpoint_dir"], exist_ok=True)
-                        with open(os.path.join(self.args["checkpoint_dir"], "val_metrics.pkl"), "wb") as f:
+                        ckpt_dir = os.path.realpath(self.args["checkpoint_dir"])
+                        os.makedirs(ckpt_dir, exist_ok=True)
+                        with open(os.path.join(ckpt_dir, "val_metrics.pkl"), "wb") as f:
                             pickle.dump(val_metrics, f)
+
 
 
 
