@@ -713,6 +713,7 @@ class BrainToTextDecoder_Trainer:
         }
 
         
+        Path(save_path).parent.mkdir(parents=True, exist_ok=True)
         torch.save(checkpoint, save_path)
         
         self.logger.info("Saved model to checkpoint: " + save_path)
