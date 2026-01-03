@@ -1,0 +1,3 @@
+# Force xLSTM decoder regardless of base config defaults
+model:
+  decoder_type: xlstm
