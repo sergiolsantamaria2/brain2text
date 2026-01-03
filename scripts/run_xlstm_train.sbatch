@@ -19,7 +19,7 @@ fi
 
 # ---- Env (xLSTM) ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
-conda activate brain2text_xlstm
+conda activate brain2text
 
 python - <<'PY'
 import torch, sys
