@@ -54,20 +54,21 @@ else
   fi
 fi
 
-# Fallback: generic /usr/local/cuda symlink
+# Fallback: generic /usr/local/cuda symlink (ONLY if major matches)
 if [[ -z "${CUDA_HOME_CANDIDATE}" && -d "/usr/local/cuda" ]]; then
-  CUDA_HOME_CANDIDATE="/usr/local/cuda"
+  # read nvcc major from /usr/local/cuda
+  NVCC_MAJOR="$(/usr/local/cuda/bin/nvcc --version 2>/dev/null | sed -n 's/.*release \([0-9]\+\)\..*/\1/p' | tail -n 1)"
+  if [[ -n "${NVCC_MAJOR}" && "${NVCC_MAJOR}" == "${TORCH_CUDA_MAJOR}" ]]; then
+    CUDA_HOME_CANDIDATE="/usr/local/cuda"
+  fi
 fi
 
-# Fallback: derive from nvcc if available
-if [[ -z "${CUDA_HOME_CANDIDATE}" && -n "$(command -v nvcc 2>/dev/null || true)" ]]; then
-  CUDA_HOME_CANDIDATE="$(dirname "$(dirname "$(command -v nvcc)")")"
-fi
-
-if [[ -z "${CUDA_HOME_CANDIDATE}" || ! -d "${CUDA_HOME_CANDIDATE}" ]]; then
-  echo "ERROR: No usable CUDA toolkit found (no /usr/local/cuda* and no nvcc in PATH)."
+if [[ -z "${CUDA_HOME_CANDIDATE}" ]]; then
+  echo "ERROR: No CUDA toolkit with major ${TORCH_CUDA_MAJOR} found. torch expects CUDA ${TORCH_CUDA}."
+  echo "Fix: load a CUDA ${TORCH_CUDA_MAJOR}.x module or install a matching toolkit, OR switch torch to CUDA 12.x."
   exit 1
 fi
+
 
 export CUDA_HOME="${CUDA_HOME_CANDIDATE}"
 export PATH="${CUDA_HOME}/bin:${PATH}"
