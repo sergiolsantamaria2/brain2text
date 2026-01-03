@@ -21,6 +21,17 @@ fi
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text_cu126
+# ---- Prefer system CUDA toolkit (cluster has CUDA 12.6 under /usr/local/cuda) ----
+if [[ -d "/usr/local/cuda" ]]; then
+  export CUDA_HOME="/usr/local/cuda"
+  export PATH="${CUDA_HOME}/bin:${PATH}"
+  export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${CUDA_HOME}/lib:${LD_LIBRARY_PATH:-}"
+  echo "CUDA_HOME=${CUDA_HOME}"
+  nvcc --version || true
+else
+  echo "WARNING: /usr/local/cuda not found. Will try conda-provided CUDA runtime only."
+fi
+
 
 # Make sure conda libs (e.g., nccl) are visible
 export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
@@ -57,28 +68,78 @@ PY
 )"
 echo "torch CUDA runtime expects: ${TORCH_CUDA}"
 
-# ---- Locate libcudart matching torch.version.cuda and PRELOAD it (fixes __cudaLaunchKernel) ----
+# ---- Locate libcudart and PRELOAD it (fixes __cudaLaunchKernel) ----
 export CUDART_SO="$(python - <<'PY'
 import os, glob, torch
+
 ver = torch.version.cuda or ""
+major = ver.split(".")[0] if ver else ""
 cp = os.environ.get("CONDA_PREFIX","")
 cuda_home = os.environ.get("CUDA_HOME","")
 
 cands = []
-# Prefer CUDA_HOME if it exists
-if cuda_home and ver:
-    cands += glob.glob(os.path.join(cuda_home, "lib64", f"libcudart.so.{ver}*"))
-    cands += glob.glob(os.path.join(cuda_home, "lib",   f"libcudart.so.{ver}*"))
 
-# Then conda (pkgs + env)
-if cp and ver:
-    cands += glob.glob(f"{cp}/pkgs/**/libcudart.so.{ver}*", recursive=True)
-    cands += glob.glob(f"{cp}/**/libcudart.so.{ver}*", recursive=True)
+def add(patterns):
+    for p in patterns:
+        cands.extend(glob.glob(p))
 
+# 1) Prefer system toolkit (CUDA_HOME) if available
+if cuda_home and major:
+    add([
+        os.path.join(cuda_home, "lib64", f"libcudart.so.{ver}*"),   # try exact 12.6 first (may not exist)
+        os.path.join(cuda_home, "lib",   f"libcudart.so.{ver}*"),
+        os.path.join(cuda_home, "lib64", f"libcudart.so.{major}*"), # fallback to major (libcudart.so.12*)
+        os.path.join(cuda_home, "lib",   f"libcudart.so.{major}*"),
+        os.path.join(cuda_home, "lib64", "libcudart.so*"),          # last resort: any cudart in toolkit
+        os.path.join(cuda_home, "lib",   "libcudart.so*"),
+    ])
+
+# 2) Then conda env/pkgs
+if cp and major:
+    add([
+        f"{cp}/pkgs/**/libcudart.so.{ver}*",
+        f"{cp}/pkgs/**/libcudart.so.{major}*",
+        f"{cp}/**/libcudart.so.{ver}*",
+        f"{cp}/**/libcudart.so.{major}*",
+    ])
+
+# Filter
 cands = [c for c in cands if c and (not c.endswith(".a"))]
-print(cands[0] if cands else "")
+
+# Pick best: exact match first, then major
+best = ""
+for x in cands:
+    if f"libcudart.so.{ver}" in os.path.basename(x):
+        best = x; break
+if not best:
+    for x in cands:
+        if f"libcudart.so.{major}" in os.path.basename(x):
+            best = x; break
+if not best and cands:
+    best = cands[0]
+
+print(best)
 PY
 )"
+
+if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
+  echo "ERROR: Could not locate libcudart for torch CUDA (${TORCH_CUDA})."
+  echo "Debug: CUDA_HOME=${CUDA_HOME:-unset}"
+  if [[ -n "${CUDA_HOME:-}" && -d "${CUDA_HOME}/lib64" ]]; then
+    echo "Contents of ${CUDA_HOME}/lib64 (cudart):"
+    ls -lah "${CUDA_HOME}/lib64"/libcudart.so* 2>/dev/null || true
+  fi
+  echo "Contents of conda lib (cudart):"
+  ls -lah "${CONDA_PREFIX}/lib"/libcudart.so* 2>/dev/null || true
+  exit 1
+fi
+
+export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
+export LD_LIBRARY_PATH="$(dirname "${CUDART_SO}"):${LD_LIBRARY_PATH:-}"
+
+echo "CUDART_SO=${CUDART_SO}"
+echo "LD_PRELOAD=${LD_PRELOAD}"
+
 
 if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
   echo "ERROR: Could not locate libcudart matching torch CUDA (${TORCH_CUDA})."
