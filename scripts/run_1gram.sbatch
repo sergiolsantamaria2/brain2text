@@ -388,12 +388,22 @@ export PYTHONUNBUFFERED=1
 
 mkdir -p logs
 
-# ---- Output: trained_models -> node-local ----
-mkdir -p "${JOB_TMP}/trained_models"
-rm -rf trained_models
-ln -s "${JOB_TMP}/trained_models" trained_models
-echo "trained_models -> $(readlink -f trained_models)"
-# ---------------------------------------------
+# ---- Output: trained_models -> node-local (robust symlink) ----
+OUT_ROOT="${JOB_TMP}/trained_models"
+mkdir -p "${OUT_ROOT}"
+
+# Safety: if trained_models exists and is NOT a symlink, do not delete it
+if [[ -e trained_models && ! -L trained_models ]]; then
+  echo "ERROR: trained_models exists and is not a symlink. Refusing to modify it."
+  ls -ld trained_models
+  exit 1
+fi
+
+# Force/update the symlink even if an old dangling symlink exists
+ln -sfn "${OUT_ROOT}" trained_models
+echo "trained_models -> $(readlink trained_models)"
+echo "OUT_ROOT=${OUT_ROOT}"
+# --------------------------------------------------------------
 
 BASE="configs/rnn_args.yaml"
 OVR1="configs/overrides/wer_1gram_only.yaml"
