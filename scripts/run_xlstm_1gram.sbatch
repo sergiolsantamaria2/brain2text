@@ -21,6 +21,10 @@ fi
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text_cu126
+
+# Make sure conda libs (e.g., nccl) are visible
+export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
+
 # ---- Prefer system CUDA toolkit (cluster has CUDA 12.6 under /usr/local/cuda) ----
 if [[ -d "/usr/local/cuda" ]]; then
   export CUDA_HOME="/usr/local/cuda"
@@ -31,10 +35,6 @@ if [[ -d "/usr/local/cuda" ]]; then
 else
   echo "WARNING: /usr/local/cuda not found. Will try conda-provided CUDA runtime only."
 fi
-
-
-# Make sure conda libs (e.g., nccl) are visible
-export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
 
 set -u
 
@@ -83,14 +83,14 @@ def add(patterns):
     for p in patterns:
         cands.extend(glob.glob(p))
 
-# 1) Prefer system toolkit (CUDA_HOME) if available
+# 1) Prefer system toolkit (CUDA_HOME)
 if cuda_home and major:
     add([
-        os.path.join(cuda_home, "lib64", f"libcudart.so.{ver}*"),   # try exact 12.6 first (may not exist)
+        os.path.join(cuda_home, "lib64", f"libcudart.so.{ver}*"),
         os.path.join(cuda_home, "lib",   f"libcudart.so.{ver}*"),
-        os.path.join(cuda_home, "lib64", f"libcudart.so.{major}*"), # fallback to major (libcudart.so.12*)
+        os.path.join(cuda_home, "lib64", f"libcudart.so.{major}*"),
         os.path.join(cuda_home, "lib",   f"libcudart.so.{major}*"),
-        os.path.join(cuda_home, "lib64", "libcudart.so*"),          # last resort: any cudart in toolkit
+        os.path.join(cuda_home, "lib64", "libcudart.so*"),
         os.path.join(cuda_home, "lib",   "libcudart.so*"),
     ])
 
@@ -103,10 +103,8 @@ if cp and major:
         f"{cp}/**/libcudart.so.{major}*",
     ])
 
-# Filter
 cands = [c for c in cands if c and (not c.endswith(".a"))]
 
-# Pick best: exact match first, then major
 best = ""
 for x in cands:
     if f"libcudart.so.{ver}" in os.path.basename(x):
@@ -125,24 +123,8 @@ PY
 if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
   echo "ERROR: Could not locate libcudart for torch CUDA (${TORCH_CUDA})."
   echo "Debug: CUDA_HOME=${CUDA_HOME:-unset}"
-  if [[ -n "${CUDA_HOME:-}" && -d "${CUDA_HOME}/lib64" ]]; then
-    echo "Contents of ${CUDA_HOME}/lib64 (cudart):"
-    ls -lah "${CUDA_HOME}/lib64"/libcudart.so* 2>/dev/null || true
-  fi
-  echo "Contents of conda lib (cudart):"
+  echo "Conda cudart:"
   ls -lah "${CONDA_PREFIX}/lib"/libcudart.so* 2>/dev/null || true
-  exit 1
-fi
-
-export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
-export LD_LIBRARY_PATH="$(dirname "${CUDART_SO}"):${LD_LIBRARY_PATH:-}"
-
-echo "CUDART_SO=${CUDART_SO}"
-echo "LD_PRELOAD=${LD_PRELOAD}"
-
-
-if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
-  echo "ERROR: Could not locate libcudart matching torch CUDA (${TORCH_CUDA})."
   exit 1
 fi
 
@@ -159,6 +141,20 @@ export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
 export PYTHONUNBUFFERED=1
 
 mkdir -p logs
+
+# ---- Make lm_decoder importable (compiled .so is in NEJM runtime build dir) ----
+LM_SO=$(find references/nejm-brain-to-text/language_model/runtime/server/x86/build \
+  -name "lm_decoder.cpython-*.so" 2>/dev/null | head -n 1 || true)
+
+if [[ -z "${LM_SO}" || ! -f "${LM_SO}" ]]; then
+  echo "ERROR: lm_decoder .so not found under references/nejm-brain-to-text/language_model/runtime/server/x86/build"
+  exit 1
+fi
+
+export PYTHONPATH="$(dirname "${LM_SO}"):${PYTHONPATH:-}"
+echo "lm_decoder .so: ${LM_SO}"
+python -c "import lm_decoder; print('lm_decoder import: OK ->', lm_decoder.__file__)"
+# ---------------------------------------------------------------------------
 
 # ---- Runtime linking for lm_decoder (OpenFST v8 runtime) ----
 rm -f "${CONDA_PREFIX}/lib/libfst.so.8" 2>/dev/null || true
@@ -186,11 +182,7 @@ export LD_LIBRARY_PATH="${TMP_LIB}:${FST_DIR}:${CONDA_PREFIX}/lib:${TORCH_LIB}:$
 
 echo "TORCH_LIB=$TORCH_LIB"
 echo "FST_SO=$FST_SO"
-echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 ls -lah "$TMP_LIB/libfst.so.8" || true
-
-python -c "import lm_decoder; print('lm_decoder import: OK ->', lm_decoder.__file__)" || \
-  echo "WARNING: lm_decoder not importable; WER will be disabled by trainer."
 # ------------------------------------------------------------------------
 
 # ---- Output: trained_models -> node-local ----
@@ -243,10 +235,7 @@ for EXP_DIR in "$@"; do
 import os, sys, ctypes, runpy
 import os as _os
 
-# Make future dlopen() global
 sys.setdlopenflags(_os.RTLD_GLOBAL | _os.RTLD_NOW)
-
-# Preload cudart globally (critical for __cudaLaunchKernel resolution)
 ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
 
 sys.argv = [
