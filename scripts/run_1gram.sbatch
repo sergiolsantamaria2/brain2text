@@ -158,6 +158,9 @@ echo "TORCH_USE_RTLD_GLOBAL=${TORCH_USE_RTLD_GLOBAL}"
 
 # ---- Repo + data ----
 cd /home/e12511253/Brain2Text/brain2text
+LM_PY="/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/build/lib.linux-x86_64-cpython-39"
+export PYTHONPATH="${LM_PY}:${PWD}/src:${PYTHONPATH:-}"
+
 mkdir -p logs
 
 export B2T_DATA_DIR="${PWD}/data/hdf5_data_final"
