@@ -9,7 +9,8 @@
 #SBATCH --no-requeue
 #SBATCH --exclude=a-l40s-o-2
 
-set -euo pipefail
+set -eo pipefail
+set +u
 
 if [[ $# -lt 1 ]]; then
   echo "ERROR: Missing experiment folder argument(s)."
@@ -20,6 +21,8 @@ fi
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text
+set -u
+
 
 # IMPORTANT: must be set before importing torch in Python
 export TORCH_USE_RTLD_GLOBAL=1
