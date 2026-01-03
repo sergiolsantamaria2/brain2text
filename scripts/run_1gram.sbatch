@@ -330,13 +330,11 @@ echo "trained_models -> $(readlink -f trained_models)"
 
 BASE="configs/rnn_args.yaml"
 OVR1="configs/overrides/wer_1gram_only.yaml"
-OVR2="configs/overrides/disk_conservative.yaml"
 
 echo "=============================================="
 echo "Job: ${SLURM_JOB_NAME}  ID: ${SLURM_JOB_ID}"
 echo "Base: $BASE"
 echo "Global override 1: $OVR1"
-echo "Global override 2: $OVR2"
 echo "Folders: $*"
 echo "Host: $(hostname)"
 echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
@@ -368,7 +366,6 @@ for EXP_DIR in "$@"; do
     python -u -m brain2text.model_training.train_model \
       --config "$BASE" \
       --config "$OVR1" \
-      --config "$OVR2" \
       --config "$CFG"
   done
 done
@@ -400,13 +397,11 @@ echo "trained_models -> $(readlink -f trained_models)"
 
 BASE="configs/rnn_args.yaml"
 OVR1="configs/overrides/wer_1gram_only.yaml"
-OVR2="configs/overrides/disk_conservative.yaml"
 
 echo "=============================================="
 echo "Job: ${SLURM_JOB_NAME}  ID: ${SLURM_JOB_ID}"
 echo "Base: $BASE"
 echo "Global override 1: $OVR1"
-echo "Global override 2: $OVR2"
 echo "Folders: $*"
 echo "Host: $(hostname)"
 echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
@@ -452,7 +447,6 @@ sys.argv = [
   "train_model",
   "--config", "${BASE}",
   "--config", "${OVR1}",
-  "--config", "${OVR2}",
   "--config", "${CFG}",
 ]
 runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
