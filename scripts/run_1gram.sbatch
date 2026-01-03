@@ -29,26 +29,21 @@ import torch
 print(torch.version.cuda or "")
 PY
 )"
-
 echo "torch CUDA runtime expects: ${TORCH_CUDA}"
 
-# Prefer a toolkit that EXACTLY matches torch.version.cuda
 CUDA_HOME_CANDIDATE=""
 if [[ -n "${TORCH_CUDA}" && -d "/usr/local/cuda-${TORCH_CUDA}" ]]; then
   CUDA_HOME_CANDIDATE="/usr/local/cuda-${TORCH_CUDA}"
 fi
 
-# If no system toolkit matches, try conda-provided nvcc (if installed)
 if [[ -z "${CUDA_HOME_CANDIDATE}" ]]; then
   if command -v nvcc >/dev/null 2>&1; then
-    # If nvcc is in conda, CUDA_HOME will be CONDA_PREFIX; if system, it'll be /usr/local/cuda
     CUDA_HOME_CANDIDATE="$(dirname "$(dirname "$(command -v nvcc)")")"
   fi
 fi
 
 if [[ -z "${CUDA_HOME_CANDIDATE}" || ! -d "${CUDA_HOME_CANDIDATE}" ]]; then
   echo "ERROR: No usable CUDA toolkit found. torch expects CUDA=${TORCH_CUDA}."
-  echo "Fix (recommended): install matching toolkit inside conda (see instructions below)."
   exit 1
 fi
 
@@ -65,14 +60,12 @@ echo "nvcc release: ${NVCC_REL}"
 
 if [[ -n "${TORCH_CUDA}" && -n "${NVCC_REL}" && "${NVCC_REL}" != "${TORCH_CUDA}" ]]; then
   echo "ERROR: nvcc (${NVCC_REL}) != torch CUDA (${TORCH_CUDA})."
-  echo "This mismatch is a common cause of segfaults in custom CUDA extensions (like sLSTM)."
-  echo "Fix: install nvcc+libs matching torch CUDA inside conda."
+  echo "This mismatch is a common cause of undefined-symbol issues in custom CUDA extensions (like sLSTM)."
   exit 1
 fi
 # ---------------------------------------------------------------
 
 # ---- Runtime linking for lm_decoder (Torch + NEJM OpenFST v8 runtime) ----
-# Ensure we DO NOT have a wrong conda-level libfst.so.8 shim (ABI mismatch).
 rm -f "${CONDA_PREFIX}/lib/libfst.so.8" 2>/dev/null || true
 
 TORCH_LIB=$(python - <<'PY'
@@ -82,24 +75,18 @@ PY
 )
 
 LM_RT="/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime"
-
-# Find OpenFST v8 runtime library
 FST_SO=$(find "$LM_RT" -type f -name "libfst.so.8.0.0" 2>/dev/null | head -n 1)
 
 if [[ -z "$FST_SO" ]]; then
   echo "ERROR: libfst.so.8.0.0 not found under $LM_RT"
-  echo "       Make sure the NEJM language model runtime has been built/downloaded."
   exit 1
 fi
 
 FST_DIR=$(dirname "$FST_SO")
-
-# Create the exact SONAME expected by lm_decoder (libfst.so.8) in job-local temp dir
 TMP_LIB="${SLURM_TMPDIR:-/tmp}/lm_runtime_libs"
 mkdir -p "$TMP_LIB"
 ln -sf "$FST_SO" "$TMP_LIB/libfst.so.8"
 
-# Prepend: job-local shim dir, then the NEJM dir, then conda + torch
 export LD_LIBRARY_PATH="${TMP_LIB}:${FST_DIR}:${CONDA_PREFIX}/lib:${TORCH_LIB}:${LD_LIBRARY_PATH:-}"
 
 echo "CONDA_PREFIX=$CONDA_PREFIX"
@@ -108,54 +95,93 @@ echo "FST_SO=$FST_SO"
 echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 ls -lah "$TMP_LIB/libfst.so.8" || true
 
-# Fail early if decoder cannot import
 python -c "import lm_decoder; print('lm_decoder import: OK')" || \
   echo "WARNING: lm_decoder not importable; continuing without WER (trainer will disable WER)."
 # ------------------------------------------------------------------------
 
-# ---- xLSTM / torch extensions: build in node-local tmp (avoid corrupt HOME cache) ----
+# ---- Job-local dirs (avoid quota in /home) ----
+export TMPDIR="${SLURM_TMPDIR:-/tmp}"
+JOB_TMP="${TMPDIR}/${USER}_b2t_${SLURM_JOB_ID:-manual}"
+mkdir -p "${JOB_TMP}"
+
+# Torch extensions: build/load on node-local disk (prevents HOME cache + quota issues)
 export PYTHONFAULTHANDLER=1
 export MAX_JOBS="${SLURM_CPUS_PER_TASK:-8}"
-
-# Build/load torch extensions from node-local disk
-export TORCH_EXTENSIONS_DIR="${SLURM_TMPDIR:-/tmp}/torch_extensions"
+export TORCH_EXTENSIONS_DIR="${JOB_TMP}/torch_extensions"
 rm -rf "${TORCH_EXTENSIONS_DIR}"
 mkdir -p "${TORCH_EXTENSIONS_DIR}"
 
-# A100 = SM80. Helps avoid weird arch autodetect issues.
+# A100 = SM80
 export TORCH_CUDA_ARCH_LIST="8.0"
+
+# W&B logs on node-local disk
+export WANDB_DIR="${JOB_TMP}/wandb"
+mkdir -p "${WANDB_DIR}"
 
 echo "PYTHONFAULTHANDLER=$PYTHONFAULTHANDLER"
 echo "MAX_JOBS=$MAX_JOBS"
+echo "TMPDIR=$TMPDIR"
+echo "JOB_TMP=$JOB_TMP"
 echo "TORCH_EXTENSIONS_DIR=$TORCH_EXTENSIONS_DIR"
 echo "TORCH_CUDA_ARCH_LIST=$TORCH_CUDA_ARCH_LIST"
+echo "WANDB_DIR=$WANDB_DIR"
 # -------------------------------------------------------------------------------
 
-
+# ---- Repo + data ----
 cd /home/e12511253/Brain2Text/brain2text
 export B2T_DATA_DIR="${PWD}/data/hdf5_data_final"
-echo "B2T_DATA_DIR=$B2T_DATA_DIR"
-
-
 export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
 export PYTHONUNBUFFERED=1
 
-export TMPDIR="${SLURM_TMPDIR:-/tmp}"
-export WANDB_DIR="${TMPDIR}/wandb"
-mkdir -p logs "$WANDB_DIR"
+mkdir -p logs
+
+# ---- Output: trained_models -> node-local ----
+mkdir -p "${JOB_TMP}/trained_models"
+rm -rf trained_models
+ln -s "${JOB_TMP}/trained_models" trained_models
+echo "trained_models -> $(readlink -f trained_models)"
+# ---------------------------------------------
+
+# ---- Preload libcudart with RTLD_GLOBAL (mitigates __cudaLaunchKernel issues) ----
+python - <<'PY'
+import os, ctypes, glob
+
+candidates = []
+cuda_home = os.environ.get("CUDA_HOME", "")
+if cuda_home:
+    candidates += glob.glob(os.path.join(cuda_home, "lib64", "libcudart.so*"))
+
+conda_prefix = os.environ.get("CONDA_PREFIX", "")
+if conda_prefix:
+    candidates += glob.glob(os.path.join(conda_prefix, "**", "libcudart.so*"), recursive=True)
+
+lib = None
+for c in candidates:
+    if c.endswith(".a"):
+        continue
+    lib = c
+    break
+
+if lib:
+    ctypes.CDLL(lib, mode=ctypes.RTLD_GLOBAL)
+    print("Preloaded libcudart:", lib)
+else:
+    print("WARNING: could not find libcudart to preload")
+PY
+# -------------------------------------------------------------------------------
 
 BASE="configs/rnn_args.yaml"
-OVR="configs/overrides/wer_1gram_only.yaml"
+OVR1="configs/overrides/wer_1gram_only.yaml"
+OVR2="configs/overrides/disk_conservative.yaml"
 
 echo "=============================================="
 echo "Job: ${SLURM_JOB_NAME}  ID: ${SLURM_JOB_ID}"
 echo "Base: $BASE"
-echo "Global override: $OVR"
+echo "Global override 1: $OVR1"
+echo "Global override 2: $OVR2"
 echo "Folders: $*"
 echo "Host: $(hostname)"
 echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
-echo "TMPDIR=$TMPDIR"
-echo "WANDB_DIR=$WANDB_DIR"
 echo "=============================================="
 
 for EXP_DIR in "$@"; do
@@ -183,7 +209,8 @@ for EXP_DIR in "$@"; do
     echo "=== RUN $(basename "$CFG") ==="
     python -u -m brain2text.model_training.train_model \
       --config "$BASE" \
-      --config "$OVR" \
+      --config "$OVR1" \
+      --config "$OVR2" \
       --config "$CFG"
   done
 done
