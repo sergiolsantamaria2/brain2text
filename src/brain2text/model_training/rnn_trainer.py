@@ -1038,9 +1038,11 @@ class BrainToTextDecoder_Trainer:
 
 
                     # save validation metrics to pickle file
-                    if self.args['save_val_metrics']:
-                        with open(f'{self.args["checkpoint_dir"]}/val_metrics.pkl', 'wb') as f:
-                            pickle.dump(val_metrics, f) 
+                    if self.args.get("save_val_metrics", False):
+                        pathlib.Path(self.args["checkpoint_dir"]).mkdir(parents=True, exist_ok=True)
+                        with open(os.path.join(self.args["checkpoint_dir"], "val_metrics.pkl"), "wb") as f:
+                            pickle.dump(val_metrics, f)
+
 
                     val_steps_since_improvement = 0
                     
