@@ -26,7 +26,7 @@ def defines_to_cflags(defines=Union[dict[str, Union[int, str]], Sequence[tuple[s
 
 curdir = os.path.dirname(__file__)
 
-if torch.cuda.is_available():
+if torch.cuda.is_available() and ("CUDA_LIB" not in os.environ):
     from packaging import version
 
     if version.parse(torch.__version__) >= version.parse("2.6.0"):
@@ -37,6 +37,7 @@ if torch.cuda.is_available():
         os.environ["CUDA_LIB"] = os.path.join(
             os.path.split(torch.utils.cpp_extension.include_paths(cuda=True)[-1])[0], "lib"
         )
+
 
 
 EXTRA_INCLUDE_PATHS = (
@@ -86,15 +87,22 @@ def load(*, name, sources, extra_cflags=(), extra_cuda_cflags=(), **kwargs):
         extra_cflags.append("-isystem")
         extra_cflags.append(eip)
 
+    cuda_lib = os.environ.get("CUDA_LIB", "")
+    if not cuda_lib:
+        raise RuntimeError("CUDA_LIB is not set; expected it from sbatch (dir containing libcudart.so).")
+
     myargs = {
         "verbose": True,
         "with_cuda": True,
-        "extra_ldflags": [f"-L{os.environ['CUDA_LIB']}", "-lcublas"],
+        "extra_ldflags": [
+            f"-L{cuda_lib}",
+            "-Wl,--no-as-needed",
+            "-lcudart",
+            "-lcublas",
+            f"-Wl,-rpath,{cuda_lib}",
+        ],
         "extra_cflags": [*extra_cflags],
         "extra_cuda_cflags": [
-            # "-gencode",
-            # "arch=compute_70,code=compute_70",
-            # "-dbg=1",
             '-Xptxas="-v"',
             "-gencode",
             "arch=compute_80,code=compute_80",
@@ -107,6 +115,7 @@ def load(*, name, sources, extra_cflags=(), extra_cuda_cflags=(), **kwargs):
             *extra_cuda_cflags,
         ],
     }
+
     print(myargs)
     myargs.update(**kwargs)
     # add random waiting time to minimize deadlocks because of badly managed multicompile of pytorch ext
