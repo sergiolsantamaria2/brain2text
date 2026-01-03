@@ -10,6 +10,7 @@
 #SBATCH --exclude=a-l40s-o-2
 
 set -eo pipefail
+set +u  # conda activation scripts sometimes reference unset vars
 
 if [[ $# -lt 1 ]]; then
   echo "ERROR: Missing experiment folder argument(s)."
@@ -21,131 +22,16 @@ fi
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text_cu126
 
-# Ensure conda libs are visible early (NCCL, etc.)
+# Make sure conda libs (e.g., nccl) are visible
 export LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
 
-# Helps dlopen behavior for CUDA extensions
+set -u
+
+# Important for dlopen + some custom extensions
 export TORCH_USE_RTLD_GLOBAL=1
 export CUDA_MODULE_LOADING=LAZY
 
-# ---- Discover torch CUDA version ----
-TORCH_CUDA="$(python - <<'PY'
-import torch
-print(torch.version.cuda or "")
-PY
-)"
-echo "torch CUDA runtime expects: ${TORCH_CUDA}"
-if [[ -z "${TORCH_CUDA}" ]]; then
-  echo "ERROR: torch.version.cuda is empty (CPU-only torch?)."
-  exit 1
-fi
-TORCH_CUDA_MAJOR="${TORCH_CUDA%%.*}"
-
-# ---- Pick CUDA toolkit (prefer versioned path, fallback to /usr/local/cuda) ----
-CUDA_HOME_CANDIDATE=""
-if [[ -d "/usr/local/cuda-${TORCH_CUDA}" ]]; then
-  CUDA_HOME_CANDIDATE="/usr/local/cuda-${TORCH_CUDA}"
-elif [[ -d "/usr/local/cuda" ]]; then
-  CUDA_HOME_CANDIDATE="/usr/local/cuda"
-fi
-
-if [[ -z "${CUDA_HOME_CANDIDATE}" ]]; then
-  echo "ERROR: No CUDA toolkit found under /usr/local. torch expects CUDA=${TORCH_CUDA}."
-  exit 1
-fi
-
-export CUDA_HOME="${CUDA_HOME_CANDIDATE}"
-export PATH="${CUDA_HOME}/bin:${PATH}"
-export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${CUDA_HOME}/lib:${LD_LIBRARY_PATH:-}"
-
-echo "CUDA_HOME=${CUDA_HOME}"
-echo "which nvcc: $(command -v nvcc || echo 'nvcc-not-found')"
-nvcc --version || true
-
-NVCC_MAJOR="$(nvcc --version 2>/dev/null | sed -n 's/.*release \([0-9]\+\)\..*/\1/p' | tail -n 1)"
-if [[ -n "${NVCC_MAJOR}" && "${NVCC_MAJOR}" != "${TORCH_CUDA_MAJOR}" ]]; then
-  echo "WARNING: nvcc major (${NVCC_MAJOR}) != torch CUDA major (${TORCH_CUDA_MAJOR})."
-  echo "If xLSTM CUDA extension build fails, this mismatch is usually the reason."
-fi
-
-# ---- Locate libcudart matching torch and PRELOAD it (fixes __cudaLaunchKernel) ----
-CUDART_SO="$(python - <<'PY'
-import os, glob, torch
-ver = torch.version.cuda or ""
-maj = ver.split(".")[0] if ver else ""
-cuda_home = os.environ.get("CUDA_HOME","")
-cp = os.environ.get("CONDA_PREFIX","")
-
-cands = []
-# Prefer CUDA_HOME exact version first
-if cuda_home and ver:
-    cands += glob.glob(os.path.join(cuda_home, "lib64", f"libcudart.so.{ver}*"))
-    cands += glob.glob(os.path.join(cuda_home, "lib",   f"libcudart.so.{ver}*"))
-# Fallback: CUDA_HOME major
-if cuda_home and maj:
-    cands += glob.glob(os.path.join(cuda_home, "lib64", f"libcudart.so.{maj}*"))
-    cands += glob.glob(os.path.join(cuda_home, "lib",   f"libcudart.so.{maj}*"))
-# Fallback: conda
-if cp and ver:
-    cands += glob.glob(f"{cp}/**/libcudart.so.{ver}*", recursive=True)
-if cp and maj:
-    cands += glob.glob(f"{cp}/**/libcudart.so.{maj}*", recursive=True)
-
-cands = [c for c in cands if c and (not c.endswith(".a"))]
-print(cands[0] if cands else "")
-PY
-)"
-
-if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
-  echo "ERROR: Could not locate libcudart for torch CUDA (${TORCH_CUDA})."
-  exit 1
-fi
-
-export CUDART_SO
-export CUDA_LIB="$(dirname "${CUDART_SO}")"
-export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
-export LD_LIBRARY_PATH="${CUDA_LIB}:${LD_LIBRARY_PATH:-}"
-
-echo "CUDART_SO=${CUDART_SO}"
-echo "CUDA_LIB=${CUDA_LIB}"
-echo "LD_PRELOAD=${LD_PRELOAD}"
-
-# ---- Runtime linking for lm_decoder (Torch + NEJM OpenFST v8 runtime) ----
-rm -f "${CONDA_PREFIX}/lib/libfst.so.8" 2>/dev/null || true
-
-TORCH_LIB=$(python - <<'PY'
-import torch, os
-print(os.path.join(os.path.dirname(torch.__file__), "lib"))
-PY
-)
-
-LM_RT="/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime"
-FST_SO=$(find "$LM_RT" -type f -name "libfst.so.8.0.0" 2>/dev/null | head -n 1)
-
-if [[ -z "$FST_SO" ]]; then
-  echo "ERROR: libfst.so.8.0.0 not found under $LM_RT"
-  exit 1
-fi
-
-FST_DIR=$(dirname "$FST_SO")
-TMP_LIB="${SLURM_TMPDIR:-/tmp}/lm_runtime_libs"
-mkdir -p "$TMP_LIB"
-ln -sf "$FST_SO" "$TMP_LIB/libfst.so.8"
-
-# Put OpenFST + conda + torch libs on path
-export LD_LIBRARY_PATH="${TMP_LIB}:${FST_DIR}:${CONDA_PREFIX}/lib:${TORCH_LIB}:${LD_LIBRARY_PATH:-}"
-
-echo "CONDA_PREFIX=$CONDA_PREFIX"
-echo "TORCH_LIB=$TORCH_LIB"
-echo "FST_SO=$FST_SO"
-echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
-ls -lah "$TMP_LIB/libfst.so.8" || true
-
-python -c "import lm_decoder; print('lm_decoder import: OK')" || \
-  echo "WARNING: lm_decoder not importable; WER will be disabled by trainer."
-# ------------------------------------------------------------------------
-
-# ---- Job-local dirs ----
+# ---- Job-local dirs (avoid quota in /home) ----
 export TMPDIR="${SLURM_TMPDIR:-/tmp}"
 JOB_TMP="${TMPDIR}/${USER}_b2t_${SLURM_JOB_ID:-manual}"
 mkdir -p "${JOB_TMP}"
@@ -159,8 +45,51 @@ mkdir -p "${TORCH_EXTENSIONS_DIR}"
 # A100 = SM80
 export TORCH_CUDA_ARCH_LIST="8.0"
 
+# W&B logs on node-local disk
 export WANDB_DIR="${JOB_TMP}/wandb"
 mkdir -p "${WANDB_DIR}"
+
+# ---- Discover torch CUDA version ----
+TORCH_CUDA="$(python - <<'PY'
+import torch
+print(torch.version.cuda or "")
+PY
+)"
+echo "torch CUDA runtime expects: ${TORCH_CUDA}"
+
+# ---- Locate libcudart matching torch.version.cuda and PRELOAD it (fixes __cudaLaunchKernel) ----
+export CUDART_SO="$(python - <<'PY'
+import os, glob, torch
+ver = torch.version.cuda or ""
+cp = os.environ.get("CONDA_PREFIX","")
+cuda_home = os.environ.get("CUDA_HOME","")
+
+cands = []
+# Prefer CUDA_HOME if it exists
+if cuda_home and ver:
+    cands += glob.glob(os.path.join(cuda_home, "lib64", f"libcudart.so.{ver}*"))
+    cands += glob.glob(os.path.join(cuda_home, "lib",   f"libcudart.so.{ver}*"))
+
+# Then conda (pkgs + env)
+if cp and ver:
+    cands += glob.glob(f"{cp}/pkgs/**/libcudart.so.{ver}*", recursive=True)
+    cands += glob.glob(f"{cp}/**/libcudart.so.{ver}*", recursive=True)
+
+cands = [c for c in cands if c and (not c.endswith(".a"))]
+print(cands[0] if cands else "")
+PY
+)"
+
+if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
+  echo "ERROR: Could not locate libcudart matching torch CUDA (${TORCH_CUDA})."
+  exit 1
+fi
+
+export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
+export LD_LIBRARY_PATH="$(dirname "${CUDART_SO}"):${LD_LIBRARY_PATH:-}"
+
+echo "CUDART_SO=${CUDART_SO}"
+echo "LD_PRELOAD=${LD_PRELOAD}"
 
 # ---- Repo + data ----
 cd /home/e12511253/Brain2Text/brain2text
@@ -170,12 +99,44 @@ export PYTHONUNBUFFERED=1
 
 mkdir -p logs
 
+# ---- Runtime linking for lm_decoder (OpenFST v8 runtime) ----
+rm -f "${CONDA_PREFIX}/lib/libfst.so.8" 2>/dev/null || true
+
+TORCH_LIB=$(python - <<'PY'
+import torch, os
+print(os.path.join(os.path.dirname(torch.__file__), "lib"))
+PY
+)
+
+LM_RT="${PWD}/references/nejm-brain-to-text/language_model/runtime"
+FST_SO=$(find "$LM_RT" -type f -name "libfst.so.8.0.0" 2>/dev/null | head -n 1)
+
+if [[ -z "$FST_SO" ]]; then
+  echo "ERROR: libfst.so.8.0.0 not found under $LM_RT"
+  exit 1
+fi
+
+FST_DIR=$(dirname "$FST_SO")
+TMP_LIB="${SLURM_TMPDIR:-/tmp}/lm_runtime_libs"
+mkdir -p "$TMP_LIB"
+ln -sf "$FST_SO" "$TMP_LIB/libfst.so.8"
+
+export LD_LIBRARY_PATH="${TMP_LIB}:${FST_DIR}:${CONDA_PREFIX}/lib:${TORCH_LIB}:${LD_LIBRARY_PATH:-}"
+
+echo "TORCH_LIB=$TORCH_LIB"
+echo "FST_SO=$FST_SO"
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+ls -lah "$TMP_LIB/libfst.so.8" || true
+
+python -c "import lm_decoder; print('lm_decoder import: OK ->', lm_decoder.__file__)" || \
+  echo "WARNING: lm_decoder not importable; WER will be disabled by trainer."
+# ------------------------------------------------------------------------
+
 # ---- Output: trained_models -> node-local ----
 mkdir -p "${JOB_TMP}/trained_models"
 rm -rf trained_models
 ln -s "${JOB_TMP}/trained_models" trained_models
 echo "trained_models -> $(readlink -f trained_models)"
-# ---------------------------------------------
 
 BASE="configs/rnn_args.yaml"
 OVR1="configs/overrides/wer_1gram_only.yaml"
@@ -221,10 +182,10 @@ for EXP_DIR in "$@"; do
 import os, sys, ctypes, runpy
 import os as _os
 
-# Make dlopen global for subsequently loaded .so
+# Make future dlopen() global
 sys.setdlopenflags(_os.RTLD_GLOBAL | _os.RTLD_NOW)
 
-# Preload cudart globally (fixes __cudaLaunchKernel resolution)
+# Preload cudart globally (critical for __cudaLaunchKernel resolution)
 ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
 
 sys.argv = [
