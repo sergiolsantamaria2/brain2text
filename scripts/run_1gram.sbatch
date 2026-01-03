@@ -63,6 +63,23 @@ ls -lah "$TMP_LIB/libfst.so.8" || true
 python -c "import lm_decoder; print('lm_decoder import: OK')"
 # ------------------------------------------------------------------------
 
+# ---- xLSTM / torch extensions: build in node-local tmp (avoid corrupt HOME cache) ----
+export PYTHONFAULTHANDLER=1
+export MAX_JOBS="${SLURM_CPUS_PER_TASK:-8}"
+
+# Build/load torch extensions from node-local disk
+export TORCH_EXTENSIONS_DIR="${SLURM_TMPDIR:-/tmp}/torch_extensions"
+rm -rf "${TORCH_EXTENSIONS_DIR}"
+mkdir -p "${TORCH_EXTENSIONS_DIR}"
+
+# A100 = SM80. Helps avoid weird arch autodetect issues.
+export TORCH_CUDA_ARCH_LIST="8.0"
+
+echo "PYTHONFAULTHANDLER=$PYTHONFAULTHANDLER"
+echo "MAX_JOBS=$MAX_JOBS"
+echo "TORCH_EXTENSIONS_DIR=$TORCH_EXTENSIONS_DIR"
+echo "TORCH_CUDA_ARCH_LIST=$TORCH_CUDA_ARCH_LIST"
+# -------------------------------------------------------------------------------
 
 
 cd /home/e12511253/Brain2Text/brain2text
