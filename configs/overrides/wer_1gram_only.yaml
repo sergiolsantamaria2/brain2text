@@ -1,12 +1,6 @@
 eval:
   compute_wer: true
-
-  # Explicit 1-gram LM (avoids any symlink/path ambiguity)
-  lm_dir: references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil
-
-  # Ensure 5-gram decoder is NOT initialized in 1-gram runs
-  lm_dir_5gram: null
-
   wer_tag: "1gram"
   wer_every_val_steps: 1
   wer_max_trials: 64
+  lm_dir: references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil
