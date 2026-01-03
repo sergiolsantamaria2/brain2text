@@ -19,7 +19,7 @@ fi
 
 # ---- Env ----
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
-conda activate brain2text_cu126
+conda activate brain2text
 
 # ---- Job-local dirs (avoid quota in /home) ----
 export TMPDIR="${SLURM_TMPDIR:-/tmp}"
