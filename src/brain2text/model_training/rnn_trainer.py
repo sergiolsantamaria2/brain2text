@@ -185,7 +185,6 @@ class BrainToTextDecoder_Trainer:
         self._val_step_count = 0
         self._lm = None
 
-        from pathlib import Path
 
         if self.compute_wer:
             try:
@@ -713,7 +712,7 @@ class BrainToTextDecoder_Trainer:
         }
 
         
-        Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+        pathlib.Path(save_path).parent.mkdir(parents=True, exist_ok=True)
         torch.save(checkpoint, save_path)
         
         self.logger.info("Saved model to checkpoint: " + save_path)
