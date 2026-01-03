@@ -1,0 +1,35 @@
+num_training_batches: 20
+batches_per_train_log: 1
+batches_per_val_step: 9999999
+
+torch_compile: false
+use_amp: false
+
+eval:
+  compute_wer: false
+
+save_all_val_steps: false
+save_val_logits: false
+save_val_metrics: false
+save_final_model: false
+save_best_checkpoint: false
+
+dataset:
+  batch_size: 8
+  num_dataloader_workers: 0
+
+model:
+  decoder_type: xlstm
+  xlstm_num_blocks: 1
+  xlstm_num_heads: 4
+  xlstm_conv1d_kernel_size: 3
+  xlstm_dropout: 0.2
+  head_type: "none"
+  head_num_blocks: 0
+  input_speckle_p: 0.0
+
+output_dir: trained_models/xlstm/sanity_trainonly/b1_bs8
+checkpoint_dir: ${output_dir}/checkpoint
+
+wandb:
+  enabled: false
