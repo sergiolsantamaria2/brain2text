@@ -714,8 +714,9 @@ class BrainToTextDecoder_Trainer:
         }
 
         
-        pathlib.Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+        os.makedirs(os.path.dirname(str(save_path)), exist_ok=True)
         torch.save(checkpoint, save_path)
+
         
         self.logger.info("Saved model to checkpoint: " + save_path)
 
@@ -1039,9 +1040,10 @@ class BrainToTextDecoder_Trainer:
 
                     # save validation metrics to pickle file
                     if self.args.get("save_val_metrics", False):
-                        pathlib.Path(self.args["checkpoint_dir"]).mkdir(parents=True, exist_ok=True)
+                        os.makedirs(self.args["checkpoint_dir"], exist_ok=True)
                         with open(os.path.join(self.args["checkpoint_dir"], "val_metrics.pkl"), "wb") as f:
                             pickle.dump(val_metrics, f)
+
 
 
                     val_steps_since_improvement = 0
