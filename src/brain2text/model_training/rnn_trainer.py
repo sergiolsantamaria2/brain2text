@@ -378,16 +378,22 @@ class BrainToTextDecoder_Trainer:
 
 
 
-        # Call torch.compile to speed up training
+        # Call torch.compile to speed up training (optional, controlled by config)
         self.logger.info("Using torch.compile (if available)")
-        if hasattr(torch, "compile"):
+        use_compile = bool(self.args.get("torch_compile", True))
+
+        if use_compile and hasattr(torch, "compile"):
             try:
                 self.model = torch.compile(self.model)
                 self.logger.info("torch.compile enabled.")
             except Exception as e:
                 self.logger.warning(f"torch.compile failed; falling back to eager. Reason: {e}")
         else:
-            self.logger.info("torch.compile not available (torch<2.0). Skipping.")
+            if not use_compile:
+                self.logger.info("torch.compile disabled by config (torch_compile=false).")
+            else:
+                self.logger.info("torch.compile not available (torch<2.0). Skipping.")
+
 
 
         self.logger.info(f"Initialized RNN decoding model")

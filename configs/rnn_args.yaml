@@ -236,3 +236,5 @@ eval:
   nbest: 50
   blank_penalty: 90.0
   sil_index: 40
+
+torch_compile: true
