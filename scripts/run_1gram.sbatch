@@ -14,8 +14,6 @@ set -eo pipefail
 if [[ $# -lt 1 ]]; then
   echo "ERROR: Missing experiment folder argument(s)."
   echo "Usage: sbatch scripts/run_1gram.sbatch <folder1> [<folder2> ...]"
-  echo "Example:"
-  echo "  sbatch scripts/run_1gram.sbatch configs/experiments/head_blocks configs/experiments/lr_cosine"
   exit 1
 fi
 
@@ -49,7 +47,7 @@ fi
 
 export CUDA_HOME="${CUDA_HOME_CANDIDATE}"
 export PATH="${CUDA_HOME}/bin:${PATH}"
-export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${LD_LIBRARY_PATH:-}"
+export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${CUDA_HOME}/lib:${LD_LIBRARY_PATH:-}"
 
 echo "CUDA_HOME=${CUDA_HOME}"
 echo "which nvcc: $(command -v nvcc || echo 'nvcc-not-found')"
@@ -104,7 +102,7 @@ export TMPDIR="${SLURM_TMPDIR:-/tmp}"
 JOB_TMP="${TMPDIR}/${USER}_b2t_${SLURM_JOB_ID:-manual}"
 mkdir -p "${JOB_TMP}"
 
-# Torch extensions: build/load on node-local disk (prevents HOME cache + quota issues)
+# Torch extensions: build/load on node-local disk
 export PYTHONFAULTHANDLER=1
 export MAX_JOBS="${SLURM_CPUS_PER_TASK:-8}"
 export TORCH_EXTENSIONS_DIR="${JOB_TMP}/torch_extensions"
@@ -127,16 +125,25 @@ echo "TORCH_CUDA_ARCH_LIST=$TORCH_CUDA_ARCH_LIST"
 echo "WANDB_DIR=$WANDB_DIR"
 # -------------------------------------------------------------------------------
 
-# ---- Fix __cudaLaunchKernel: LD_PRELOAD libcudart matching torch CUDA ----
+# ---- Locate libcudart that matches torch.version.cuda, export CUDA_LIB + CUDART_SO ----
 CUDART_SO="$(python - <<'PY'
 import os, glob, torch
 ver = torch.version.cuda or ""
 cp = os.environ.get("CONDA_PREFIX","")
+cuda_home = os.environ.get("CUDA_HOME","")
+
 cands = []
+# Prefer CUDA_HOME first (system toolkit if available)
+if cuda_home and ver:
+    cands += glob.glob(os.path.join(cuda_home, "lib64", f"libcudart.so.{ver}*"))
+    cands += glob.glob(os.path.join(cuda_home, "lib",   f"libcudart.so.{ver}*"))
+
+# Then conda (pkgs + env)
 if cp and ver:
     cands += glob.glob(f"{cp}/pkgs/**/libcudart.so.{ver}*", recursive=True)
     cands += glob.glob(f"{cp}/**/libcudart.so.{ver}*", recursive=True)
-cands = [c for c in cands if ".a" not in c]
+
+cands = [c for c in cands if c and (not c.endswith(".a"))]
 print(cands[0] if cands else "")
 PY
 )"
@@ -147,15 +154,15 @@ if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
 fi
 
 export CUDA_LIB="$(dirname "${CUDART_SO}")"
-export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
+# Important: put CUDA_LIB FIRST to avoid picking wrong cudart from conda/lib64
 export LD_LIBRARY_PATH="${CUDA_LIB}:${LD_LIBRARY_PATH:-}"
+
+# Helps torch dlopen behavior
 export TORCH_USE_RTLD_GLOBAL=1
 
 echo "CUDART_SO=${CUDART_SO}"
 echo "CUDA_LIB=${CUDA_LIB}"
-echo "LD_PRELOAD=${LD_PRELOAD}"
 echo "TORCH_USE_RTLD_GLOBAL=${TORCH_USE_RTLD_GLOBAL}"
-
 # -------------------------------------------------------------------------------
 
 # ---- Repo + data ----
@@ -210,11 +217,29 @@ for EXP_DIR in "$@"; do
   for CFG in "${CFG_FILES[@]}"; do
     echo
     echo "=== RUN $(basename "$CFG") ==="
-    python -u -m brain2text.model_training.train_model \
-      --config "$BASE" \
-      --config "$OVR1" \
-      --config "$OVR2" \
-      --config "$CFG"
+
+    # Wrapper: force RTLD_GLOBAL + preload libcudart in-process (this fixes __cudaLaunchKernel)
+    python -u - <<PY
+import os, sys, ctypes, runpy
+import os as _os, sys as _sys
+
+# Make future dlopen() global
+_sys.setdlopenflags(_os.RTLD_GLOBAL | _os.RTLD_NOW)
+
+# Preload cudart globally (critical)
+ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
+
+# Run the training module with the same CLI args
+sys.argv = [
+  "train_model",
+  "--config", "${BASE}",
+  "--config", "${OVR1}",
+  "--config", "${OVR2}",
+  "--config", "${CFG}",
+]
+runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
+PY
+
   done
 done
 
