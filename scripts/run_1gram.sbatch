@@ -233,9 +233,10 @@ ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
 sys.argv = [
   "train_model",
   "--config", base,
-  "--config", ovr1,
   "--config", cfg,
+  "--config", ovr1,   # override al final
 ]
+
 runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
 PY
 

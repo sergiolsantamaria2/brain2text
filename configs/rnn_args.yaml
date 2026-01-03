@@ -221,7 +221,7 @@ wandb:
 eval:
   compute_wer: true
   lm_dir: data/lm/openwebtext_1gram_lm_sil
-  lm_dir_5gram: data/lm/5gram/languageModel
+  lm_dir_5gram: null
   reorder_mode: identity
   wer_tag: "1gram"
   wer_every_val_steps: 1
