@@ -21,10 +21,19 @@ fi
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text_xlstm
 
+python - <<'PY'
+import torch, sys
+print("torch", torch.__version__, "cuda", torch.version.cuda, "is_available", torch.cuda.is_available())
+if not torch.cuda.is_available():
+    sys.exit("ERROR: torch has no CUDA. Install a CUDA-enabled PyTorch build in this env.")
+PY
+
+
 # (Opcional pero recomendable en cluster) cargar CUDA si existe 'module'
 if command -v module >/dev/null 2>&1; then
-  module load cuda || true
+  module load cuda/12.1 || module load cuda/12.0 || module load cuda || true
 fi
+
 
 cd /home/e12511253/Brain2Text/brain2text
 
