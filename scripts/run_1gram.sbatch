@@ -23,18 +23,53 @@ fi
 source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text
 
-python - <<'PY'
-import torch, subprocess
-print("torch:", torch.__version__)
-print("torch cuda:", torch.version.cuda)
-subprocess.run(["nvcc","--version"])
+# ---- CUDA toolkit selection: MUST match torch.version.cuda ----
+TORCH_CUDA="$(python - <<'PY'
+import torch
+print(torch.version.cuda or "")
 PY
+)"
 
-# ---- Force CUDA toolkit that matches torch (cu117 => CUDA 11.7) ----
-export CUDA_HOME=/usr/local/cuda-11.7
+echo "torch CUDA runtime expects: ${TORCH_CUDA}"
+
+# Prefer a toolkit that EXACTLY matches torch.version.cuda
+CUDA_HOME_CANDIDATE=""
+if [[ -n "${TORCH_CUDA}" && -d "/usr/local/cuda-${TORCH_CUDA}" ]]; then
+  CUDA_HOME_CANDIDATE="/usr/local/cuda-${TORCH_CUDA}"
+fi
+
+# If no system toolkit matches, try conda-provided nvcc (if installed)
+if [[ -z "${CUDA_HOME_CANDIDATE}" ]]; then
+  if command -v nvcc >/dev/null 2>&1; then
+    # If nvcc is in conda, CUDA_HOME will be CONDA_PREFIX; if system, it'll be /usr/local/cuda
+    CUDA_HOME_CANDIDATE="$(dirname "$(dirname "$(command -v nvcc)")")"
+  fi
+fi
+
+if [[ -z "${CUDA_HOME_CANDIDATE}" || ! -d "${CUDA_HOME_CANDIDATE}" ]]; then
+  echo "ERROR: No usable CUDA toolkit found. torch expects CUDA=${TORCH_CUDA}."
+  echo "Fix (recommended): install matching toolkit inside conda (see instructions below)."
+  exit 1
+fi
+
+export CUDA_HOME="${CUDA_HOME_CANDIDATE}"
 export PATH="${CUDA_HOME}/bin:${PATH}"
 export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${LD_LIBRARY_PATH:-}"
-# --------------------------------------------------------------------
+
+echo "CUDA_HOME=${CUDA_HOME}"
+echo "which nvcc: $(command -v nvcc || echo 'nvcc-not-found')"
+nvcc --version || true
+
+NVCC_REL="$(nvcc --version 2>/dev/null | sed -n 's/.*release \([0-9]\+\.[0-9]\+\).*/\1/p' | tail -n 1)"
+echo "nvcc release: ${NVCC_REL}"
+
+if [[ -n "${TORCH_CUDA}" && -n "${NVCC_REL}" && "${NVCC_REL}" != "${TORCH_CUDA}" ]]; then
+  echo "ERROR: nvcc (${NVCC_REL}) != torch CUDA (${TORCH_CUDA})."
+  echo "This mismatch is a common cause of segfaults in custom CUDA extensions (like sLSTM)."
+  echo "Fix: install nvcc+libs matching torch CUDA inside conda."
+  exit 1
+fi
+# ---------------------------------------------------------------
 
 # ---- Runtime linking for lm_decoder (Torch + NEJM OpenFST v8 runtime) ----
 # Ensure we DO NOT have a wrong conda-level libfst.so.8 shim (ABI mismatch).
