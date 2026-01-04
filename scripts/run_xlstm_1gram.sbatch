@@ -145,19 +145,22 @@ if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
 fi
 
 export CUDART_SO
-# Prefer CUDA libs from conda "targets" layout (what torch usually expects)
+# Prefer CUDA libs from conda targets layout
 if [[ -d "${CONDA_PREFIX}/targets/x86_64-linux/lib" ]]; then
   export CUDA_LIB="${CONDA_PREFIX}/targets/x86_64-linux/lib"
 else
-  # fallback to your previous logic if targets doesn't exist
-  export CUDA_LIB="$(dirname "${CUDART_SO}")"
+  export CUDA_LIB="${CUDA_HOME}/lib64"
 fi
+
+# Prioriza CUDA_LIB y torch/lib al principio del loader path
+export LD_LIBRARY_PATH="${CUDA_LIB}:${TORCH_LIB}:${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
+unset LD_PRELOAD
+
+
 CUDART_SO="$(ls -1 "${CUDA_LIB}"/libcudart.so.* 2>/dev/null | head -n 1)"
 export CUDART_SO
 
-export LD_LIBRARY_PATH="${CUDA_LIB}:${LD_LIBRARY_PATH:-}"
-export LD_PRELOAD="${CUDART_SO}${LD_PRELOAD:+:${LD_PRELOAD}}"
-export TORCH_USE_RTLD_GLOBAL=1
+
 
 echo "CUDA_LIB=${CUDA_LIB}"
 echo "CUDART_SO=${CUDART_SO}"
@@ -226,6 +229,12 @@ for EXP_DIR in "$@"; do
 
   echo "Num configs: ${#CFG_FILES[@]}"
 
+export CUDA_LAUNCH_BLOCKING=1
+export TORCH_SHOW_CPP_STACKTRACES=1
+export PYTHONFAULTHANDLER=1
+export CUDA_MODULE_LOADING=LAZY
+
+
   for CFG in "${CFG_FILES[@]}"; do
     echo
     echo "=== RUN $(basename "$CFG") ==="
@@ -240,7 +249,6 @@ base, cfg, ovr_xlstm, ovr_wer = sys.argv[1:5]
 sys.setdlopenflags(os.RTLD_GLOBAL | os.RTLD_NOW)
 
 # Preload cudart globally (critical)
-ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
 
 # Run the training module with the same CLI args
 # Order matters: base -> experiment cfg -> force xlstm -> wer override
