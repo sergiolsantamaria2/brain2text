@@ -1,8 +1,0 @@
-num_training_batches: 20000
-lr_decay_steps: ${num_training_batches}
-lr_decay_steps_day: ${num_training_batches}
-
-wandb:
-  group: input_dropout
-  run_name: base
-  tags: ["input_dropout", "base"]
