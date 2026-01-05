@@ -1,0 +1,17 @@
+# configs/overrides/xlstm_safe.yaml
+model:
+  decoder_type: xlstm
+
+# Evita interacciones peligrosas con kernels CUDA custom
+torch_compile: false
+use_amp: false
+
+# Aislar DataLoader (evitar pin_memory thread + multiprocessing)
+dataset:
+  num_dataloader_workers: 0
+  pin_memory: false
+  persistent_workers: false
+
+# (Opcional) para depurar sin threads externos:
+# wandb:
+#   enabled: false
