@@ -701,7 +701,8 @@ class BrainToTextDecoder_Trainer:
     def save_model_checkpoint(self, save_path, PER, loss, WER=None):
 
         '''
-        Save a training checkpoint
+        Save a training checkpoint using Atomic Save (write to .tmp then rename)
+        to prevent file corruption errors like [enforce fail at inline_container.cc].
         '''
 
         checkpoint = {
@@ -713,18 +714,40 @@ class BrainToTextDecoder_Trainer:
             'val_WER': WER,
         }
 
-        
-        save_dir = os.path.dirname(os.path.realpath(save_path))
+        # Resolve path
+        save_path = os.path.realpath(save_path)
+        save_dir = os.path.dirname(save_path)
         os.makedirs(save_dir, exist_ok=True)
-        torch.save(checkpoint, save_path)
 
+        # --- ATOMIC SAVE IMPLEMENTATION ---
+        # 1. Define a temporary path
+        tmp_save_path = save_path + ".tmp"
 
-        
-        self.logger.info("Saved model to checkpoint: " + save_path)
+        try:
+            # 2. Write to the temporary file first
+            torch.save(checkpoint, tmp_save_path)
+            
+            # 3. Atomically replace the target file with the temporary file
+            # os.replace is atomic on POSIX systems (linux/unix)
+            os.replace(tmp_save_path, save_path)
+            
+            self.logger.info("Saved model to checkpoint: " + save_path)
+        except Exception as e:
+            self.logger.error(f"Failed to save checkpoint to {save_path}. Error: {e}")
+            # Optional: try to clean up tmp file if it exists
+            if os.path.exists(tmp_save_path):
+                os.remove(tmp_save_path)
+            raise e
+        # ----------------------------------
 
         # Save the args file alongside the checkpoint
-        with open(os.path.join(self.args['checkpoint_dir'], 'args.yaml'), 'w') as f:
-            OmegaConf.save(config=self.args, f=f)
+        # We do this separately as it's a small text file, less prone to corruption,
+        # but good practice to wrap it too if desired. 
+        try:
+            with open(os.path.join(self.args['checkpoint_dir'], 'args.yaml'), 'w') as f:
+                OmegaConf.save(config=self.args, f=f)
+        except Exception as e:
+            self.logger.warning(f"Could not save args.yaml: {e}")
 
     def create_attention_mask(self, sequence_lengths):
 
