@@ -145,29 +145,29 @@ if [[ -z "${CUDART_SO}" || ! -f "${CUDART_SO}" ]]; then
 fi
 
 export CUDART_SO
-# Prefer CUDA libs from conda targets layout
+
+# Prefer CUDA libs from conda "targets" layout (lo que torch suele esperar)
 if [[ -d "${CONDA_PREFIX}/targets/x86_64-linux/lib" ]]; then
   export CUDA_LIB="${CONDA_PREFIX}/targets/x86_64-linux/lib"
 else
+  # fallback razonable
   export CUDA_LIB="${CUDA_HOME}/lib64"
 fi
 
-# Prioriza CUDA_LIB y torch/lib al principio del loader path
-export LD_LIBRARY_PATH="${CUDA_LIB}:${TORCH_LIB}:${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
+# Importante: NO forzar cudart por preload
 unset LD_PRELOAD
 
-
-CUDART_SO="$(ls -1 "${CUDA_LIB}"/libcudart.so.* 2>/dev/null | head -n 1)"
-export CUDART_SO
-
-
+# Orden recomendado: CUDA_LIB primero, luego torch/lib, luego conda/lib
+export LD_LIBRARY_PATH="${CUDA_LIB}:${TORCH_LIB}:${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH:-}"
 
 echo "CUDA_LIB=${CUDA_LIB}"
 echo "CUDART_SO=${CUDART_SO}"
-nm -D "$CUDART_SO" | egrep "__cudaLaunchKernel|cudaLaunchKernel" || echo "WARNING: symbol not found in this libcudart"
+echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
 
-echo "LD_PRELOAD=${LD_PRELOAD}"
-echo "TORCH_USE_RTLD_GLOBAL=${TORCH_USE_RTLD_GLOBAL}"
+# (Opcional) check rápido de cudart que estás apuntando (solo informativo)
+if [[ -n "${CUDART_SO}" && -f "${CUDART_SO}" ]]; then
+  nm -D "${CUDART_SO}" | egrep "__cudaLaunchKernel|cudaLaunchKernel" || true
+fi
 
 # ---- Repo + data ----
 cd /home/e12511253/Brain2Text/brain2text
@@ -179,6 +179,12 @@ mkdir -p logs
 export B2T_DATA_DIR="${PWD}/data/hdf5_data_final"
 export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
 export PYTHONUNBUFFERED=1
+
+# ---- Debug CUDA (para que NO sea segfault “a ciegas”) ----
+export CUDA_LAUNCH_BLOCKING=1
+export TORCH_SHOW_CPP_STACKTRACES=1
+export CUDA_MODULE_LOADING=LAZY
+export PYTHONFAULTHANDLER=1
 
 # ---- Output: trained_models -> node-local (robust symlink) ----
 OUT_ROOT="${JOB_TMP}/trained_models"
@@ -241,17 +247,14 @@ export CUDA_MODULE_LOADING=LAZY
 
     # Wrapper: force RTLD_GLOBAL + preload libcudart in-process
     python -u - "$BASE" "$CFG" "$OVR_XLSTM" "$OVR_WER" <<'PY'
-import os, sys, ctypes, runpy
+
+import os, sys, runpy
 
 base, cfg, ovr_xlstm, ovr_wer = sys.argv[1:5]
 
 # Make future dlopen() global
 sys.setdlopenflags(os.RTLD_GLOBAL | os.RTLD_NOW)
 
-# Preload cudart globally (critical)
-
-# Run the training module with the same CLI args
-# Order matters: base -> experiment cfg -> force xlstm -> wer override
 sys.argv = [
   "train_model",
   "--config", base,
@@ -261,6 +264,7 @@ sys.argv = [
 ]
 
 runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
+
 PY
 
   done
