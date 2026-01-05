@@ -1,3 +1,11 @@
-# Force xLSTM decoder regardless of base config defaults
+# Force xLSTM decoder (safe runtime: no torch.compile, no AMP)
 model:
   decoder_type: xlstm
+
+# IMPORTANT: xLSTM + custom CUDA kernels often crash under torch.compile / AMP
+torch_compile: false
+use_amp: false
+
+# Reduce moving parts while stabilizing
+dataset:
+  num_dataloader_workers: 0

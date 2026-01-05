@@ -180,7 +180,7 @@ nm -D "${CUDART_SO}" 2>/dev/null | grep "${SYMBOL}" | head -n 1 || true
 # ---- Debug (optional but useful) ----
 export CUDA_MODULE_LOADING=LAZY
 export TORCH_SHOW_CPP_STACKTRACES=1
-export CUDA_LAUNCH_BLOCKING=0
+export CUDA_LAUNCH_BLOCKING=1
 
 # ---- Output: trained_models -> node-local ----
 OUT_ROOT="${JOB_TMP}/trained_models"
