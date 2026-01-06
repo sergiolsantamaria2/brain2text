@@ -166,7 +166,7 @@ export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
 export PYTHONUNBUFFERED=1
 
 # ---- Output root (job-local, no repo symlink) ----
-OUT_ROOT="${JOB_TMP}/trained_models"
+OUT_ROOT="${PWD}/trained_models"
 mkdir -p "${OUT_ROOT}"
 echo "OUT_ROOT=${OUT_ROOT}"
 

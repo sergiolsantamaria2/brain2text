@@ -1082,12 +1082,13 @@ class BrainToTextDecoder_Trainer:
                 cur_wer_to_save = float(val_metrics.get(wer_key, float("nan")))
                 cur_wer_to_save = cur_wer_to_save if np.isfinite(cur_wer_to_save) else None
 
-                self.save_model_checkpoint(
-                    f'{self.args["checkpoint_dir"]}/checkpoint_batch_{i}',
-                    val_metrics['avg_PER'],
-                    val_metrics['avg_loss'],
-                    cur_wer_to_save,
-                )
+                if bool(self.args.get("save_all_val_steps", False)):
+                    self.save_model_checkpoint(
+                        f'{self.args["checkpoint_dir"]}/checkpoint_batch_{i}',
+                        val_metrics["avg_PER"],
+                        val_metrics["avg_loss"],
+                        cur_wer_to_save,
+                    )
 
 
 
