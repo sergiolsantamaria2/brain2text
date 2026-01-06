@@ -45,8 +45,9 @@ gpu_number: '0' # GPU number to use for training, formatted as a string (e.g., '
 mode: train
 use_amp: true # whether to use automatic mixed precision (AMP) for training
 
-output_dir: trained_models/dev_run # directory to save the trained model and logs
-checkpoint_dir: ${output_dir}/checkpoint # directory to save checkpoints during training
+# Output dir can be forced per job/run via env var JOB_OUT_DIR
+output_dir: ${oc.env:JOB_OUT_DIR,trained_models/dev_run}
+checkpoint_dir: ${output_dir}/checkpoint
 init_from_checkpoint: false # whether to initialize the model from a checkpoint
 init_checkpoint_path: None # path of the checkpoint to initialize the model from, if any
 

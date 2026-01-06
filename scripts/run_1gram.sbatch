@@ -167,18 +167,9 @@ export B2T_DATA_DIR="${PWD}/data/hdf5_data_final"
 export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
 export PYTHONUNBUFFERED=1
 
-# ---- Output: trained_models -> node-local (robust symlink) ----
+# ---- Output root (job-local, no repo symlink) ----
 OUT_ROOT="${JOB_TMP}/trained_models"
 mkdir -p "${OUT_ROOT}"
-
-if [[ -e trained_models && ! -L trained_models ]]; then
-  echo "ERROR: trained_models exists and is not a symlink. Refusing to modify it."
-  ls -ld trained_models
-  exit 1
-fi
-
-ln -sfn "${OUT_ROOT}" trained_models
-echo "trained_models -> $(readlink trained_models)"
 echo "OUT_ROOT=${OUT_ROOT}"
 
 BASE="configs/rnn_args.yaml"
@@ -217,28 +208,34 @@ for EXP_DIR in "$@"; do
     echo
     echo "=== RUN $(basename "$CFG") ==="
 
+    RUN_STEM="$(basename "$CFG" .yaml)"
+    RUN_GROUP="$(basename "$EXP_DIR")"
+    export JOB_OUT_DIR="${OUT_ROOT}/${RUN_GROUP}/${RUN_STEM}"
+    mkdir -p "${JOB_OUT_DIR}"
+    echo "JOB_OUT_DIR=${JOB_OUT_DIR}"
+
     # Wrapper: force RTLD_GLOBAL + preload libcudart in-process
     python -u - "$BASE" "$OVR1" "$CFG" <<'PY'
-import os, sys, ctypes, runpy
+  import os, sys, ctypes, runpy
 
-base, ovr1, cfg = sys.argv[1:4]
+  base, ovr1, cfg = sys.argv[1:4]
 
-# Make future dlopen() global
-sys.setdlopenflags(os.RTLD_GLOBAL | os.RTLD_NOW)
+  # Make future dlopen() global
+  sys.setdlopenflags(os.RTLD_GLOBAL | os.RTLD_NOW)
 
-# Preload cudart globally (critical)
-ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
+  # Preload cudart globally (critical)
+  ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
 
-# Run the training module with the same CLI args
-sys.argv = [
-  "train_model",
-  "--config", base,
-  "--config", cfg,
-  "--config", ovr1,   # override al final
-]
+  # Run the training module with the same CLI args
+  sys.argv = [
+    "train_model",
+    "--config", base,
+    "--config", cfg,
+    "--config", ovr1,   # override al final
+  ]
 
-runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
-PY
+  runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
+  PY
 
   done
 done
