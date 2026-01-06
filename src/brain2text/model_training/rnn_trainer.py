@@ -95,6 +95,12 @@ class BrainToTextDecoder_Trainer:
 
         # Trainer fields
         self.args = args
+        # --- Force output_dir from env (job-local) if provided ---
+        job_out = os.environ.get("JOB_OUT_DIR", "")
+        if job_out and args.get("mode", "") == "train":
+            self.args["output_dir"] = job_out
+            self.args["checkpoint_dir"] = os.path.join(job_out, "checkpoint")
+        # --------------------------------------------------------
         self.logger = None 
         self.device = None
         self.model = None
