@@ -215,26 +215,26 @@ for EXP_DIR in "$@"; do
 
     # Wrapper: force RTLD_GLOBAL + preload libcudart in-process
     python -u - "$BASE" "$OVR1" "$CFG" <<'PY'
-  import os, sys, ctypes, runpy
+    import os, sys, ctypes, runpy
 
-  base, ovr1, cfg = sys.argv[1:4]
+    base, ovr1, cfg = sys.argv[1:4]
 
-  # Make future dlopen() global
-  sys.setdlopenflags(os.RTLD_GLOBAL | os.RTLD_NOW)
+    # Make future dlopen() global
+    sys.setdlopenflags(os.RTLD_GLOBAL | os.RTLD_NOW)
 
-  # Preload cudart globally (critical)
-  ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
+    # Preload cudart globally (critical)
+    ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
 
-  # Run the training module with the same CLI args
-  sys.argv = [
-    "train_model",
-    "--config", base,
-    "--config", cfg,
-    "--config", ovr1,   # override al final
-  ]
+    # Run the training module with the same CLI args
+    sys.argv = [
+      "train_model",
+      "--config", base,
+      "--config", cfg,
+      "--config", ovr1,   # override al final
+    ]
 
-  runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
-  PY
+    runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
+    PY
 
   done
 done
