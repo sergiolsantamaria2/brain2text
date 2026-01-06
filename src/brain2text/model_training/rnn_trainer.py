@@ -705,55 +705,50 @@ class BrainToTextDecoder_Trainer:
         self.logger.info("Loaded model from checkpoint: " + load_path)
 
     def save_model_checkpoint(self, save_path, PER, loss, WER=None):
+        """
+        Save a training checkpoint.
 
-        '''
-        Save a training checkpoint using Atomic Save (write to .tmp then rename)
-        to prevent file corruption errors like [enforce fail at inline_container.cc].
-        '''
-
+        IMPORTANT:
+        - Use legacy (non-zip) serialization to avoid inline_container.cc unexpected pos errors
+        on some HPC filesystems.
+        - Write to a temp file and atomically rename.
+        - Never crash training if checkpoint saving fails.
+        """
         checkpoint = {
-            'model_state_dict': self.model.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'scheduler_state_dict': self.learning_rate_scheduler.state_dict(),
-            'val_PER': PER,
-            'val_loss': loss,
-            'val_WER': WER,
+            "model_state_dict": self.model.state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
+            "scheduler_state_dict": self.learning_rate_scheduler.state_dict(),
+            "val_PER": PER,
+            "val_loss": loss,
+            "val_WER": WER,
         }
 
-        # Resolve path
-        save_path = os.path.realpath(save_path)
+        save_path = os.path.realpath(str(save_path))
         save_dir = os.path.dirname(save_path)
         os.makedirs(save_dir, exist_ok=True)
 
-        # --- ATOMIC SAVE IMPLEMENTATION ---
-        # 1. Define a temporary path
         tmp_save_path = save_path + ".tmp"
 
         try:
-            # 2. Write to the temporary file first
-            torch.save(checkpoint, tmp_save_path)
-            
-            # 3. Atomically replace the target file with the temporary file
-            # os.replace is atomic on POSIX systems (linux/unix)
-            os.replace(tmp_save_path, save_path)
-            
+            # Legacy serializer avoids zip-container writer (inline_container.cc)
+            torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+            os.replace(tmp_save_path, save_path)  # atomic rename
             self.logger.info("Saved model to checkpoint: " + save_path)
         except Exception as e:
-            self.logger.error(f"Failed to save checkpoint to {save_path}. Error: {e}")
-            # Optional: try to clean up tmp file if it exists
-            if os.path.exists(tmp_save_path):
-                os.remove(tmp_save_path)
-            raise e
-        # ----------------------------------
+            self.logger.exception(f"Checkpoint save failed (continuing training): {save_path} ({e})")
+            try:
+                if os.path.exists(tmp_save_path):
+                    os.remove(tmp_save_path)
+            except OSError:
+                pass
+            return
 
-        # Save the args file alongside the checkpoint
-        # We do this separately as it's a small text file, less prone to corruption,
-        # but good practice to wrap it too if desired. 
+        # Save the args file alongside the checkpoint (best-effort too)
         try:
-            with open(os.path.join(self.args['checkpoint_dir'], 'args.yaml'), 'w') as f:
+            with open(os.path.join(self.args["checkpoint_dir"], "args.yaml"), "w") as f:
                 OmegaConf.save(config=self.args, f=f)
         except Exception as e:
-            self.logger.warning(f"Could not save args.yaml: {e}")
+            self.logger.warning(f"Could not save args.yaml (continuing): {e}")
 
     def create_attention_mask(self, sequence_lengths):
 
