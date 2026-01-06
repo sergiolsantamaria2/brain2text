@@ -7,6 +7,8 @@
 #SBATCH --mem=64G
 #SBATCH --time=24:00:00
 #SBATCH --no-requeue
+#SBATCH --exclude=a-l40s-o-2
+
 
 set -eo pipefail
 
