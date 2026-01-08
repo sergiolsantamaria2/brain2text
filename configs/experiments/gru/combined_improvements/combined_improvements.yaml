@@ -1,0 +1,37 @@
+# configs/experiments/gru/combined_improvements.yaml
+num_training_batches: 20000
+
+lr_scheduler_type: cosine_stepdrop
+lr_max: 0.004
+lr_min: 0.0001
+lr_decay_steps: ${num_training_batches}
+lr_warmup_steps: 500
+lr_stepdrop_step: 15000
+lr_stepdrop_factor: 0.1
+
+weight_decay: 0.00001
+
+model:
+  # Speckled masking
+  input_speckle_p: 0.3
+  input_speckle_mode: "feature"
+  
+  # Post-RNN head
+  head_type: "resffn"
+  head_num_blocks: 2
+  head_norm: "layernorm"
+  head_dropout: 0.1
+  head_activation: "gelu"
+  
+  # Kernel más grande (si aplica)
+  patch_size: 20
+  patch_stride: 4
+
+output_dir: trained_models/combined_v1
+checkpoint_dir: ${output_dir}/checkpoint
+
+wandb:
+  enabled: true
+  group: combined_improvements
+  run_name: speckle_head_stepdrop
+  tags: ["speckle", "head", "stepdrop", "combined"]
