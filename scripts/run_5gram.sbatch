@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=b2t
+#SBATCH --job-name=b2t5g
 #SBATCH --output=logs/%x_%j.out
 #SBATCH --error=logs/%x_%j.err
 #SBATCH --gres=gpu:1
@@ -9,12 +9,11 @@
 #SBATCH --no-requeue
 #SBATCH --exclude=a-l40s-o-2
 
-
 set -eo pipefail
 
 if [[ $# -lt 1 ]]; then
   echo "ERROR: Missing experiment folder argument(s)."
-  echo "Usage: sbatch scripts/run_1gram.sbatch <folder1> [<folder2> ...]"
+  echo "Usage: sbatch scripts/run_5gram.sbatch <folder1> [<folder2> ...]"
   exit 1
 fi
 
@@ -164,10 +163,9 @@ export PYTHONPATH="${LM_PY}:${PWD}/src:${PYTHONPATH:-}"
 mkdir -p logs
 
 export B2T_DATA_DIR="${PWD}/data/hdf5_data_final"
-export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
 export PYTHONUNBUFFERED=1
 
-# ---- Output root (job-local, no repo symlink) ----
+# ---- Output root (same as 1-gram script) ----
 OUT_ROOT="${PWD}/trained_models"
 mkdir -p "${OUT_ROOT}"
 echo "OUT_ROOT=${OUT_ROOT}"
@@ -231,7 +229,7 @@ sys.argv = [
   "train_model",
   "--config", base,
   "--config", cfg,
-  "--config", ovr1,   # override al final
+  "--config", ovr1,   # override at the end
 ]
 
 runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
