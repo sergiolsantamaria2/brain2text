@@ -23,7 +23,15 @@ source /home/e12511253/miniforge3/etc/profile.d/conda.sh
 conda activate brain2text
 
 # ---- Job-local dirs (avoid quota in /home) ----
-export TMPDIR="${SLURM_TMPDIR:-/tmp}"
+if [[ -n "${SLURM_TMPDIR}" && -w "${SLURM_TMPDIR}" ]]; then
+  export TMPDIR="${SLURM_TMPDIR}"
+elif [[ -n "${SCRATCH}" && -w "${SCRATCH}" ]]; then
+  export TMPDIR="${SCRATCH}/tmp_${SLURM_JOB_ID:-$$}"
+else
+  export TMPDIR="${HOME}/tmp"
+fi
+mkdir -p "${TMPDIR}"
+
 JOB_TMP="${TMPDIR}/${USER}_b2t_${SLURM_JOB_ID:-manual}"
 mkdir -p "${JOB_TMP}"
 
