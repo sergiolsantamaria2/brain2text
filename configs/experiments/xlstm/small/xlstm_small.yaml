@@ -1,11 +1,12 @@
 num_training_batches: 20000
 
-training:
+dataset:
   batch_size: 24
 
 model:
   decoder_type: xlstm
   n_units: 512
+  n_layers: 3
   xlstm_num_blocks: 3
   xlstm_num_heads: 4
   xlstm_conv1d_kernel_size: 4
@@ -20,7 +21,7 @@ model:
   input_speckle_p: 0.0
 
 lr_scheduler_type: cosine
-lr_max: 0.0040
+lr_max: 0.004
 lr_min: 0.0001333
 lr_decay_steps: ${num_training_batches}
 lr_warmup_steps: 500
@@ -39,4 +40,4 @@ wandb:
   enabled: true
   group: xlstm_small
   run_name: xlstm_small
-  tags: ["xlstm", "slstm", "small", "vanilla"]
+  tags: ["xlstm", "slstm", "small", "vanilla", "512u", b"]

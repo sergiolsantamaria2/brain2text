@@ -1,20 +1,27 @@
-training_batches: 20000
+num_training_batches: 20000
+
+dataset:
+  batch_size: 16
 
 model:
   decoder_type: xlstm
   n_units: 768
-  xlstm_num_blocks: 5
+  n_layers: 3
+  xlstm_num_blocks: 3
   xlstm_num_heads: 4
-  xlstm_conv1d_kernel_size: 8  # kernel más grande
+  xlstm_conv1d_kernel_size: 4
   xlstm_dropout: 0.2
+  xlstm_backend: "vanilla"
   
   patch_size: 14
   patch_stride: 4
+  
   head_type: "none"
+  head_num_blocks: 0
   input_speckle_p: 0.0
 
 lr_scheduler_type: cosine
-lr_max: 0.0040
+lr_max: 0.004
 lr_min: 0.0001333
 lr_decay_steps: ${num_training_batches}
 lr_warmup_steps: 500
@@ -26,11 +33,11 @@ lr_warmup_steps_day: 500
 
 weight_decay: 0.00001
 
-output_dir: trained_models/xlstm/baseline/xlstm_conv8
+output_dir: trained_models/xlstm/small/xlstm_medium
 checkpoint_dir: ${output_dir}/checkpoint
 
 wandb:
   enabled: true
-  group: xlstm_baseline
-  run_name: xlstm_conv8
-  tags: ["xlstm", "slstm", "conv8"]
+  group: xlstm_small
+  run_name: xlstm_medium
+  tags: ["xlstm", "slstm", "medium", "vanilla", "768u", "3b"]
