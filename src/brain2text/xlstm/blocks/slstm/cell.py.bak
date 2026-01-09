@@ -778,24 +778,9 @@ class sLSTMCell(sLSTMCellBase):
     config_class = sLSTMCellConfig
 
     def __new__(cls, config: sLSTMCellConfig, skip_backend_init: bool = False):
-        backend = config.backend
-        
-        # Auto-fallback: if CUDA requested but not available, use vanilla
-        if backend == "cuda":
-            cuda_available = torch.cuda.is_available()
-            cuda_lib_set = bool(os.environ.get("CUDA_LIB", ""))
-            
-            if not cuda_available or not cuda_lib_set:
-                LOGGER.warning(
-                    f"sLSTMCell: CUDA backend requested but not available "
-                    f"(cuda_available={cuda_available}, CUDA_LIB set={cuda_lib_set}). "
-                    f"Falling back to vanilla (pure PyTorch) backend."
-                )
-                backend = "vanilla"
-        
-        if backend == "cuda":
+        if config.backend == "cuda":
             return sLSTMCell_cuda(config, skip_backend_init=skip_backend_init)
-        elif backend == "vanilla":
+        elif config.backend == "vanilla":
             return sLSTMCell_vanilla(config)
         else:
             raise RuntimeError(

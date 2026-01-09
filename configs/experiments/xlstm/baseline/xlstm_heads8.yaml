@@ -1,0 +1,36 @@
+num_training_batches: 20000
+
+model:
+  decoder_type: xlstm
+  n_units: 768
+  xlstm_num_blocks: 5
+  xlstm_num_heads: 8           # más heads
+  xlstm_conv1d_kernel_size: 4
+  xlstm_dropout: 0.2
+  
+  patch_size: 14
+  patch_stride: 4
+  head_type: "none"
+  input_speckle_p: 0.0
+
+lr_scheduler_type: cosine
+lr_max: 0.0040
+lr_min: 0.0001333
+lr_decay_steps: ${num_training_batches}
+lr_warmup_steps: 500
+
+lr_max_day: 0.00133
+lr_min_day: 0.0001333
+lr_decay_steps_day: ${num_training_batches}
+lr_warmup_steps_day: 500
+
+weight_decay: 0.00001
+
+output_dir: trained_models/xlstm/baseline/xlstm_heads8
+checkpoint_dir: ${output_dir}/checkpoint
+
+wandb:
+  enabled: true
+  group: xlstm_baseline
+  run_name: xlstm_heads8
+  tags: ["xlstm", "slstm", "heads8"]
