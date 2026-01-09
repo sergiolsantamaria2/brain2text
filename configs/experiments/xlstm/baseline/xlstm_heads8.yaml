@@ -1,12 +1,12 @@
 num_training_batches: 20000
-
 model:
   decoder_type: xlstm
   n_units: 768
   xlstm_num_blocks: 5
-  xlstm_num_heads: 8           # más heads
+  xlstm_num_heads: 8
   xlstm_conv1d_kernel_size: 4
   xlstm_dropout: 0.2
+  xlstm_backend: "vanilla"
   
   patch_size: 14
   patch_stride: 4
@@ -33,4 +33,4 @@ wandb:
   enabled: true
   group: xlstm_baseline
   run_name: xlstm_heads8
-  tags: ["xlstm", "slstm", "heads8"]
+  tags: ["xlstm", "slstm", "heads8", "vanilla"]

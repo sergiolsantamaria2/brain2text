@@ -6,7 +6,8 @@ model:
   xlstm_num_blocks: 5
   xlstm_num_heads: 4
   xlstm_conv1d_kernel_size: 4
-  xlstm_dpout: 0.2
+  xlstm_dropout: 0.2
+  xlstm_backend: "vanilla"
   
   patch_size: 14
   patch_stride: 4
@@ -14,7 +15,7 @@ model:
   input_speckle_p: 0.0
 
 lr_scheduler_type: cosine
-lr_max: 0.0025                 # LR más conservador
+lr_max: 0.0025
 lr_min: 0.0001
 lr_decay_steps: ${num_training_batches}
 lr_warmup_steps: 500
@@ -33,4 +34,4 @@ wandb:
   enabled: true
   group: xlstm_baseline
   run_name: xlstm_lr25
-  tags: ["xlstm", "slstm", "lr25"]
+  tags: ["xlstm", "slstm", "lr25", "vanilla"]

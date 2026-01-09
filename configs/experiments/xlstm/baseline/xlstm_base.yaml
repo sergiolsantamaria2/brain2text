@@ -3,20 +3,17 @@ num_training_batches: 20000
 model:
   decoder_type: xlstm
   n_units: 768
-  xlstm_num_blocks: 5          # equivalente a n_layers del GRU
+  xlstm_num_blocks: 5
   xlstm_num_heads: 4
   xlstm_conv1d_kernel_size: 4
   xlstm_dropout: 0.2
+  xlstm_backend: "vanilla"    # Evita problemas de compilación CUDA
   
-  # Mantener mismo patch que GRU baseline
   patch_size: 14
   patch_stride: 4
   
-  # Sin head extra por ahora (comparación limpia)
   head_type: "none"
   head_num_blocks: 0
-  
-  # Sin speckle por ahora
   input_speckle_p: 0.0
 
 lr_scheduler_type: cosine
@@ -38,5 +35,5 @@ checkpoint_dir: ${output_dir}/checkpoint
 wandb:
   enabled: true
   group: xlstm_baseline
-  run_name: lstm_base
-  tags: ["xlstm", "slstm", "baseline"]
+  run_name: xlstm_base
+  tags: ["xlstm", "slstm", "baseline", "vanilla"]

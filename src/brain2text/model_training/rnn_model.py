@@ -481,10 +481,11 @@ class XLSTMDecoder(nn.Module):
         n_layers: int,
         patch_size: int,
         patch_stride: int,
-        xlstm_num_blocks: int = None,
+       xlstm_num_blocks: int = None,
         xlstm_num_heads: int = 4,
         xlstm_conv1d_kernel_size: int = 4,
         xlstm_dropout: float = None,
+        xlstm_backend: str = "cuda",  # "cuda" or "vanilla"
         # --- NEW: post-backbone head (match GRU feature set) ---
         head_type: str = "none",          # "none" | "resffn"
         head_num_blocks: int = 0,
@@ -513,6 +514,7 @@ class XLSTMDecoder(nn.Module):
         self.xlstm_num_heads = int(xlstm_num_heads)
         self.xlstm_conv1d_kernel_size = int(xlstm_conv1d_kernel_size)
         self.xlstm_dropout = float(xlstm_dropout)
+        self.xlstm_backend = str(xlstm_backend)
 
         # Head + speckle knobs
         self.head_type = str(head_type)
