@@ -2,7 +2,7 @@
 # Based on DCoND (1st place Brain-to-Text '24)
 # Expected improvement: PER 16.62% -> 15.34%
 
-num_training_batches: 200000
+num_training_batches: 20000
 
 # Enable diphone mode
 use_diphones: true
