@@ -44,3 +44,5 @@ wandb:
   group: diphones
   run_name: diphone_speckle
   tags: ["diphones", "dcond", "gru", "speckle"]
+
+save_val_logits: false

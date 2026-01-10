@@ -39,3 +39,5 @@ wandb:
   group: diphones
   run_name: diphone_long
   tags: ["diphones", "dcond", "gru", "40k"]
+
+save_val_logits: false

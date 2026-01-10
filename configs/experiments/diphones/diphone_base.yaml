@@ -42,3 +42,5 @@ wandb:
   group: diphones
   run_name: diphone_base
   tags: ["diphones", "dcond", "gru", "baseline"]
+
+save_val_logits: false

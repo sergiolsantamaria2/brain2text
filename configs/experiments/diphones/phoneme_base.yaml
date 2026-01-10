@@ -39,3 +39,5 @@ wandb:
   group: diphones
   run_name: phoneme_base
   tags: ["phonemes", "gru", "baseline", "control"]
+
+save_val_logits: false
