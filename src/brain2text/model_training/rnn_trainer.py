@@ -14,6 +14,7 @@ import pickle
 from pathlib import Path
 
 from brain2text.lm.local_lm import LocalNgramDecoder, LocalLMConfig
+from brain2text.diphones.diphone_utils import DiphoneConverter, N_DIPHONE_CLASSES
 try:
     import wandb
 except ImportError:
@@ -258,6 +259,16 @@ class BrainToTextDecoder_Trainer:
                 self._lm_5gram = None
 
         # ------------------------------------------------
+        # Diphone support (DCoND)
+        self.use_diphones = bool(self.args.get("use_diphones", False))
+        self.diphone_converter = None
+        if self.use_diphones:
+            self.diphone_converter = DiphoneConverter()
+            self.logger.info(
+                f"Diphone mode ENABLED: n_classes changed from "
+                f"{self.args['dataset']['n_classes']} to {self.diphone_converter.num_classes}"
+            )
+        # ------------------------------------------------
 
 
         # Set seed if provided 
@@ -324,7 +335,7 @@ class BrainToTextDecoder_Trainer:
             neural_dim=mcfg["n_input_features"],
             n_units=mcfg["n_units"],
             n_days=len(self.args["dataset"]["sessions"]),
-            n_classes=self.args["dataset"]["n_classes"],
+            n_classes=self.diphone_converter.num_classes if self.use_diphones else self.args["dataset"]["n_classes"],
             rnn_dropout=mcfg["rnn_dropout"],
             input_dropout=mcfg["input_network"]["input_layer_dropout"],
             n_layers=mcfg["n_layers"],
@@ -892,9 +903,18 @@ class BrainToTextDecoder_Trainer:
                 logits = self.model(features, day_indicies)
 
                 # Calculate CTC Loss
+                # Convert labels to diphones if enabled
+                if self.use_diphones:
+                    diphone_labels, _ = self.diphone_converter.phonemes_to_diphones_batch(
+                        labels, phone_seq_lens
+                    )
+                    ctc_targets = diphone_labels
+                else:
+                    ctc_targets = labels
+                
                 loss = self.ctc_loss(
                     log_probs = torch.permute(logits.log_softmax(2), [1, 0, 2]),
-                    targets = labels,
+                    targets = ctc_targets,
                     input_lengths = adjusted_lens,
                     target_lengths = phone_seq_lens
                     )
@@ -1220,20 +1240,33 @@ class BrainToTextDecoder_Trainer:
                                 self.logger.info(f"WER debug GT example: {true_sentence}")
 
     
+                    # Convert labels to diphones if enabled
+                    if self.use_diphones:
+                        diphone_labels, _ = self.diphone_converter.phonemes_to_diphones_batch(
+                            labels, phone_seq_lens
+                        )
+                        ctc_targets = diphone_labels
+                    else:
+                        ctc_targets = labels
+                    
                     loss = self.ctc_loss(
                         torch.permute(logits.log_softmax(2), [1, 0, 2]),
-                        labels,
+                        ctc_targets,
                         adjusted_lens,
                         phone_seq_lens,
                     )
-                    loss = torch.mean(loss)
 
 
                 # Calculate PER per day and also avg over entire validation set
                 batch_edit_distance = 0 
                 decoded_seqs = []
                 for iterIdx in range(logits.shape[0]):
-                    decoded_seq = torch.argmax(logits[iterIdx, 0 : adjusted_lens[iterIdx], :].clone().detach(),dim=-1)
+                    # Marginalize diphones for PER calculation
+                    if self.use_diphones:
+                        logits_for_per = self.diphone_converter.marginalize(logits)
+                    else:
+                        logits_for_per = logits
+                    decoded_seq = torch.argmax(logits_for_per[iterIdx, 0 : adjusted_lens[iterIdx], :].clone().detach(),dim=-1)
                     decoded_seq = torch.unique_consecutive(decoded_seq, dim=-1)
                     decoded_seq = decoded_seq.cpu().detach().numpy()
                     decoded_seq = np.array([i for i in decoded_seq if i != 0])
@@ -1320,6 +1353,14 @@ class BrainToTextDecoder_Trainer:
 
             for logits_tc, true_sentence in wer_collected:
                 lp = torch.from_numpy(logits_tc).float()
+                
+                # Marginalize diphones to phonemes if enabled
+                if self.use_diphones:
+                    # logits_tc is [time, n_classes] -> need [1, time, n_classes]
+                    lp_batch = lp.unsqueeze(0)  # [1, time, 1601]
+                    lp_phoneme = self.diphone_converter.marginalize(lp_batch)  # [1, time, 41]
+                    lp = lp_phoneme.squeeze(0)  # [time, 41]
+                
                 log_probs_tc = torch.log_softmax(lp, dim=-1).cpu().numpy()
 
                 pred_primary = primary_dec.decode_from_logits(log_probs_tc, input_is_log_probs=True)

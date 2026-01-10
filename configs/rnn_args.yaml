@@ -241,3 +241,5 @@ eval:
   sil_index: 40
 
 torch_compile: true
+
+use_diphones: false

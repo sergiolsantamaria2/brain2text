@@ -1,0 +1,41 @@
+# Phoneme baseline (NO diphones) - for direct comparison
+# Same settings as diphone_base but use_diphones: false
+
+num_training_batches: 20000
+
+use_diphones: false
+
+model:
+  decoder_type: gru
+  n_units: 768
+  n_layers: 5
+  rnn_dropout: 0.2
+  
+  patch_size: 14
+  patch_stride: 4
+  
+  head_type: "none"
+  head_num_blocks: 0
+  input_speckle_p: 0.0
+
+lr_scheduler_type: cosine
+lr_max: 0.003
+lr_min: 0.0001
+lr_decay_steps: ${num_training_batches}
+lr_warmup_steps: 500
+
+lr_max_day: 0.001
+lr_min_day: 0.0001
+lr_decay_steps_day: ${num_training_batches}
+lr_warmup_steps_day: 500
+
+weight_decay: 0.00001
+
+output_dir: trained_models/diphones/phoneme_base
+checkpoint_dir: ${output_dir}/checkpoint
+
+wandb:
+  enabled: true
+  group: diphones
+  run_name: phoneme_base
+  tags: ["phonemes", "gru", "baseline", "control"]
