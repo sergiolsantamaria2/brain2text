@@ -1255,6 +1255,7 @@ class BrainToTextDecoder_Trainer:
                         adjusted_lens,
                         phone_seq_lens,
                     )
+                    loss = torch.mean(loss)
 
 
                 # Calculate PER per day and also avg over entire validation set
