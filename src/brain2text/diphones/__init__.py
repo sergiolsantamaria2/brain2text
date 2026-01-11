@@ -1,7 +1,7 @@
 """
-Diphone utilities for Brain-to-Text decoding (DCoND method).
+Diphone utilities for Brain-to-Text decoding.
 
-Based on 1st place Brain-to-Text '24 competition entry.
+Based on DCoND (Divide-Conquer Neural Decoder) approach.
 """
 
 from .diphone_utils import (
@@ -13,7 +13,6 @@ from .diphone_utils import (
     phoneme_to_diphone_index,
     diphone_index_to_phonemes,
     phoneme_sequence_to_diphones,
-    phoneme_labels_to_diphone_labels,
     marginalize_diphone_logits,
 )
 
@@ -26,6 +25,5 @@ __all__ = [
     "phoneme_to_diphone_index",
     "diphone_index_to_phonemes",
     "phoneme_sequence_to_diphones",
-    "phoneme_labels_to_diphone_labels",
     "marginalize_diphone_logits",
 ]
