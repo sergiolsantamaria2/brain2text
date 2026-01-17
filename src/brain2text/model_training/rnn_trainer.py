@@ -371,6 +371,7 @@ class BrainToTextDecoder_Trainer:
                 head_activation=str(mcfg.get("head_activation", "gelu")),
                 input_speckle_p=float(mcfg.get("input_speckle_p", 0.0)),
                 input_speckle_mode=str(mcfg.get("input_speckle_mode", "feature")),
+                xlstm_backend=str(mcfg.get("xlstm_backend", "cuda")),
             ))
 
 
@@ -384,6 +385,7 @@ class BrainToTextDecoder_Trainer:
                 head_activation=str(mcfg.get("head_activation", "gelu")),
                 input_speckle_p=float(mcfg.get("input_speckle_p", 0.0)),
                 input_speckle_mode=str(mcfg.get("input_speckle_mode", "feature")),
+                xlstm_backend=str(mcfg.get("xlstm_backend", "cuda")),
             ))
 
         # Make it robust: drop any kwargs not accepted by the selected decoder

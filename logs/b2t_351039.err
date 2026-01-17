@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 9, in <module>
+    from .rnn_trainer import BrainToTextDecoder_Trainer
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 83, in <module>
+    from .rnn_model import GRUDecoder, ResLSTMDecoder, XLSTMDecoder
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_model.py", line 464, in <module>
+    from brain2text.xlstm.xlstm_block_stack import xLSTMBlockStack, xLSTMBlockStackConfig
+ModuleNotFoundError: No module named 'brain2text.xlstm.xlstm_block_stack'

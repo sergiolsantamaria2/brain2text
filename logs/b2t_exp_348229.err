@@ -1,0 +1,13 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run foci4kfo
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_348229/wandb/wandb/run-20260103_203947-foci4kfo
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run base
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/foci4kfo
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+[2026-01-03T20:45:09.807] error: *** JOB 348229 ON a-l40s-o-1 CANCELLED AT 2026-01-03T20:45:09 DUE to SIGNAL Terminated ***

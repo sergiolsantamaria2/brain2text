@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/os.py", line 679, in __getitem__
+    raise KeyError(key) from None
+KeyError: 'CUDART_SO'

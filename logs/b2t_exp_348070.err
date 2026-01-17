@@ -1,0 +1,22 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 5pdmlnk5
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/wandb/wandb/run-20260103_113242-5pdmlnk5
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run b1
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/5pdmlnk5
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0103 11:32:43.739507 1279025 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0103 11:32:43.773761 1279025 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0103 11:32:43.835462 1279025 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+Using /home/e12511253/.cache/torch_extensions/py39_cu117 as PyTorch extensions root...
+Creating extension directory /home/e12511253/.cache/torch_extensions/py39_cu117/slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /home/e12511253/.cache/torch_extensions/py39_cu117/slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0/build.ninja...
+Building extension module slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+Loading extension module slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+/var/spool/slurm/d/job348070/slurm_script: line 114: 1279025 Segmentation fault      (core dumped) python -u -m brain2text.model_training.train_model --config "$BASE" --config "$OVR" --config "$CFG"

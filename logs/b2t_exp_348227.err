@@ -1,0 +1,63 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run ew9ytayz
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_348227/wandb/wandb/run-20260103_201532-ew9ytayz
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run base
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/ew9ytayz
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/pathlib.py", line 1251, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'trained_models/rnn_dropout/lr40/base/checkpoint'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/pathlib.py", line 1251, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'trained_models/rnn_dropout/lr40/base'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/pathlib.py", line 1251, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'trained_models/rnn_dropout/lr40'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/pathlib.py", line 1251, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'trained_models/rnn_dropout'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1029, in train
+    self.save_model_checkpoint(
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 715, in save_model_checkpoint
+    pathlib.Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/pathlib.py", line 1255, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/pathlib.py", line 1255, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/pathlib.py", line 1255, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  [Previous line repeated 1 more time]
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/pathlib.py", line 1251, in mkdir
+    self._accessor.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: 'trained_models'

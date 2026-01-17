@@ -1,0 +1,23 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+Using /tmp/torch_extensions as PyTorch extensions root...
+Creating extension directory /tmp/torch_extensions/slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /tmp/torch_extensions/slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0/build.ninja...
+Building extension module slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+Using envvar MAX_JOBS (8) as the number of workers...
+Loading extension module slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+Fatal Python error: Segmentation fault
+
+Current thread 0x000014d4e8cff640 (most recent call first):
+<no Python frame>
+
+Thread 0x000014d5cca28740 (most recent call first):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/autograd/__init__.py", line 197 in backward
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/_tensor.py", line 488 in backward
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 875 in train
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91 in main
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98 in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87 in _run_code
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 197 in _run_module_as_main
+/var/spool/slurm/d/job348088/slurm_script: line 132: 1290327 Segmentation fault      (core dumped) python -u -m brain2text.model_training.train_model --config "$BASE" --config "$OVR" --config "$CFG"

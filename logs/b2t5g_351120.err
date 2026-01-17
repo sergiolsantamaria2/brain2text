@@ -1,0 +1,3 @@
+[2026-01-08T15:12:21.174] error: TMPDIR [/tmp] is not writeable
+[2026-01-08T15:12:21.174] error: Setting TMPDIR to /tmp
+mkdir: cannot create directory ‘/tmp/e12511253_b2t_351120’: Permission denied

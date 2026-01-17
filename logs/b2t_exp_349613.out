@@ -1,0 +1,65 @@
+TMPDIR=/tmp
+JOB_TMP=/tmp/e12511253_b2t_349613
+TORCH_EXTENSIONS_DIR=/tmp/e12511253_b2t_349613/torch_extensions
+WANDB_DIR=/tmp/e12511253_b2t_349613/wandb
+torch CUDA runtime expects: 11.7
+CUDA_HOME=/home/e12511253/miniforge3/envs/brain2text
+which nvcc: /home/e12511253/miniforge3/envs/brain2text/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Tue_May__3_18:49:52_PDT_2022
+Cuda compilation tools, release 11.7, V11.7.64
+Build cuda_11.7.r11.7/compiler.31294372_0
+nvcc release: 11.7
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/tmp/e12511253_b2t_349613/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:/home/e12511253/miniforge3/envs/brain2text/lib64:/home/e12511253/miniforge3/envs/brain2text/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan  6 13:16 /tmp/e12511253_b2t_349613/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+CUDART_SO=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+CUDA_LIB=/home/e12511253/miniforge3/envs/brain2text/lib64
+LD_PRELOAD=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+TORCH_USE_RTLD_GLOBAL=1
+OUT_ROOT=/home/e12511253/Brain2Text/brain2text/trained_models
+==============================================
+Job: b2t_exp  ID: 349613
+Base: configs/rnn_args.yaml
+Global override 1: configs/overrides/wer_1gram_only.yaml
+Folders: configs/experiments/gru/scheduler
+Host: a-l40s-o-2
+CUDA_VISIBLE_DEVICES=0
+==============================================
+
+========== FOLDER: configs/experiments/gru/scheduler ==========
+Num configs: 2
+
+=== RUN cosine_lr40_baseline.yaml ===
+JOB_OUT_DIR=/home/e12511253/Brain2Text/brain2text/trained_models/scheduler/cosine_lr40_baseline
+2026-01-06 13:16:54,157: Using device: cpu
+2026-01-06 13:16:55,804: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil
+2026-01-06 13:16:55,824: Using 45 sessions after filtering (from 45).
+2026-01-06 13:16:56,213: Using torch.compile (if available)
+2026-01-06 13:16:56,214: torch.compile not available (torch<2.0). Skipping.
+2026-01-06 13:16:56,214: Initialized RNN decoding model
+2026-01-06 13:16:56,214: GRUDecoder(
+  (day_layer_activation): Softsign()
+  (day_layer_dropout): Dropout(p=0.2, inplace=False)
+  (gru): GRU(7168, 768, num_layers=5, batch_first=True, dropout=0.2)
+  (head): Sequential(
+    (0): ResidualFFNBlock(
+      (norm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (lin): Linear(in_features=768, out_features=768, bias=True)
+      (act): GELU(approximate='none')
+      (drop): Dropout(p=0.1, inplace=False)
+    )
+  )
+  (out): Linear(in_features=768, out_features=41, bias=True)
+)
+2026-01-06 13:16:56,214: Model has 44,907,305 parameters
+2026-01-06 13:16:56,214: Model has 11,819,520 day-specific parameters | 26.32% of total parameters
+2026-01-06 13:16:57,493: Successfully initialized datasets
+2026-01-06 13:16:57,494: AdamW(fused) not available in this torch build. Using standard AdamW.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mcosine_lr40_baseline[0m at: [34m[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../tmp/e12511253_b2t_349613/wandb/wandb/run-20260106_131654-9f6zye7i/logs[0m

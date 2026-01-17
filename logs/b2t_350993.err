@@ -1,0 +1,97 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run cre3ecut
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_350993/wandb/wandb/run-20260108_105756-cre3ecut
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run combined_30k
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/cre3ecut
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0108 10:57:57.481745 3825360 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0108 10:57:57.525071 3825360 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0108 10:57:57.589135 3825360 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading output.log; uploading config.yaml
+wandb: uploading history steps 29999-29999, summary, console lines 3282-3332
+wandb: 
+wandb: Run history:
+wandb:          lr/day ███████▇▇▇▆▅▅▄▄▄▄▄▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁
+wandb:         lr/main ▅█████████▇▇▇▇▇▆▅▅▅▄▄▄▄▄▃▃▃▃▂▂▂▂▂▂▂▁▁▁▁▁
+wandb: train/grad_norm ▅█▆▃▅▅▃▃▂▂▂▅▃▂▃▃▂▂▂▂▇▃▃▆▁▁▃▂▃▂▂▁▁▂▃▃▁▃▂▂
+wandb:      train/loss █▇▅▄▄▄▄▃▄▄▃▂▃▃▃▃▃▂▃▃▂▂▂▁▁▁▂▂▁▁▂▂▁▂▁▁▁▁▁▁
+wandb:         val/PER █▄▃▃▃▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val/WER █▆▇▇▆▇▆█▆██▇▆▅▅▆▅▇▅▆▂▂▂▃▃▁▂▁▃▂▃▂▂▃▃▂▃▂▃▂
+wandb:        val/loss █▆▅▄▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:          lr/day 0.00013
+wandb:         lr/main 0.00013
+wandb: train/grad_norm 27.76408
+wandb:      train/loss 1.81376
+wandb:         val/PER 0.12952
+wandb:         val/WER 91.11675
+wandb:        val/loss 14.65692
+wandb: 
+wandb: 🚀 View run combined_30k at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/cre3ecut
+wandb: ⭐️ View project at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/e12511253_b2t_350993/wandb/wandb/run-20260108_105756-cre3ecut/logs
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run igz7cg35
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_350993/wandb/wandb/run-20260108_115157-igz7cg35
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run combined_linderman
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/igz7cg35
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0108 11:51:58.524973 3877803 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0108 11:51:58.565841 3877803 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0108 11:51:58.629220 3877803 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 19999-19999, summary, console lines 2203-2247
+wandb: 
+wandb: Run history:
+wandb:          lr/day █████████▇▇▇▆▆▆▅▅▅▅▅▄▄▄▄▄▃▃▂▂▂▂▂▂▂▂▁▁▁▁▁
+wandb:         lr/main ▆████▇▇▇▇▆▆▆▆▅▅▄▄▄▃▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: train/grad_norm ▄▄▄▄▄▃▃█▃▅▃▂▃▄▂▁▂▃▂▂▂▂▃▂▂▃▂▃▃▃▂▂▃▂▃▂▅▃▃▆
+wandb:      train/loss ██▅▆▅▅▅▄▄▃▄▂▂▄▃▂▂▁▂▂▂▂▃▃▂▃▃▁▂▃▂▁▂▂▃▂▂▃▂▂
+wandb:         val/PER █▄▃▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val/WER ▇▇▆▅▆▄▅▇▄▇▆▅▆▄▂▇▄▇▇▇▆█▆▄▃▃▂▃▄▁▂▂▂▂▁▃▁▂▂▂
+wandb:        val/loss █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:          lr/day 0.00013
+wandb:         lr/main 0.00013
+wandb: train/grad_norm 55.24628
+wandb:      train/loss 14.27339
+wandb:         val/PER 0.20274
+wandb:         val/WER 95.68528
+wandb:        val/loss 21.8747
+wandb: 
+wandb: 🚀 View run combined_linderman at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/igz7cg35
+wandb: ⭐️ View project at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/e12511253_b2t_350993/wandb/wandb/run-20260108_115157-igz7cg35/logs
+Traceback (most recent call last):
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 9, in <module>
+    from .rnn_trainer import BrainToTextDecoder_Trainer
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 83, in <module>
+    from .rnn_model import GRUDecoder, ResLSTMDecoder, XLSTMDecoder
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_model.py", line 464, in <module>
+    from brain2text.xlstm.xlstm_block_stack import xLSTMBlockStack, xLSTMBlockStackConfig
+ModuleNotFoundError: No module named 'brain2text.xlstm.xlstm_block_stack'

@@ -1,0 +1,26 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run guffsrra
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/wandb/wandb/run-20260103_112423-guffsrra
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run base
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/guffsrra
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0103 11:24:24.622614 1277319 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0103 11:24:24.665848 1277319 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0103 11:24:24.729487 1277319 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 88, in main
+    trainer = BrainToTextDecoder_Trainer(cfg)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 289, in __init__
+    raise RuntimeError("No valid training sessions found. Check dataset_dir and data files.")
+RuntimeError: No valid training sessions found. Check dataset_dir and data files.

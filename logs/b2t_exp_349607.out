@@ -1,0 +1,769 @@
+TMPDIR=/tmp
+JOB_TMP=/tmp/e12511253_b2t_349607
+TORCH_EXTENSIONS_DIR=/tmp/e12511253_b2t_349607/torch_extensions
+WANDB_DIR=/tmp/e12511253_b2t_349607/wandb
+torch CUDA runtime expects: 11.7
+CUDA_HOME=/home/e12511253/miniforge3/envs/brain2text
+which nvcc: /home/e12511253/miniforge3/envs/brain2text/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Tue_May__3_18:49:52_PDT_2022
+Cuda compilation tools, release 11.7, V11.7.64
+Build cuda_11.7.r11.7/compiler.31294372_0
+nvcc release: 11.7
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/tmp/e12511253_b2t_349607/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:/home/e12511253/miniforge3/envs/brain2text/lib64:/home/e12511253/miniforge3/envs/brain2text/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan  6 12:38 /tmp/e12511253_b2t_349607/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+CUDART_SO=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+CUDA_LIB=/home/e12511253/miniforge3/envs/brain2text/lib64
+LD_PRELOAD=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+TORCH_USE_RTLD_GLOBAL=1
+OUT_ROOT=/tmp/e12511253_b2t_349607/trained_models
+==============================================
+Job: b2t_exp  ID: 349607
+Base: configs/rnn_args.yaml
+Global override 1: configs/overrides/wer_1gram_only.yaml
+Folders: configs/experiments/gru/scheduler
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+==============================================
+
+========== FOLDER: configs/experiments/gru/scheduler ==========
+Num configs: 2
+
+=== RUN cosine_lr40_baseline.yaml ===
+JOB_OUT_DIR=/tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline
+2026-01-06 12:38:54,170: Using device: cuda:0
+2026-01-06 12:38:55,795: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil
+2026-01-06 12:38:55,820: Using 45 sessions after filtering (from 45).
+2026-01-06 12:38:56,223: Using torch.compile (if available)
+2026-01-06 12:38:56,223: torch.compile not available (torch<2.0). Skipping.
+2026-01-06 12:38:56,224: Initialized RNN decoding model
+2026-01-06 12:38:56,224: GRUDecoder(
+  (day_layer_activation): Softsign()
+  (day_layer_dropout): Dropout(p=0.2, inplace=False)
+  (gru): GRU(7168, 768, num_layers=5, batch_first=True, dropout=0.2)
+  (head): Sequential(
+    (0): ResidualFFNBlock(
+      (norm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (lin): Linear(in_features=768, out_features=768, bias=True)
+      (act): GELU(approximate='none')
+      (drop): Dropout(p=0.1, inplace=False)
+    )
+  )
+  (out): Linear(in_features=768, out_features=41, bias=True)
+)
+2026-01-06 12:38:56,224: Model has 44,907,305 parameters
+2026-01-06 12:38:56,224: Model has 11,819,520 day-specific parameters | 26.32% of total parameters
+2026-01-06 12:38:57,488: Successfully initialized datasets
+2026-01-06 12:38:57,489: AdamW(fused) not available in this torch build. Using standard AdamW.
+2026-01-06 12:38:58,471: Train batch 0: loss: 581.04 grad norm: 1398.64 time: 0.175
+2026-01-06 12:38:58,471: Running test after training batch: 0
+2026-01-06 12:38:58,580: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:39:03,753: WER debug example
+  GT : you can see the code at this point as well
+  PR : laham zapf
+2026-01-06 12:39:04,461: WER debug example
+  GT : how does it keep the cost down
+  PR : anafranil
+2026-01-06 12:39:37,885: Val batch 0: PER (avg): 1.4293 CTC Loss (avg): 633.1811 WER(1gram): 100.00% (n=64) time: 39.413
+2026-01-06 12:39:37,885: WER lens: avg_true_words=6.16 avg_pred_words=1.77 max_pred_words=4
+2026-01-06 12:39:37,885: t15.2023.08.13 val PER: 1.3056
+2026-01-06 12:39:37,885: t15.2023.08.18 val PER: 1.4208
+2026-01-06 12:39:37,886: t15.2023.08.20 val PER: 1.3002
+2026-01-06 12:39:37,886: t15.2023.08.25 val PER: 1.3389
+2026-01-06 12:39:37,886: t15.2023.08.27 val PER: 1.2460
+2026-01-06 12:39:37,886: t15.2023.09.01 val PER: 1.4537
+2026-01-06 12:39:37,886: t15.2023.09.03 val PER: 1.3171
+2026-01-06 12:39:37,886: t15.2023.09.24 val PER: 1.5461
+2026-01-06 12:39:37,886: t15.2023.09.29 val PER: 1.4671
+2026-01-06 12:39:37,886: t15.2023.10.01 val PER: 1.2147
+2026-01-06 12:39:37,886: t15.2023.10.06 val PER: 1.4876
+2026-01-06 12:39:37,886: t15.2023.10.08 val PER: 1.1827
+2026-01-06 12:39:37,886: t15.2023.10.13 val PER: 1.3964
+2026-01-06 12:39:37,886: t15.2023.10.15 val PER: 1.3889
+2026-01-06 12:39:37,886: t15.2023.10.20 val PER: 1.4866
+2026-01-06 12:39:37,887: t15.2023.10.22 val PER: 1.3942
+2026-01-06 12:39:37,887: t15.2023.11.03 val PER: 1.5923
+2026-01-06 12:39:37,887: t15.2023.11.04 val PER: 2.0171
+2026-01-06 12:39:37,887: t15.2023.11.17 val PER: 1.9518
+2026-01-06 12:39:37,887: t15.2023.11.19 val PER: 1.6707
+2026-01-06 12:39:37,887: t15.2023.11.26 val PER: 1.5413
+2026-01-06 12:39:37,887: t15.2023.12.03 val PER: 1.4254
+2026-01-06 12:39:37,887: t15.2023.12.08 val PER: 1.4487
+2026-01-06 12:39:37,887: t15.2023.12.10 val PER: 1.6899
+2026-01-06 12:39:37,887: t15.2023.12.17 val PER: 1.3077
+2026-01-06 12:39:37,887: t15.2023.12.29 val PER: 1.4063
+2026-01-06 12:39:37,887: t15.2024.02.25 val PER: 1.4228
+2026-01-06 12:39:37,887: t15.2024.03.08 val PER: 1.3257
+2026-01-06 12:39:37,887: t15.2024.03.15 val PER: 1.3196
+2026-01-06 12:39:37,887: t15.2024.03.17 val PER: 1.4052
+2026-01-06 12:39:37,888: t15.2024.05.10 val PER: 1.3224
+2026-01-06 12:39:37,888: t15.2024.06.14 val PER: 1.5315
+2026-01-06 12:39:37,888: t15.2024.07.19 val PER: 1.0817
+2026-01-06 12:39:37,888: t15.2024.07.21 val PER: 1.6290
+2026-01-06 12:39:37,888: t15.2024.07.28 val PER: 1.6588
+2026-01-06 12:39:37,888: t15.2025.01.10 val PER: 1.0923
+2026-01-06 12:39:37,888: t15.2025.01.12 val PER: 1.7629
+2026-01-06 12:39:37,888: t15.2025.03.14 val PER: 1.0414
+2026-01-06 12:39:37,889: t15.2025.03.16 val PER: 1.6257
+2026-01-06 12:39:37,889: t15.2025.03.30 val PER: 1.2874
+2026-01-06 12:39:37,889: t15.2025.04.13 val PER: 1.5949
+2026-01-06 12:39:37,890: New best val WER(1gram) inf% --> 100.00%
+2026-01-06 12:39:37,890: Checkpointing model
+2026-01-06 12:39:37,940: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:39:37,987: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_0 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:39:56,194: Train batch 200: loss: 77.59 grad norm: 106.20 time: 0.055
+2026-01-06 12:40:13,577: Train batch 400: loss: 53.90 grad norm: 93.99 time: 0.062
+2026-01-06 12:40:22,353: Running test after training batch: 500
+2026-01-06 12:40:22,484: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:40:27,280: WER debug example
+  GT : you can see the code at this point as well
+  PR : used and ease thus uhde at this ide is aisles
+2026-01-06 12:40:27,315: WER debug example
+  GT : how does it keep the cost down
+  PR : houde does it ink thus as adz
+2026-01-06 12:40:29,685: Val batch 500: PER (avg): 0.5147 CTC Loss (avg): 55.0458 WER(1gram): 88.83% (n=64) time: 7.331
+2026-01-06 12:40:29,685: WER lens: avg_true_words=6.16 avg_pred_words=5.64 max_pred_words=12
+2026-01-06 12:40:29,685: t15.2023.08.13 val PER: 0.4553
+2026-01-06 12:40:29,685: t15.2023.08.18 val PER: 0.4468
+2026-01-06 12:40:29,685: t15.2023.08.20 val PER: 0.4400
+2026-01-06 12:40:29,685: t15.2023.08.25 val PER: 0.4247
+2026-01-06 12:40:29,685: t15.2023.08.27 val PER: 0.5177
+2026-01-06 12:40:29,685: t15.2023.09.01 val PER: 0.4115
+2026-01-06 12:40:29,686: t15.2023.09.03 val PER: 0.4941
+2026-01-06 12:40:29,686: t15.2023.09.24 val PER: 0.4235
+2026-01-06 12:40:29,686: t15.2023.09.29 val PER: 0.4556
+2026-01-06 12:40:29,686: t15.2023.10.01 val PER: 0.5112
+2026-01-06 12:40:29,686: t15.2023.10.06 val PER: 0.4252
+2026-01-06 12:40:29,686: t15.2023.10.08 val PER: 0.5345
+2026-01-06 12:40:29,686: t15.2023.10.13 val PER: 0.5741
+2026-01-06 12:40:29,686: t15.2023.10.15 val PER: 0.4878
+2026-01-06 12:40:29,686: t15.2023.10.20 val PER: 0.4530
+2026-01-06 12:40:29,686: t15.2023.10.22 val PER: 0.4421
+2026-01-06 12:40:29,687: t15.2023.11.03 val PER: 0.5027
+2026-01-06 12:40:29,687: t15.2023.11.04 val PER: 0.2491
+2026-01-06 12:40:29,687: t15.2023.11.17 val PER: 0.3748
+2026-01-06 12:40:29,687: t15.2023.11.19 val PER: 0.3234
+2026-01-06 12:40:29,687: t15.2023.11.26 val PER: 0.5493
+2026-01-06 12:40:29,687: t15.2023.12.03 val PER: 0.4979
+2026-01-06 12:40:29,687: t15.2023.12.08 val PER: 0.5153
+2026-01-06 12:40:29,688: t15.2023.12.10 val PER: 0.4534
+2026-01-06 12:40:29,688: t15.2023.12.17 val PER: 0.5655
+2026-01-06 12:40:29,688: t15.2023.12.29 val PER: 0.5353
+2026-01-06 12:40:29,688: t15.2024.02.25 val PER: 0.4775
+2026-01-06 12:40:29,688: t15.2024.03.08 val PER: 0.6074
+2026-01-06 12:40:29,688: t15.2024.03.15 val PER: 0.5566
+2026-01-06 12:40:29,688: t15.2024.03.17 val PER: 0.5098
+2026-01-06 12:40:29,688: t15.2024.05.10 val PER: 0.5409
+2026-01-06 12:40:29,689: t15.2024.06.14 val PER: 0.5158
+2026-01-06 12:40:29,689: t15.2024.07.19 val PER: 0.6697
+2026-01-06 12:40:29,689: t15.2024.07.21 val PER: 0.4834
+2026-01-06 12:40:29,689: t15.2024.07.28 val PER: 0.5066
+2026-01-06 12:40:29,689: t15.2025.01.10 val PER: 0.7424
+2026-01-06 12:40:29,689: t15.2025.01.12 val PER: 0.5543
+2026-01-06 12:40:29,689: t15.2025.03.14 val PER: 0.7396
+2026-01-06 12:40:29,689: t15.2025.03.16 val PER: 0.5851
+2026-01-06 12:40:29,689: t15.2025.03.30 val PER: 0.7276
+2026-01-06 12:40:29,689: t15.2025.04.13 val PER: 0.5678
+2026-01-06 12:40:29,690: New best val WER(1gram) 100.00% --> 88.83%
+2026-01-06 12:40:29,690: Checkpointing model
+2026-01-06 12:40:29,697: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:40:29,728: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_500 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:40:38,289: Train batch 600: loss: 49.06 grad norm: 85.40 time: 0.079
+2026-01-06 12:40:55,372: Train batch 800: loss: 40.98 grad norm: 86.16 time: 0.057
+2026-01-06 12:41:12,775: Train batch 1000: loss: 42.79 grad norm: 80.00 time: 0.066
+2026-01-06 12:41:12,776: Running test after training batch: 1000
+2026-01-06 12:41:12,900: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:41:17,621: WER debug example
+  GT : you can see the code at this point as well
+  PR : wooed ent ease thus code it this and is while
+2026-01-06 12:41:17,653: WER debug example
+  GT : how does it keep the cost down
+  PR : houde does it eke that wass it
+2026-01-06 12:41:19,462: Val batch 1000: PER (avg): 0.4113 CTC Loss (avg): 42.3323 WER(1gram): 81.47% (n=64) time: 6.687
+2026-01-06 12:41:19,463: WER lens: avg_true_words=6.16 avg_pred_words=5.41 max_pred_words=11
+2026-01-06 12:41:19,463: t15.2023.08.13 val PER: 0.3784
+2026-01-06 12:41:19,463: t15.2023.08.18 val PER: 0.3412
+2026-01-06 12:41:19,463: t15.2023.08.20 val PER: 0.3431
+2026-01-06 12:41:19,463: t15.2023.08.25 val PER: 0.3072
+2026-01-06 12:41:19,463: t15.2023.08.27 val PER: 0.4212
+2026-01-06 12:41:19,463: t15.2023.09.01 val PER: 0.3028
+2026-01-06 12:41:19,463: t15.2023.09.03 val PER: 0.3872
+2026-01-06 12:41:19,463: t15.2023.09.24 val PER: 0.3374
+2026-01-06 12:41:19,464: t15.2023.09.29 val PER: 0.3701
+2026-01-06 12:41:19,464: t15.2023.10.01 val PER: 0.4082
+2026-01-06 12:41:19,464: t15.2023.10.06 val PER: 0.3186
+2026-01-06 12:41:19,464: t15.2023.10.08 val PER: 0.4587
+2026-01-06 12:41:19,464: t15.2023.10.13 val PER: 0.4748
+2026-01-06 12:41:19,464: t15.2023.10.15 val PER: 0.3777
+2026-01-06 12:41:19,464: t15.2023.10.20 val PER: 0.3624
+2026-01-06 12:41:19,464: t15.2023.10.22 val PER: 0.3452
+2026-01-06 12:41:19,464: t15.2023.11.03 val PER: 0.3989
+2026-01-06 12:41:19,464: t15.2023.11.04 val PER: 0.1502
+2026-01-06 12:41:19,464: t15.2023.11.17 val PER: 0.2644
+2026-01-06 12:41:19,464: t15.2023.11.19 val PER: 0.2116
+2026-01-06 12:41:19,464: t15.2023.11.26 val PER: 0.4428
+2026-01-06 12:41:19,464: t15.2023.12.03 val PER: 0.4118
+2026-01-06 12:41:19,465: t15.2023.12.08 val PER: 0.4095
+2026-01-06 12:41:19,465: t15.2023.12.10 val PER: 0.3640
+2026-01-06 12:41:19,465: t15.2023.12.17 val PER: 0.4127
+2026-01-06 12:41:19,465: t15.2023.12.29 val PER: 0.4056
+2026-01-06 12:41:19,465: t15.2024.02.25 val PER: 0.3511
+2026-01-06 12:41:19,465: t15.2024.03.08 val PER: 0.4922
+2026-01-06 12:41:19,465: t15.2024.03.15 val PER: 0.4472
+2026-01-06 12:41:19,465: t15.2024.03.17 val PER: 0.4149
+2026-01-06 12:41:19,465: t15.2024.05.10 val PER: 0.4339
+2026-01-06 12:41:19,465: t15.2024.06.14 val PER: 0.4148
+2026-01-06 12:41:19,465: t15.2024.07.19 val PER: 0.5280
+2026-01-06 12:41:19,465: t15.2024.07.21 val PER: 0.3834
+2026-01-06 12:41:19,466: t15.2024.07.28 val PER: 0.4199
+2026-01-06 12:41:19,466: t15.2025.01.10 val PER: 0.6019
+2026-01-06 12:41:19,466: t15.2025.01.12 val PER: 0.4550
+2026-01-06 12:41:19,466: t15.2025.03.14 val PER: 0.6494
+2026-01-06 12:41:19,466: t15.2025.03.16 val PER: 0.4830
+2026-01-06 12:41:19,466: t15.2025.03.30 val PER: 0.6632
+2026-01-06 12:41:19,466: t15.2025.04.13 val PER: 0.4964
+2026-01-06 12:41:19,467: New best val WER(1gram) 88.83% --> 81.47%
+2026-01-06 12:41:19,467: Checkpointing model
+2026-01-06 12:41:19,474: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:41:19,496: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_1000 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:41:37,889: Train batch 1200: loss: 33.02 grad norm: 72.96 time: 0.068
+2026-01-06 12:41:56,505: Train batch 1400: loss: 35.90 grad norm: 76.38 time: 0.060
+2026-01-06 12:42:05,788: Running test after training batch: 1500
+2026-01-06 12:42:05,892: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:42:10,864: WER debug example
+  GT : you can see the code at this point as well
+  PR : yule aunt e the good at this boyde is will
+2026-01-06 12:42:10,895: WER debug example
+  GT : how does it keep the cost down
+  PR : houde does it heap that us
+2026-01-06 12:42:12,425: Val batch 1500: PER (avg): 0.3829 CTC Loss (avg): 37.2169 WER(1gram): 76.14% (n=64) time: 6.637
+2026-01-06 12:42:12,426: WER lens: avg_true_words=6.16 avg_pred_words=5.08 max_pred_words=11
+2026-01-06 12:42:12,426: t15.2023.08.13 val PER: 0.3493
+2026-01-06 12:42:12,426: t15.2023.08.18 val PER: 0.3244
+2026-01-06 12:42:12,426: t15.2023.08.20 val PER: 0.3082
+2026-01-06 12:42:12,426: t15.2023.08.25 val PER: 0.2560
+2026-01-06 12:42:12,426: t15.2023.08.27 val PER: 0.4051
+2026-01-06 12:42:12,426: t15.2023.09.01 val PER: 0.2808
+2026-01-06 12:42:12,426: t15.2023.09.03 val PER: 0.3741
+2026-01-06 12:42:12,426: t15.2023.09.24 val PER: 0.3131
+2026-01-06 12:42:12,426: t15.2023.09.29 val PER: 0.3452
+2026-01-06 12:42:12,426: t15.2023.10.01 val PER: 0.3937
+2026-01-06 12:42:12,427: t15.2023.10.06 val PER: 0.2863
+2026-01-06 12:42:12,427: t15.2023.10.08 val PER: 0.4290
+2026-01-06 12:42:12,427: t15.2023.10.13 val PER: 0.4407
+2026-01-06 12:42:12,427: t15.2023.10.15 val PER: 0.3731
+2026-01-06 12:42:12,427: t15.2023.10.20 val PER: 0.3423
+2026-01-06 12:42:12,427: t15.2023.10.22 val PER: 0.3196
+2026-01-06 12:42:12,427: t15.2023.11.03 val PER: 0.3758
+2026-01-06 12:42:12,427: t15.2023.11.04 val PER: 0.1160
+2026-01-06 12:42:12,427: t15.2023.11.17 val PER: 0.2146
+2026-01-06 12:42:12,427: t15.2023.11.19 val PER: 0.1717
+2026-01-06 12:42:12,427: t15.2023.11.26 val PER: 0.4254
+2026-01-06 12:42:12,427: t15.2023.12.03 val PER: 0.3792
+2026-01-06 12:42:12,428: t15.2023.12.08 val PER: 0.3622
+2026-01-06 12:42:12,428: t15.2023.12.10 val PER: 0.3101
+2026-01-06 12:42:12,428: t15.2023.12.17 val PER: 0.3981
+2026-01-06 12:42:12,428: t15.2023.12.29 val PER: 0.3720
+2026-01-06 12:42:12,428: t15.2024.02.25 val PER: 0.3118
+2026-01-06 12:42:12,428: t15.2024.03.08 val PER: 0.4481
+2026-01-06 12:42:12,428: t15.2024.03.15 val PER: 0.4171
+2026-01-06 12:42:12,428: t15.2024.03.17 val PER: 0.3821
+2026-01-06 12:42:12,428: t15.2024.05.10 val PER: 0.3789
+2026-01-06 12:42:12,428: t15.2024.06.14 val PER: 0.3959
+2026-01-06 12:42:12,428: t15.2024.07.19 val PER: 0.5188
+2026-01-06 12:42:12,428: t15.2024.07.21 val PER: 0.3538
+2026-01-06 12:42:12,428: t15.2024.07.28 val PER: 0.3728
+2026-01-06 12:42:12,428: t15.2025.01.10 val PER: 0.6102
+2026-01-06 12:42:12,428: t15.2025.01.12 val PER: 0.4265
+2026-01-06 12:42:12,428: t15.2025.03.14 val PER: 0.5991
+2026-01-06 12:42:12,428: t15.2025.03.16 val PER: 0.4529
+2026-01-06 12:42:12,429: t15.2025.03.30 val PER: 0.6276
+2026-01-06 12:42:12,429: t15.2025.04.13 val PER: 0.4708
+2026-01-06 12:42:12,430: New best val WER(1gram) 81.47% --> 76.14%
+2026-01-06 12:42:12,430: Checkpointing model
+2026-01-06 12:42:12,437: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:42:12,457: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_1500 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:42:21,242: Train batch 1600: loss: 37.13 grad norm: 82.26 time: 0.063
+2026-01-06 12:42:38,621: Train batch 1800: loss: 35.41 grad norm: 71.13 time: 0.088
+2026-01-06 12:42:56,477: Train batch 2000: loss: 34.57 grad norm: 73.75 time: 0.066
+2026-01-06 12:42:56,478: Running test after training batch: 2000
+2026-01-06 12:42:56,679: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:43:01,474: WER debug example
+  GT : you can see the code at this point as well
+  PR : yule canned sze the good at this bonde is wheel
+2026-01-06 12:43:01,505: WER debug example
+  GT : how does it keep the cost down
+  PR : houde des it heap thus wass it
+2026-01-06 12:43:03,274: Val batch 2000: PER (avg): 0.3290 CTC Loss (avg): 32.7440 WER(1gram): 70.81% (n=64) time: 6.796
+2026-01-06 12:43:03,274: WER lens: avg_true_words=6.16 avg_pred_words=5.33 max_pred_words=11
+2026-01-06 12:43:03,274: t15.2023.08.13 val PER: 0.3015
+2026-01-06 12:43:03,274: t15.2023.08.18 val PER: 0.2515
+2026-01-06 12:43:03,275: t15.2023.08.20 val PER: 0.2550
+2026-01-06 12:43:03,275: t15.2023.08.25 val PER: 0.2304
+2026-01-06 12:43:03,275: t15.2023.08.27 val PER: 0.3489
+2026-01-06 12:43:03,275: t15.2023.09.01 val PER: 0.2346
+2026-01-06 12:43:03,275: t15.2023.09.03 val PER: 0.3135
+2026-01-06 12:43:03,275: t15.2023.09.24 val PER: 0.2427
+2026-01-06 12:43:03,275: t15.2023.09.29 val PER: 0.2750
+2026-01-06 12:43:03,275: t15.2023.10.01 val PER: 0.3362
+2026-01-06 12:43:03,275: t15.2023.10.06 val PER: 0.2454
+2026-01-06 12:43:03,275: t15.2023.10.08 val PER: 0.3924
+2026-01-06 12:43:03,275: t15.2023.10.13 val PER: 0.3801
+2026-01-06 12:43:03,275: t15.2023.10.15 val PER: 0.3045
+2026-01-06 12:43:03,275: t15.2023.10.20 val PER: 0.3020
+2026-01-06 12:43:03,275: t15.2023.10.22 val PER: 0.2695
+2026-01-06 12:43:03,275: t15.2023.11.03 val PER: 0.3094
+2026-01-06 12:43:03,275: t15.2023.11.04 val PER: 0.1024
+2026-01-06 12:43:03,276: t15.2023.11.17 val PER: 0.1788
+2026-01-06 12:43:03,276: t15.2023.11.19 val PER: 0.1297
+2026-01-06 12:43:03,276: t15.2023.11.26 val PER: 0.3623
+2026-01-06 12:43:03,276: t15.2023.12.03 val PER: 0.3151
+2026-01-06 12:43:03,276: t15.2023.12.08 val PER: 0.3149
+2026-01-06 12:43:03,276: t15.2023.12.10 val PER: 0.2668
+2026-01-06 12:43:03,276: t15.2023.12.17 val PER: 0.3285
+2026-01-06 12:43:03,276: t15.2023.12.29 val PER: 0.3205
+2026-01-06 12:43:03,276: t15.2024.02.25 val PER: 0.2837
+2026-01-06 12:43:03,276: t15.2024.03.08 val PER: 0.3898
+2026-01-06 12:43:03,276: t15.2024.03.15 val PER: 0.3602
+2026-01-06 12:43:03,276: t15.2024.03.17 val PER: 0.3459
+2026-01-06 12:43:03,277: t15.2024.05.10 val PER: 0.3447
+2026-01-06 12:43:03,277: t15.2024.06.14 val PER: 0.3360
+2026-01-06 12:43:03,277: t15.2024.07.19 val PER: 0.4726
+2026-01-06 12:43:03,277: t15.2024.07.21 val PER: 0.3014
+2026-01-06 12:43:03,278: t15.2024.07.28 val PER: 0.3301
+2026-01-06 12:43:03,278: t15.2025.01.10 val PER: 0.5358
+2026-01-06 12:43:03,278: t15.2025.01.12 val PER: 0.3880
+2026-01-06 12:43:03,278: t15.2025.03.14 val PER: 0.5251
+2026-01-06 12:43:03,278: t15.2025.03.16 val PER: 0.4058
+2026-01-06 12:43:03,278: t15.2025.03.30 val PER: 0.5414
+2026-01-06 12:43:03,278: t15.2025.04.13 val PER: 0.4165
+2026-01-06 12:43:03,279: New best val WER(1gram) 76.14% --> 70.81%
+2026-01-06 12:43:03,279: Checkpointing model
+2026-01-06 12:43:03,286: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:43:03,309: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_2000 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:43:20,604: Train batch 2200: loss: 28.12 grad norm: 67.99 time: 0.060
+2026-01-06 12:43:38,309: Train batch 2400: loss: 28.94 grad norm: 62.87 time: 0.052
+2026-01-06 12:43:47,385: Running test after training batch: 2500
+2026-01-06 12:43:47,482: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:43:52,514: WER debug example
+  GT : you can see the code at this point as well
+  PR : yule canned e the code at this point is will
+2026-01-06 12:43:52,553: WER debug example
+  GT : how does it keep the cost down
+  PR : houde des it keep thus cost it
+2026-01-06 12:43:54,453: Val batch 2500: PER (avg): 0.3003 CTC Loss (avg): 30.0007 WER(1gram): 67.51% (n=64) time: 7.068
+2026-01-06 12:43:54,454: WER lens: avg_true_words=6.16 avg_pred_words=5.62 max_pred_words=11
+2026-01-06 12:43:54,454: t15.2023.08.13 val PER: 0.2827
+2026-01-06 12:43:54,454: t15.2023.08.18 val PER: 0.2372
+2026-01-06 12:43:54,454: t15.2023.08.20 val PER: 0.2415
+2026-01-06 12:43:54,454: t15.2023.08.25 val PER: 0.2033
+2026-01-06 12:43:54,454: t15.2023.08.27 val PER: 0.3312
+2026-01-06 12:43:54,454: t15.2023.09.01 val PER: 0.2135
+2026-01-06 12:43:54,454: t15.2023.09.03 val PER: 0.2827
+2026-01-06 12:43:54,454: t15.2023.09.24 val PER: 0.2233
+2026-01-06 12:43:54,454: t15.2023.09.29 val PER: 0.2521
+2026-01-06 12:43:54,455: t15.2023.10.01 val PER: 0.3018
+2026-01-06 12:43:54,455: t15.2023.10.06 val PER: 0.2110
+2026-01-06 12:43:54,455: t15.2023.10.08 val PER: 0.3599
+2026-01-06 12:43:54,455: t15.2023.10.13 val PER: 0.3507
+2026-01-06 12:43:54,455: t15.2023.10.15 val PER: 0.2795
+2026-01-06 12:43:54,455: t15.2023.10.20 val PER: 0.2919
+2026-01-06 12:43:54,455: t15.2023.10.22 val PER: 0.2238
+2026-01-06 12:43:54,455: t15.2023.11.03 val PER: 0.2972
+2026-01-06 12:43:54,455: t15.2023.11.04 val PER: 0.0853
+2026-01-06 12:43:54,456: t15.2023.11.17 val PER: 0.1369
+2026-01-06 12:43:54,456: t15.2023.11.19 val PER: 0.1277
+2026-01-06 12:43:54,456: t15.2023.11.26 val PER: 0.3406
+2026-01-06 12:43:54,456: t15.2023.12.03 val PER: 0.2868
+2026-01-06 12:43:54,456: t15.2023.12.08 val PER: 0.2803
+2026-01-06 12:43:54,456: t15.2023.12.10 val PER: 0.2418
+2026-01-06 12:43:54,456: t15.2023.12.17 val PER: 0.2786
+2026-01-06 12:43:54,456: t15.2023.12.29 val PER: 0.2965
+2026-01-06 12:43:54,456: t15.2024.02.25 val PER: 0.2416
+2026-01-06 12:43:54,456: t15.2024.03.08 val PER: 0.3656
+2026-01-06 12:43:54,456: t15.2024.03.15 val PER: 0.3496
+2026-01-06 12:43:54,456: t15.2024.03.17 val PER: 0.2957
+2026-01-06 12:43:54,456: t15.2024.05.10 val PER: 0.3105
+2026-01-06 12:43:54,457: t15.2024.06.14 val PER: 0.3076
+2026-01-06 12:43:54,457: t15.2024.07.19 val PER: 0.4456
+2026-01-06 12:43:54,457: t15.2024.07.21 val PER: 0.2607
+2026-01-06 12:43:54,457: t15.2024.07.28 val PER: 0.2956
+2026-01-06 12:43:54,457: t15.2025.01.10 val PER: 0.4917
+2026-01-06 12:43:54,457: t15.2025.01.12 val PER: 0.3533
+2026-01-06 12:43:54,457: t15.2025.03.14 val PER: 0.4985
+2026-01-06 12:43:54,457: t15.2025.03.16 val PER: 0.3534
+2026-01-06 12:43:54,457: t15.2025.03.30 val PER: 0.5023
+2026-01-06 12:43:54,457: t15.2025.04.13 val PER: 0.3894
+2026-01-06 12:43:54,458: New best val WER(1gram) 70.81% --> 67.51%
+2026-01-06 12:43:54,458: Checkpointing model
+2026-01-06 12:43:54,465: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:43:54,488: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_2500 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:44:03,373: Train batch 2600: loss: 35.56 grad norm: 84.65 time: 0.055
+2026-01-06 12:44:21,476: Train batch 2800: loss: 25.81 grad norm: 72.23 time: 0.081
+2026-01-06 12:44:38,814: Train batch 3000: loss: 31.25 grad norm: 71.47 time: 0.083
+2026-01-06 12:44:38,815: Running test after training batch: 3000
+2026-01-06 12:44:38,921: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:44:43,624: WER debug example
+  GT : you can see the code at this point as well
+  PR : yule end sze the good at this point is will
+2026-01-06 12:44:43,652: WER debug example
+  GT : how does it keep the cost down
+  PR : houde des it hipp the cost et
+2026-01-06 12:44:45,258: Val batch 3000: PER (avg): 0.2820 CTC Loss (avg): 27.6843 WER(1gram): 64.97% (n=64) time: 6.443
+2026-01-06 12:44:45,259: WER lens: avg_true_words=6.16 avg_pred_words=5.67 max_pred_words=10
+2026-01-06 12:44:45,259: t15.2023.08.13 val PER: 0.2672
+2026-01-06 12:44:45,259: t15.2023.08.18 val PER: 0.2163
+2026-01-06 12:44:45,259: t15.2023.08.20 val PER: 0.2192
+2026-01-06 12:44:45,259: t15.2023.08.25 val PER: 0.2018
+2026-01-06 12:44:45,259: t15.2023.08.27 val PER: 0.3071
+2026-01-06 12:44:45,260: t15.2023.09.01 val PER: 0.1802
+2026-01-06 12:44:45,260: t15.2023.09.03 val PER: 0.2862
+2026-01-06 12:44:45,260: t15.2023.09.24 val PER: 0.2039
+2026-01-06 12:44:45,260: t15.2023.09.29 val PER: 0.2323
+2026-01-06 12:44:45,260: t15.2023.10.01 val PER: 0.2867
+2026-01-06 12:44:45,260: t15.2023.10.06 val PER: 0.2002
+2026-01-06 12:44:45,260: t15.2023.10.08 val PER: 0.3599
+2026-01-06 12:44:45,260: t15.2023.10.13 val PER: 0.3390
+2026-01-06 12:44:45,260: t15.2023.10.15 val PER: 0.2617
+2026-01-06 12:44:45,260: t15.2023.10.20 val PER: 0.2685
+2026-01-06 12:44:45,261: t15.2023.10.22 val PER: 0.2127
+2026-01-06 12:44:45,261: t15.2023.11.03 val PER: 0.2768
+2026-01-06 12:44:45,261: t15.2023.11.04 val PER: 0.0853
+2026-01-06 12:44:45,261: t15.2023.11.17 val PER: 0.1291
+2026-01-06 12:44:45,261: t15.2023.11.19 val PER: 0.1178
+2026-01-06 12:44:45,261: t15.2023.11.26 val PER: 0.3080
+2026-01-06 12:44:45,261: t15.2023.12.03 val PER: 0.2521
+2026-01-06 12:44:45,261: t15.2023.12.08 val PER: 0.2563
+2026-01-06 12:44:45,261: t15.2023.12.10 val PER: 0.2194
+2026-01-06 12:44:45,261: t15.2023.12.17 val PER: 0.2651
+2026-01-06 12:44:45,261: t15.2023.12.29 val PER: 0.2835
+2026-01-06 12:44:45,261: t15.2024.02.25 val PER: 0.2303
+2026-01-06 12:44:45,261: t15.2024.03.08 val PER: 0.3570
+2026-01-06 12:44:45,262: t15.2024.03.15 val PER: 0.3408
+2026-01-06 12:44:45,262: t15.2024.03.17 val PER: 0.2887
+2026-01-06 12:44:45,262: t15.2024.05.10 val PER: 0.2987
+2026-01-06 12:44:45,262: t15.2024.06.14 val PER: 0.2918
+2026-01-06 12:44:45,262: t15.2024.07.19 val PER: 0.4074
+2026-01-06 12:44:45,262: t15.2024.07.21 val PER: 0.2338
+2026-01-06 12:44:45,262: t15.2024.07.28 val PER: 0.2728
+2026-01-06 12:44:45,262: t15.2025.01.10 val PER: 0.4876
+2026-01-06 12:44:45,262: t15.2025.01.12 val PER: 0.3333
+2026-01-06 12:44:45,262: t15.2025.03.14 val PER: 0.4586
+2026-01-06 12:44:45,262: t15.2025.03.16 val PER: 0.3338
+2026-01-06 12:44:45,262: t15.2025.03.30 val PER: 0.4885
+2026-01-06 12:44:45,262: t15.2025.04.13 val PER: 0.3481
+2026-01-06 12:44:45,264: New best val WER(1gram) 67.51% --> 64.97%
+2026-01-06 12:44:45,264: Checkpointing model
+2026-01-06 12:44:45,271: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:44:45,293: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_3000 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:45:03,986: Train batch 3200: loss: 26.56 grad norm: 66.31 time: 0.077
+2026-01-06 12:45:22,401: Train batch 3400: loss: 18.26 grad norm: 58.63 time: 0.049
+2026-01-06 12:45:31,817: Running test after training batch: 3500
+2026-01-06 12:45:31,914: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:45:36,637: WER debug example
+  GT : you can see the code at this point as well
+  PR : yule canned sci the code at this point is will
+2026-01-06 12:45:36,665: WER debug example
+  GT : how does it keep the cost down
+  PR : houde dust it eke thus cussed nit
+2026-01-06 12:45:38,289: Val batch 3500: PER (avg): 0.2645 CTC Loss (avg): 26.6298 WER(1gram): 65.99% (n=64) time: 6.472
+2026-01-06 12:45:38,289: WER lens: avg_true_words=6.16 avg_pred_words=6.03 max_pred_words=11
+2026-01-06 12:45:38,290: t15.2023.08.13 val PER: 0.2391
+2026-01-06 12:45:38,290: t15.2023.08.18 val PER: 0.2070
+2026-01-06 12:45:38,290: t15.2023.08.20 val PER: 0.2073
+2026-01-06 12:45:38,290: t15.2023.08.25 val PER: 0.1822
+2026-01-06 12:45:38,290: t15.2023.08.27 val PER: 0.2717
+2026-01-06 12:45:38,290: t15.2023.09.01 val PER: 0.1818
+2026-01-06 12:45:38,290: t15.2023.09.03 val PER: 0.2458
+2026-01-06 12:45:38,290: t15.2023.09.24 val PER: 0.2063
+2026-01-06 12:45:38,290: t15.2023.09.29 val PER: 0.2125
+2026-01-06 12:45:38,290: t15.2023.10.01 val PER: 0.2787
+2026-01-06 12:45:38,290: t15.2023.10.06 val PER: 0.1916
+2026-01-06 12:45:38,291: t15.2023.10.08 val PER: 0.3369
+2026-01-06 12:45:38,291: t15.2023.10.13 val PER: 0.3126
+2026-01-06 12:45:38,291: t15.2023.10.15 val PER: 0.2512
+2026-01-06 12:45:38,291: t15.2023.10.20 val PER: 0.2248
+2026-01-06 12:45:38,291: t15.2023.10.22 val PER: 0.2027
+2026-01-06 12:45:38,291: t15.2023.11.03 val PER: 0.2700
+2026-01-06 12:45:38,291: t15.2023.11.04 val PER: 0.0751
+2026-01-06 12:45:38,291: t15.2023.11.17 val PER: 0.1089
+2026-01-06 12:45:38,291: t15.2023.11.19 val PER: 0.0938
+2026-01-06 12:45:38,291: t15.2023.11.26 val PER: 0.2790
+2026-01-06 12:45:38,291: t15.2023.12.03 val PER: 0.2395
+2026-01-06 12:45:38,291: t15.2023.12.08 val PER: 0.2397
+2026-01-06 12:45:38,291: t15.2023.12.10 val PER: 0.2024
+2026-01-06 12:45:38,291: t15.2023.12.17 val PER: 0.2557
+2026-01-06 12:45:38,291: t15.2023.12.29 val PER: 0.2574
+2026-01-06 12:45:38,291: t15.2024.02.25 val PER: 0.2107
+2026-01-06 12:45:38,292: t15.2024.03.08 val PER: 0.3385
+2026-01-06 12:45:38,292: t15.2024.03.15 val PER: 0.3152
+2026-01-06 12:45:38,292: t15.2024.03.17 val PER: 0.2678
+2026-01-06 12:45:38,292: t15.2024.05.10 val PER: 0.2660
+2026-01-06 12:45:38,292: t15.2024.06.14 val PER: 0.2792
+2026-01-06 12:45:38,292: t15.2024.07.19 val PER: 0.3922
+2026-01-06 12:45:38,292: t15.2024.07.21 val PER: 0.2276
+2026-01-06 12:45:38,292: t15.2024.07.28 val PER: 0.2787
+2026-01-06 12:45:38,292: t15.2025.01.10 val PER: 0.4601
+2026-01-06 12:45:38,292: t15.2025.01.12 val PER: 0.2948
+2026-01-06 12:45:38,292: t15.2025.03.14 val PER: 0.4482
+2026-01-06 12:45:38,292: t15.2025.03.16 val PER: 0.3246
+2026-01-06 12:45:38,292: t15.2025.03.30 val PER: 0.4391
+2026-01-06 12:45:38,293: t15.2025.04.13 val PER: 0.3324
+2026-01-06 12:45:38,301: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_3500 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:45:47,679: Train batch 3600: loss: 22.42 grad norm: 62.77 time: 0.066
+2026-01-06 12:46:06,051: Train batch 3800: loss: 25.80 grad norm: 69.31 time: 0.067
+2026-01-06 12:46:24,407: Train batch 4000: loss: 19.56 grad norm: 55.30 time: 0.057
+2026-01-06 12:46:24,408: Running test after training batch: 4000
+2026-01-06 12:46:24,598: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:46:29,310: WER debug example
+  GT : you can see the code at this point as well
+  PR : yule kant e the code at this point is will
+2026-01-06 12:46:29,338: WER debug example
+  GT : how does it keep the cost down
+  PR : houde dust it keep the us nett
+2026-01-06 12:46:30,962: Val batch 4000: PER (avg): 0.2479 CTC Loss (avg): 24.6198 WER(1gram): 64.97% (n=64) time: 6.554
+2026-01-06 12:46:30,963: WER lens: avg_true_words=6.16 avg_pred_words=6.02 max_pred_words=11
+2026-01-06 12:46:30,963: t15.2023.08.13 val PER: 0.2214
+2026-01-06 12:46:30,963: t15.2023.08.18 val PER: 0.2070
+2026-01-06 12:46:30,963: t15.2023.08.20 val PER: 0.2041
+2026-01-06 12:46:30,963: t15.2023.08.25 val PER: 0.1551
+2026-01-06 12:46:30,963: t15.2023.08.27 val PER: 0.2830
+2026-01-06 12:46:30,963: t15.2023.09.01 val PER: 0.1599
+2026-01-06 12:46:30,963: t15.2023.09.03 val PER: 0.2458
+2026-01-06 12:46:30,963: t15.2023.09.24 val PER: 0.1857
+2026-01-06 12:46:30,963: t15.2023.09.29 val PER: 0.1966
+2026-01-06 12:46:30,963: t15.2023.10.01 val PER: 0.2550
+2026-01-06 12:46:30,963: t15.2023.10.06 val PER: 0.1733
+2026-01-06 12:46:30,963: t15.2023.10.08 val PER: 0.3356
+2026-01-06 12:46:30,964: t15.2023.10.13 val PER: 0.3026
+2026-01-06 12:46:30,964: t15.2023.10.15 val PER: 0.2399
+2026-01-06 12:46:30,964: t15.2023.10.20 val PER: 0.2550
+2026-01-06 12:46:30,964: t15.2023.10.22 val PER: 0.1949
+2026-01-06 12:46:30,964: t15.2023.11.03 val PER: 0.2436
+2026-01-06 12:46:30,964: t15.2023.11.04 val PER: 0.0614
+2026-01-06 12:46:30,965: t15.2023.11.17 val PER: 0.0995
+2026-01-06 12:46:30,965: t15.2023.11.19 val PER: 0.0878
+2026-01-06 12:46:30,965: t15.2023.11.26 val PER: 0.2681
+2026-01-06 12:46:30,965: t15.2023.12.03 val PER: 0.2269
+2026-01-06 12:46:30,965: t15.2023.12.08 val PER: 0.2144
+2026-01-06 12:46:30,965: t15.2023.12.10 val PER: 0.1708
+2026-01-06 12:46:30,965: t15.2023.12.17 val PER: 0.2474
+2026-01-06 12:46:30,965: t15.2023.12.29 val PER: 0.2553
+2026-01-06 12:46:30,965: t15.2024.02.25 val PER: 0.2121
+2026-01-06 12:46:30,965: t15.2024.03.08 val PER: 0.3357
+2026-01-06 12:46:30,965: t15.2024.03.15 val PER: 0.2889
+2026-01-06 12:46:30,965: t15.2024.03.17 val PER: 0.2490
+2026-01-06 12:46:30,965: t15.2024.05.10 val PER: 0.2734
+2026-01-06 12:46:30,965: t15.2024.06.14 val PER: 0.2587
+2026-01-06 12:46:30,965: t15.2024.07.19 val PER: 0.3639
+2026-01-06 12:46:30,965: t15.2024.07.21 val PER: 0.1903
+2026-01-06 12:46:30,966: t15.2024.07.28 val PER: 0.2404
+2026-01-06 12:46:30,966: t15.2025.01.10 val PER: 0.4132
+2026-01-06 12:46:30,966: t15.2025.01.12 val PER: 0.2833
+2026-01-06 12:46:30,966: t15.2025.03.14 val PER: 0.4172
+2026-01-06 12:46:30,966: t15.2025.03.16 val PER: 0.2945
+2026-01-06 12:46:30,966: t15.2025.03.30 val PER: 0.4195
+2026-01-06 12:46:30,966: t15.2025.04.13 val PER: 0.3110
+2026-01-06 12:46:30,974: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/checkpoint_batch_4000 (write(): fd 52 failed with No space left on device)
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 427, in save
+    _legacy_save(obj, opened_file, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 571, in _legacy_save
+    storage._write_file(f, _should_read_directly(f), True, torch._utils._element_size(dtype))
+RuntimeError: write(): fd 52 failed with No space left on device
+2026-01-06 12:46:49,507: Train batch 4200: loss: 22.41 grad norm: 67.25 time: 0.080
+2026-01-06 12:47:07,205: Train batch 4400: loss: 17.08 grad norm: 56.36 time: 0.066
+2026-01-06 12:47:16,062: Running test after training batch: 4500
+2026-01-06 12:47:16,191: WER debug GT example: You can see the code at this point as well.
+2026-01-06 12:47:21,026: WER debug example
+  GT : you can see the code at this point as well
+  PR : yule canned sci the code at this point us will
+2026-01-06 12:47:21,055: WER debug example
+  GT : how does it keep the cost down
+  PR : houde dust it heap the cost get
+2026-01-06 12:47:22,635: Val batch 4500: PER (avg): 0.2357 CTC Loss (avg): 23.0245 WER(1gram): 62.69% (n=64) time: 6.572
+2026-01-06 12:47:22,635: WER lens: avg_true_words=6.16 avg_pred_words=6.16 max_pred_words=11
+2026-01-06 12:47:22,635: t15.2023.08.13 val PER: 0.2152
+2026-01-06 12:47:22,635: t15.2023.08.18 val PER: 0.1852
+2026-01-06 12:47:22,635: t15.2023.08.20 val PER: 0.1859
+2026-01-06 12:47:22,636: t15.2023.08.25 val PER: 0.1401
+2026-01-06 12:47:22,636: t15.2023.08.27 val PER: 0.2524
+2026-01-06 12:47:22,636: t15.2023.09.01 val PER: 0.1550
+2026-01-06 12:47:22,636: t15.2023.09.03 val PER: 0.2387
+2026-01-06 12:47:22,636: t15.2023.09.24 val PER: 0.1808
+2026-01-06 12:47:22,636: t15.2023.09.29 val PER: 0.1966
+2026-01-06 12:47:22,636: t15.2023.10.01 val PER: 0.2503
+2026-01-06 12:47:22,636: t15.2023.10.06 val PER: 0.1453
+2026-01-06 12:47:22,636: t15.2023.10.08 val PER: 0.3180
+2026-01-06 12:47:22,636: t15.2023.10.13 val PER: 0.2987
+2026-01-06 12:47:22,636: t15.2023.10.15 val PER: 0.2334
+2026-01-06 12:47:22,636: t15.2023.10.20 val PER: 0.2315
+2026-01-06 12:47:22,637: t15.2023.10.22 val PER: 0.1915
+2026-01-06 12:47:22,637: t15.2023.11.03 val PER: 0.2395
+2026-01-06 12:47:22,637: t15.2023.11.04 val PER: 0.0546
+2026-01-06 12:47:22,637: t15.2023.11.17 val PER: 0.1058
+2026-01-06 12:47:22,637: t15.2023.11.19 val PER: 0.0938
+2026-01-06 12:47:22,637: t15.2023.11.26 val PER: 0.2522
+2026-01-06 12:47:22,637: t15.2023.12.03 val PER: 0.1996
+2026-01-06 12:47:22,637: t15.2023.12.08 val PER: 0.2051
+2026-01-06 12:47:22,637: t15.2023.12.10 val PER: 0.1892
+2026-01-06 12:47:22,637: t15.2023.12.17 val PER: 0.2318
+2026-01-06 12:47:22,637: t15.2023.12.29 val PER: 0.2402
+2026-01-06 12:47:22,637: t15.2024.02.25 val PER: 0.1938
+2026-01-06 12:47:22,637: t15.2024.03.08 val PER: 0.3158
+2026-01-06 12:47:22,637: t15.2024.03.15 val PER: 0.2821
+2026-01-06 12:47:22,637: t15.2024.03.17 val PER: 0.2364
+2026-01-06 12:47:22,637: t15.2024.05.10 val PER: 0.2526
+2026-01-06 12:47:22,638: t15.2024.06.14 val PER: 0.2413
+2026-01-06 12:47:22,638: t15.2024.07.19 val PER: 0.3401
+2026-01-06 12:47:22,638: t15.2024.07.21 val PER: 0.1772
+2026-01-06 12:47:22,638: t15.2024.07.28 val PER: 0.2206
+2026-01-06 12:47:22,638: t15.2025.01.10 val PER: 0.3912
+2026-01-06 12:47:22,638: t15.2025.01.12 val PER: 0.2648
+2026-01-06 12:47:22,638: t15.2025.03.14 val PER: 0.3979
+2026-01-06 12:47:22,638: t15.2025.03.16 val PER: 0.2840
+2026-01-06 12:47:22,638: t15.2025.03.30 val PER: 0.4046
+2026-01-06 12:47:22,638: t15.2025.04.13 val PER: 0.2967
+2026-01-06 12:47:22,640: New best val WER(1gram) 64.97% --> 62.69%
+2026-01-06 12:47:22,640: Checkpointing model
+2026-01-06 12:47:22,640: Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint ([Errno 28] No space left on device: '/tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint.tmp')
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 426, in save
+    with _open_file_like(f, 'wb') as opened_file:
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 270, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 251, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+OSError: [Errno 28] No space left on device: '/tmp/e12511253_b2t_349607/trained_models/scheduler/cosine_lr40_baseline/checkpoint/best_checkpoint.tmp'
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mcosine_lr40_baseline[0m at: [34m[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../tmp/e12511253_b2t_349607/wandb/wandb/run-20260106_123854-6k6o5ab7/logs[0m
