@@ -1,7 +1,7 @@
 # Diphone with extended training
 # 1601 classes needs more batches than 41 classes
 
-num_training_batches: 30000
+num_training_batches: 100000
 
 use_diphones: false
 
