@@ -3,7 +3,7 @@
 model:
   n_input_features: 512 # number of input features in the neural data. (2 features per electrode, 256 electrodes)
   n_units: 768 # number of units per GRU layer
-  rnn_dropout: 0.2 # <-- OPTIMAL from our sweeps
+  rnn_dropout: 0.2
   rnn_trainable: true # whether the GRU layers are trainable
   n_layers: 5 # number of GRU layers
   decoder_type: gru
@@ -88,7 +88,7 @@ batches_per_val_step: 500
 batches_per_save: 0
 log_individual_day_val_PER: true
 log_val_skip_logs: false
-save_val_logits: true
+save_val_logits: false
 save_val_data: false
 
 dataset:
@@ -242,4 +242,4 @@ eval:
 
 torch_compile: true
 
-use_diphones: false
+use_diphones: true

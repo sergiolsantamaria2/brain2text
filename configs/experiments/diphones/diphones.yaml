@@ -10,8 +10,8 @@ checkpoint_dir: ${output_dir}/checkpoint
 
 wandb:
   enabled: true
-  group: diphones
-  run_name: diphone_40k
+  group: diphones vs no diphones
+  run_name: Diphones
   tags: ["diphones", "dcond", "gru", "40k"]
 
 save_val_logits: false
