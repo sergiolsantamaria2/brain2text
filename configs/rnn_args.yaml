@@ -54,8 +54,8 @@ init_from_checkpoint: false # whether to initialize the model from a checkpoint
 init_checkpoint_path: None # path of the checkpoint to initialize the model from, if any
 
 # Keep disk usage conservative by default
-save_best_checkpoint: false
-save_all_val_steps: true
+save_best_checkpoint: true
+save_all_val_steps: false
 save_final_model: false
 save_val_metrics: true
 early_stopping: false
