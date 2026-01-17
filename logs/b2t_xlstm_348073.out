@@ -1,0 +1,16 @@
+==============================================
+Job: b2t_xlstm  ID: 348073
+Base: configs/rnn_args.yaml
+Override: configs/overrides/no_wer.yaml
+Folders: configs/experiments/xlstm/num_blocks
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+TMPDIR=/tmp
+TORCH_EXTENSIONS_DIR=/tmp/torch_extensions
+WANDB_DIR=/tmp/wandb
+==============================================
+
+========== FOLDER: configs/experiments/xlstm/num_blocks ==========
+Num configs: 4
+
+=== RUN b1.yaml ===

@@ -1,0 +1,6 @@
+TMPDIR=/tmp
+JOB_TMP=/tmp/e12511253_b2t_348247
+TORCH_EXTENSIONS_DIR=/tmp/e12511253_b2t_348247/torch_extensions
+WANDB_DIR=/tmp/e12511253_b2t_348247/wandb
+torch CUDA runtime expects: 12.6
+ERROR: No usable CUDA toolkit found. torch expects CUDA=12.6.

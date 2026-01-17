@@ -1,0 +1,140 @@
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/tmp/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan  3 11:32 /tmp/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+B2T_DATA_DIR=/home/e12511253/Brain2Text/brain2text/data/hdf5_data_final
+==============================================
+Job: b2t_exp  ID: 348070
+Base: configs/rnn_args.yaml
+Global override: configs/overrides/wer_1gram_only.yaml
+Folders: configs/experiments/xlstm/num_blocks
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+TMPDIR=/tmp
+WANDB_DIR=/tmp/wandb
+==============================================
+
+========== FOLDER: configs/experiments/xlstm/num_blocks ==========
+Num configs: 4
+
+=== RUN b1.yaml ===
+2026-01-03 11:32:42,293: Using device: cuda:0
+2026-01-03 11:32:43,898: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil
+2026-01-03 11:32:43,919: Using 45 sessions after filtering (from 45).
+{'verbose': True, 'with_cuda': True, 'extra_ldflags': ['-L/usr/local/cuda/lib', '-lcublas'], 'extra_cflags': ['-DSLSTM_HIDDEN_SIZE=768', '-DSLSTM_BATCH_SIZE=8', '-DSLSTM_NUM_HEADS=4', '-DSLSTM_NUM_STATES=4', '-DSLSTM_DTYPE_B=float', '-DSLSTM_DTYPE_R=__nv_bfloat16', '-DSLSTM_DTYPE_W=__nv_bfloat16', '-DSLSTM_DTYPE_G=__nv_bfloat16', '-DSLSTM_DTYPE_S=__nv_bfloat16', '-DSLSTM_DTYPE_A=float', '-DSLSTM_NUM_GATES=4', '-DSLSTM_SIMPLE_AGG=true', '-DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false', '-DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0', '-DSLSTM_FORWARD_CLIPVAL_VALID=false', '-DSLSTM_FORWARD_CLIPVAL=0.0', '-U__CUDA_NO_HALF_OPERATORS__', '-U__CUDA_NO_HALF_CONVERSIONS__', '-U__CUDA_NO_BFLOAT16_OPERATORS__', '-U__CUDA_NO_BFLOAT16_CONVERSIONS__', '-U__CUDA_NO_BFLOAT162_OPERATORS__', '-U__CUDA_NO_BFLOAT162_CONVERSIONS__'], 'extra_cuda_cflags': ['-Xptxas="-v"', '-gencode', 'arch=compute_80,code=compute_80', '-res-usage', '--use_fast_math', '-O3', '-Xptxas -O3', '--extra-device-vectorization', '-DSLSTM_HIDDEN_SIZE=768', '-DSLSTM_BATCH_SIZE=8', '-DSLSTM_NUM_HEADS=4', '-DSLSTM_NUM_STATES=4', '-DSLSTM_DTYPE_B=float', '-DSLSTM_DTYPE_R=__nv_bfloat16', '-DSLSTM_DTYPE_W=__nv_bfloat16', '-DSLSTM_DTYPE_G=__nv_bfloat16', '-DSLSTM_DTYPE_S=__nv_bfloat16', '-DSLSTM_DTYPE_A=float', '-DSLSTM_NUM_GATES=4', '-DSLSTM_SIMPLE_AGG=true', '-DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false', '-DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0', '-DSLSTM_FORWARD_CLIPVAL_VALID=false', '-DSLSTM_FORWARD_CLIPVAL=0.0', '-U__CUDA_NO_HALF_OPERATORS__', '-U__CUDA_NO_HALF_CONVERSIONS__', '-U__CUDA_NO_BFLOAT16_OPERATORS__', '-U__CUDA_NO_BFLOAT16_CONVERSIONS__', '-U__CUDA_NO_BFLOAT162_OPERATORS__', '-U__CUDA_NO_BFLOAT162_CONVERSIONS__']}
+[1/8] /usr/local/cuda/bin/nvcc  -DTORCH_EXTENSION_NAME=slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0 -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/TH -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /home/e12511253/miniforge3/envs/brain2text/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_86,code=compute_86 -gencode=arch=compute_86,code=sm_86 --compiler-options '-fPIC' -Xptxas="-v" -gencode arch=compute_80,code=compute_80 -res-usage --use_fast_math -O3 -Xptxas -O3 --extra-device-vectorization -DSLSTM_HIDDEN_SIZE=768 -DSLSTM_BATCH_SIZE=8 -DSLSTM_NUM_HEADS=4 -DSLSTM_NUM_STATES=4 -DSLSTM_DTYPE_B=float -DSLSTM_DTYPE_R=__nv_bfloat16 -DSLSTM_DTYPE_W=__nv_bfloat16 -DSLSTM_DTYPE_G=__nv_bfloat16 -DSLSTM_DTYPE_S=__nv_bfloat16 -DSLSTM_DTYPE_A=float -DSLSTM_NUM_GATES=4 -DSLSTM_SIMPLE_AGG=true -DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false -DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0 -DSLSTM_FORWARD_CLIPVAL_VALID=false -DSLSTM_FORWARD_CLIPVAL=0.0 -U__CUDA_NO_HALF_OPERATORS__ -U__CUDA_NO_HALF_CONVERSIONS__ -U__CUDA_NO_BFLOAT16_OPERATORS__ -U__CUDA_NO_BFLOAT16_CONVERSIONS__ -U__CUDA_NO_BFLOAT162_OPERATORS__ -U__CUDA_NO_BFLOAT162_CONVERSIONS__ -std=c++14 -c /home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/util/cuda_error.cu -o cuda_error.cuda.o 
+ptxas info    : 0 bytes gmem
+[2/8] /usr/local/cuda/bin/nvcc  -DTORCH_EXTENSION_NAME=slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0 -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/TH -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /home/e12511253/miniforge3/envs/brain2text/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_86,code=compute_86 -gencode=arch=compute_86,code=sm_86 --compiler-options '-fPIC' -Xptxas="-v" -gencode arch=compute_80,code=compute_80 -res-usage --use_fast_math -O3 -Xptxas -O3 --extra-device-vectorization -DSLSTM_HIDDEN_SIZE=768 -DSLSTM_BATCH_SIZE=8 -DSLSTM_NUM_HEADS=4 -DSLSTM_NUM_STATES=4 -DSLSTM_DTYPE_B=float -DSLSTM_DTYPE_R=__nv_bfloat16 -DSLSTM_DTYPE_W=__nv_bfloat16 -DSLSTM_DTYPE_G=__nv_bfloat16 -DSLSTM_DTYPE_S=__nv_bfloat16 -DSLSTM_DTYPE_A=float -DSLSTM_NUM_GATES=4 -DSLSTM_SIMPLE_AGG=true -DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false -DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0 -DSLSTM_FORWARD_CLIPVAL_VALID=false -DSLSTM_FORWARD_CLIPVAL=0.0 -U__CUDA_NO_HALF_OPERATORS__ -U__CUDA_NO_HALF_CONVERSIONS__ -U__CUDA_NO_BFLOAT16_OPERATORS__ -U__CUDA_NO_BFLOAT16_CONVERSIONS__ -U__CUDA_NO_BFLOAT162_OPERATORS__ -U__CUDA_NO_BFLOAT162_CONVERSIONS__ -std=c++14 -c /home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm_forward.cu -o slstm_forward.cuda.o 
+/home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm_pointwise.cuh(11): warning #20281-D: in whole program compilation mode ("-rdc=false"), a __global__ function template instantiation or specialization ("slstm::SLSTMPointwiseForward<(bool)1> ") will be required to have a definition in the current translation unit, when "-static-global-template-stub" will be set to "true" by default in the future. To resolve this issue, either use "-rdc=true", or explicitly set "-static-global-template-stub=false" (but see nvcc documentation about downsides of turning it off)
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm_pointwise.cuh(11): warning #20281-D: in whole program compilation mode ("-rdc=false"), a __global__ function template instantiation or specialization ("slstm::SLSTMPointwiseForward<(bool)0> ") will be required to have a definition in the current translation unit, when "-static-global-template-stub" will be set to "true" by default in the future. To resolve this issue, either use "-rdc=true", or explicitly set "-static-global-template-stub=false" (but see nvcc documentation about downsides of turning it off)
+
+ptxas info    : 0 bytes gmem
+/home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm_pointwise.cuh(11): warning #20281-D: in whole program compilation mode ("-rdc=false"), a __global__ function template instantiation or specialization ("slstm::SLSTMPointwiseForward<(bool)1> ") will be required to have a definition in the current translation unit, when "-static-global-template-stub" will be set to "true" by default in the future. To resolve this issue, either use "-rdc=true", or explicitly set "-static-global-template-stub=false" (but see nvcc documentation about downsides of turning it off)
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+/home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm_pointwise.cuh(11): warning #20281-D: in whole program compilation mode ("-rdc=false"), a __global__ function template instantiation or specialization ("slstm::SLSTMPointwiseForward<(bool)0> ") will be required to have a definition in the current translation unit, when "-static-global-template-stub" will be set to "true" by default in the future. To resolve this issue, either use "-rdc=true", or explicitly set "-static-global-template-stub=false" (but see nvcc documentation about downsides of turning it off)
+
+[3/8] /usr/local/cuda/bin/nvcc  -DTORCH_EXTENSION_NAME=slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0 -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/TH -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /home/e12511253/miniforge3/envs/brain2text/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_86,code=compute_86 -gencode=arch=compute_86,code=sm_86 --compiler-options '-fPIC' -Xptxas="-v" -gencode arch=compute_80,code=compute_80 -res-usage --use_fast_math -O3 -Xptxas -O3 --extra-device-vectorization -DSLSTM_HIDDEN_SIZE=768 -DSLSTM_BATCH_SIZE=8 -DSLSTM_NUM_HEADS=4 -DSLSTM_NUM_STATES=4 -DSLSTM_DTYPE_B=float -DSLSTM_DTYPE_R=__nv_bfloat16 -DSLSTM_DTYPE_W=__nv_bfloat16 -DSLSTM_DTYPE_G=__nv_bfloat16 -DSLSTM_DTYPE_S=__nv_bfloat16 -DSLSTM_DTYPE_A=float -DSLSTM_NUM_GATES=4 -DSLSTM_SIMPLE_AGG=true -DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false -DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0 -DSLSTM_FORWARD_CLIPVAL_VALID=false -DSLSTM_FORWARD_CLIPVAL=0.0 -U__CUDA_NO_HALF_OPERATORS__ -U__CUDA_NO_HALF_CONVERSIONS__ -U__CUDA_NO_BFLOAT16_OPERATORS__ -U__CUDA_NO_BFLOAT16_CONVERSIONS__ -U__CUDA_NO_BFLOAT162_OPERATORS__ -U__CUDA_NO_BFLOAT162_CONVERSIONS__ -std=c++14 -c /home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm_backward.cu -o slstm_backward.cuda.o 
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_ZN50_GLOBAL__N__0626a4c8_17_slstm_backward_cu_3639fa5e29gradientBiasAggregationKernelEjjjjjjPK13__nv_bfloat16S2_Pf' for 'sm_86'
+ptxas info    : Function properties for _ZN50_GLOBAL__N__0626a4c8_17_slstm_backward_cu_3639fa5e29gradientBiasAggregationKernelEjjjjjjPK13__nv_bfloat16S2_Pf
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 40 registers, used 0 barriers, 400 bytes cmem[0]
+ptxas info    : Compile time = 10.096 ms
+[4/8] /usr/local/cuda/bin/nvcc  -DTORCH_EXTENSION_NAME=slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0 -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/TH -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /home/e12511253/miniforge3/envs/brain2text/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_86,code=compute_86 -gencode=arch=compute_86,code=sm_86 --compiler-options '-fPIC' -Xptxas="-v" -gencode arch=compute_80,code=compute_80 -res-usage --use_fast_math -O3 -Xptxas -O3 --extra-device-vectorization -DSLSTM_HIDDEN_SIZE=768 -DSLSTM_BATCH_SIZE=8 -DSLSTM_NUM_HEADS=4 -DSLSTM_NUM_STATES=4 -DSLSTM_DTYPE_B=float -DSLSTM_DTYPE_R=__nv_bfloat16 -DSLSTM_DTYPE_W=__nv_bfloat16 -DSLSTM_DTYPE_G=__nv_bfloat16 -DSLSTM_DTYPE_S=__nv_bfloat16 -DSLSTM_DTYPE_A=float -DSLSTM_NUM_GATES=4 -DSLSTM_SIMPLE_AGG=true -DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false -DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0 -DSLSTM_FORWARD_CLIPVAL_VALID=false -DSLSTM_FORWARD_CLIPVAL=0.0 -U__CUDA_NO_HALF_OPERATORS__ -U__CUDA_NO_HALF_CONVERSIONS__ -U__CUDA_NO_BFLOAT16_OPERATORS__ -U__CUDA_NO_BFLOAT16_CONVERSIONS__ -U__CUDA_NO_BFLOAT162_OPERATORS__ -U__CUDA_NO_BFLOAT162_CONVERSIONS__ -std=c++14 -c /home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm_pointwise.cu -o slstm_pointwise.cuda.o 
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_ZN5slstm21SLSTMPointwiseForwardILb0EEEviiiPK13__nv_bfloat16S3_PKfS3_jPS1_jS6_S6_' for 'sm_86'
+ptxas info    : Function properties for _ZN5slstm21SLSTMPointwiseForwardILb0EEEviiiPK13__nv_bfloat16S3_PKfS3_jPS1_jS6_S6_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 38 registers, used 0 barriers, 440 bytes cmem[0]
+ptxas info    : Compile time = 6.068 ms
+ptxas info    : Compiling entry function '_ZN5slstm21SLSTMPointwiseForwardILb1EEEviiiPK13__nv_bfloat16S3_PKfS3_jPS1_jS6_S6_' for 'sm_86'
+ptxas info    : Function properties for _ZN5slstm21SLSTMPointwiseForwardILb1EEEviiiPK13__nv_bfloat16S3_PKfS3_jPS1_jS6_S6_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 36 registers, used 0 barriers, 440 bytes cmem[0]
+ptxas info    : Compile time = 5.955 ms
+ptxas info    : Compiling entry function '_ZN5slstm22SLSTMPointwiseBackwardEiiiPK13__nv_bfloat16jS2_S2_PKfS2_jS2_jPS0_jS5_S5_S5_' for 'sm_86'
+ptxas info    : Function properties for _ZN5slstm22SLSTMPointwiseBackwardEiiiPK13__nv_bfloat16jS2_S2_PKfS2_jS2_jPS0_jS5_S5_S5_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 38 registers, used 0 barriers, 480 bytes cmem[0]
+ptxas info    : Compile time = 4.808 ms
+[5/8] /usr/local/cuda/bin/nvcc  -DTORCH_EXTENSION_NAME=slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0 -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/TH -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /home/e12511253/miniforge3/envs/brain2text/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_86,code=compute_86 -gencode=arch=compute_86,code=sm_86 --compiler-options '-fPIC' -Xptxas="-v" -gencode arch=compute_80,code=compute_80 -res-usage --use_fast_math -O3 -Xptxas -O3 --extra-device-vectorization -DSLSTM_HIDDEN_SIZE=768 -DSLSTM_BATCH_SIZE=8 -DSLSTM_NUM_HEADS=4 -DSLSTM_NUM_STATES=4 -DSLSTM_DTYPE_B=float -DSLSTM_DTYPE_R=__nv_bfloat16 -DSLSTM_DTYPE_W=__nv_bfloat16 -DSLSTM_DTYPE_G=__nv_bfloat16 -DSLSTM_DTYPE_S=__nv_bfloat16 -DSLSTM_DTYPE_A=float -DSLSTM_NUM_GATES=4 -DSLSTM_SIMPLE_AGG=true -DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false -DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0 -DSLSTM_FORWARD_CLIPVAL_VALID=false -DSLSTM_FORWARD_CLIPVAL=0.0 -U__CUDA_NO_HALF_OPERATORS__ -U__CUDA_NO_HALF_CONVERSIONS__ -U__CUDA_NO_BFLOAT16_OPERATORS__ -U__CUDA_NO_BFLOAT16_CONVERSIONS__ -U__CUDA_NO_BFLOAT162_OPERATORS__ -U__CUDA_NO_BFLOAT162_CONVERSIONS__ -std=c++14 -c /home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/util/blas.cu -o blas.cuda.o 
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z10initKernelI13__nv_bfloat16EvPT_iS1_' for 'sm_86'
+ptxas info    : Function properties for _Z10initKernelI13__nv_bfloat16EvPT_iS1_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, used 0 barriers, 366 bytes cmem[0]
+ptxas info    : Compile time = 1.367 ms
+ptxas info    : Compiling entry function '_Z10initKernelI6__halfEvPT_iS1_' for 'sm_86'
+ptxas info    : Function properties for _Z10initKernelI6__halfEvPT_iS1_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, used 0 barriers, 366 bytes cmem[0]
+ptxas info    : Compile time = 0.611 ms
+ptxas info    : Compiling entry function '_Z10initKernelIfEvPT_iS0_' for 'sm_86'
+ptxas info    : Function properties for _Z10initKernelIfEvPT_iS0_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, used 0 barriers, 368 bytes cmem[0]
+ptxas info    : Compile time = 0.520 ms
+ptxas info    : Compiling entry function '_Z10initKernelIdEvPT_iS0_' for 'sm_86'
+ptxas info    : Function properties for _Z10initKernelIdEvPT_iS0_
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 8 registers, used 0 barriers, 376 bytes cmem[0]
+ptxas info    : Compile time = 0.503 ms
+[6/8] /usr/local/cuda/bin/nvcc  -DTORCH_EXTENSION_NAME=slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0 -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/TH -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /home/e12511253/miniforge3/envs/brain2text/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_86,code=compute_86 -gencode=arch=compute_86,code=sm_86 --compiler-options '-fPIC' -Xptxas="-v" -gencode arch=compute_80,code=compute_80 -res-usage --use_fast_math -O3 -Xptxas -O3 --extra-device-vectorization -DSLSTM_HIDDEN_SIZE=768 -DSLSTM_BATCH_SIZE=8 -DSLSTM_NUM_HEADS=4 -DSLSTM_NUM_STATES=4 -DSLSTM_DTYPE_B=float -DSLSTM_DTYPE_R=__nv_bfloat16 -DSLSTM_DTYPE_W=__nv_bfloat16 -DSLSTM_DTYPE_G=__nv_bfloat16 -DSLSTM_DTYPE_S=__nv_bfloat16 -DSLSTM_DTYPE_A=float -DSLSTM_NUM_GATES=4 -DSLSTM_SIMPLE_AGG=true -DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false -DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0 -DSLSTM_FORWARD_CLIPVAL_VALID=false -DSLSTM_FORWARD_CLIPVAL=0.0 -U__CUDA_NO_HALF_OPERATORS__ -U__CUDA_NO_HALF_CONVERSIONS__ -U__CUDA_NO_BFLOAT16_OPERATORS__ -U__CUDA_NO_BFLOAT16_CONVERSIONS__ -U__CUDA_NO_BFLOAT162_OPERATORS__ -U__CUDA_NO_BFLOAT162_CONVERSIONS__ -std=c++14 -c /home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm_backward_cut.cu -o slstm_backward_cut.cuda.o 
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_ZN54_GLOBAL__N__945ff031_21_slstm_backward_cut_cu_1c2c4d0129gradientBiasAggregationKernelEjjjjjjPK13__nv_bfloat16S2_Pf' for 'sm_86'
+ptxas info    : Function properties for _ZN54_GLOBAL__N__945ff031_21_slstm_backward_cut_cu_1c2c4d0129gradientBiasAggregationKernelEjjjjjjPK13__nv_bfloat16S2_Pf
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 40 registers, used 0 barriers, 400 bytes cmem[0]
+ptxas info    : Compile time = 9.485 ms
+[7/8] c++ -MMD -MF slstm.o.d -DTORCH_EXTENSION_NAME=slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0 -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/TH -isystem /home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda/include -isystem /home/e12511253/miniforge3/envs/brain2text/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++14 -DSLSTM_HIDDEN_SIZE=768 -DSLSTM_BATCH_SIZE=8 -DSLSTM_NUM_HEADS=4 -DSLSTM_NUM_STATES=4 -DSLSTM_DTYPE_B=float -DSLSTM_DTYPE_R=__nv_bfloat16 -DSLSTM_DTYPE_W=__nv_bfloat16 -DSLSTM_DTYPE_G=__nv_bfloat16 -DSLSTM_DTYPE_S=__nv_bfloat16 -DSLSTM_DTYPE_A=float -DSLSTM_NUM_GATES=4 -DSLSTM_SIMPLE_AGG=true -DSLSTM_GRADIENT_RECURRENT_CLIPVAL_VALID=false -DSLSTM_GRADIENT_RECURRENT_CLIPVAL=0.0 -DSLSTM_FORWARD_CLIPVAL_VALID=false -DSLSTM_FORWARD_CLIPVAL=0.0 -U__CUDA_NO_HALF_OPERATORS__ -U__CUDA_NO_HALF_CONVERSIONS__ -U__CUDA_NO_BFLOAT16_OPERATORS__ -U__CUDA_NO_BFLOAT16_CONVERSIONS__ -U__CUDA_NO_BFLOAT162_OPERATORS__ -U__CUDA_NO_BFLOAT162_CONVERSIONS__ -c /home/e12511253/Brain2Text/brain2text/src/brain2text/xlstm/blocks/slstm/src/cuda/slstm.cc -o slstm.o 
+[8/8] c++ slstm.o slstm_forward.cuda.o slstm_backward.cuda.o slstm_backward_cut.cuda.o slstm_pointwise.cuda.o blas.cuda.o cuda_error.cuda.o -shared -L/usr/local/cuda/lib -lcublas -L/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda_cu -ltorch_cuda_cpp -ltorch -ltorch_python -L/usr/local/cuda/lib64 -lcudart -o slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0.so
+2026-01-03 11:33:01,471: Using torch.compile (if available)
+2026-01-03 11:33:01,472: torch.compile not available (torch<2.0). Skipping.
+2026-01-03 11:33:01,472: Initialized RNN decoding model
+2026-01-03 11:33:01,472: XLSTMDecoder(
+  (day_layer_activation): Softsign()
+  (day_layer_dropout): Dropout(p=0.2, inplace=False)
+  (in_proj): Linear(in_features=7168, out_features=768, bias=True)
+  (xlstm): xLSTMBlockStack(
+    (blocks): ModuleList(
+      (0): sLSTMBlock(
+        (xlstm_norm): LayerNorm()
+        (xlstm): sLSTMLayer(
+          (conv1d): CausalConv1d(
+            (conv): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+          )
+          (conv_act_fn): SiLU()
+          (fgate): LinearHeadwiseExpand(in_features=768, num_heads=4, expand_factor_up=1, bias=False, trainable_weight=True, trainable_bias=True, )
+          (igate): LinearHeadwiseExpand(in_features=768, num_heads=4, expand_factor_up=1, bias=False, trainable_weight=True, trainable_bias=True, )
+          (zgate): LinearHeadwiseExpand(in_features=768, num_heads=4, expand_factor_up=1, bias=False, trainable_weight=True, trainable_bias=True, )
+          (ogate): LinearHeadwiseExpand(in_features=768, num_heads=4, expand_factor_up=1, bias=False, trainable_weight=True, trainable_bias=True, )
+          (slstm_cell): sLSTMCell_cuda(function=slstm, hidden_size=768, num_heads=4)
+          (group_norm): MultiHeadLayerNorm()
+          (dropout): Dropout(p=0.2, inplace=False)
+        )
+      )
+    )
+    (post_blocks_norm): LayerNorm()
+  )
+  (head): Sequential(
+    (0): ResidualFFNBlock(
+      (norm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (lin): Linear(in_features=768, out_features=768, bias=True)
+      (act): GELU(approximate='none')
+      (drop): Dropout(p=0.1, inplace=False)
+    )
+  )
+  (dropout): Dropout(p=0.2, inplace=False)
+  (out): Linear(in_features=768, out_features=41, bias=True)
+)
+2026-01-03 11:33:01,472: Model has 19,137,833 parameters
+2026-01-03 11:33:01,472: Model has 11,819,520 day-specific parameters | 61.76% of total parameters
+2026-01-03 11:33:02,754: Successfully initialized datasets
+2026-01-03 11:33:02,755: AdamW(fused) not available in this torch build. Using standard AdamW.

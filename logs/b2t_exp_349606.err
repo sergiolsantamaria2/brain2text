@@ -1,0 +1,3089 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 3d9mrgs7
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_349606/wandb/wandb/run-20260106_123853-3d9mrgs7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run headless_baseline
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/3d9mrgs7
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0106 12:38:54.515550 2292423 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0106 12:38:54.551533 2292423 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0106 12:38:54.614768 2292423 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.20 val PER: 0.1827'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.25 val PER: 0.1476'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.27 val PER: 0.2572'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.01 val PER: 0.1485'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.03 val PER: 0.2209'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.24 val PER: 0.1893'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.29 val PER: 0.2042'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.01 val PER: 0.2497'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.06 val PER: 0.1550'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.08 val PER: 0.3099'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.13 val PER: 0.2832'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.15 val PER: 0.2241'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.20 val PER: 0.2215'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.22 val PER: 0.1960'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.03 val PER: 0.2361'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.04 val PER: 0.0546'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.17 val PER: 0.1026'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.19 val PER: 0.1058'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.26 val PER: 0.2623'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.03 val PER: 0.1933'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.08 val PER: 0.2250'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.10 val PER: 0.1708'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.17 val PER: 0.2495'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.29 val PER: 0.2402'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.02.25 val PER: 0.1994'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.08 val PER: 0.3030'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.15 val PER: 0.2777'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.17 val PER: 0.2308'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.05.10 val PER: 0.2407'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.06.14 val PER: 0.2524'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.19 val PER: 0.3448'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.21 val PER: 0.1662'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.28 val PER: 0.2213'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.01.10 val PER: 0.4146'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.01.12 val PER: 0.2433'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.14 val PER: 0.4275'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.16 val PER: 0.2814'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.30 val PER: 0.4046'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.04.13 val PER: 0.2910'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 426, in save
+    with _open_file_like(f, 'wb') as opened_file:
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 270, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 251, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+OSError: [Errno 28] No space left on device: '/tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/checkpoint_batch_4500.tmp'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1085, in train
+    self.save_model_checkpoint(
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 738, in save_model_checkpoint
+    self.logger.exception(f"Checkpoint save failed (continuing training): {save_path} ({e})")
+Message: "Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/checkpoint_batch_4500 ([Errno 28] No space left on device: '/tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/checkpoint_batch_4500.tmp')"
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 962, in train
+    self.logger.info(f'Train batch {i}: ' +
+Message: 'Train batch 4600: loss: 19.50 grad norm: 58.61 time: 0.061'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 962, in train
+    self.logger.info(f'Train batch {i}: ' +
+Message: 'Train batch 4800: loss: 14.54 grad norm: 41.46 time: 0.064'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 962, in train
+    self.logger.info(f'Train batch {i}: ' +
+Message: 'Train batch 5000: loss: 31.76 grad norm: 77.61 time: 0.062'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 969, in train
+    self.logger.info(f"Running test after training batch: {i}")
+Message: 'Running test after training batch: 5000'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 973, in train
+    val_metrics = self.validation(loader = self.val_loader, return_logits = self.args['save_val_logits'], return_data = self.args['save_val_data'])
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1219, in validation
+    self.logger.info(f"WER debug GT example: {true_sentence}")
+Message: 'WER debug GT example: You can see the code at this point as well.'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 973, in train
+    val_metrics = self.validation(loader = self.val_loader, return_logits = self.args['save_val_logits'], return_data = self.args['save_val_data'])
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1350, in validation
+    self.logger.info(
+Message: 'WER debug example\n  GT : you can see the code at this point as well\n  PR : yu end e a owed at this otte is ill'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 973, in train
+    val_metrics = self.validation(loader = self.val_loader, return_logits = self.args['save_val_logits'], return_data = self.args['save_val_data'])
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1350, in validation
+    self.logger.info(
+Message: 'WER debug example\n  GT : how does it keep the cost down\n  PR : aue us it oop the us end'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 983, in train
+    self.logger.info(
+Message: 'Val batch 5000: PER (avg): 0.2245 CTC Loss (avg): 21.8169 WER(1gram): 75.63% (n=64) time: 6.575'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 991, in train
+    self.logger.info(
+Message: 'WER lens: avg_true_words=6.16 avg_pred_words=6.19 max_pred_words=11'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.13 val PER: 0.2048'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.18 val PER: 0.1685'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.20 val PER: 0.1700'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.25 val PER: 0.1401'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.27 val PER: 0.2492'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.01 val PER: 0.1323'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.03 val PER: 0.2233'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.24 val PER: 0.1796'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.29 val PER: 0.1883'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.01 val PER: 0.2424'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.06 val PER: 0.1582'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.08 val PER: 0.3045'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.13 val PER: 0.2739'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.15 val PER: 0.2142'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.20 val PER: 0.2215'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.22 val PER: 0.1837'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.03 val PER: 0.2374'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.04 val PER: 0.0648'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.17 val PER: 0.0995'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.19 val PER: 0.0978'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.26 val PER: 0.2413'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.03 val PER: 0.1996'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.08 val PER: 0.2024'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.10 val PER: 0.1537'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.17 val PER: 0.2235'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.29 val PER: 0.2224'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.02.25 val PER: 0.1770'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.08 val PER: 0.2888'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.15 val PER: 0.2745'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.17 val PER: 0.2169'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.05.10 val PER: 0.2348'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.06.14 val PER: 0.2476'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.19 val PER: 0.3375'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.21 val PER: 0.1648'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.28 val PER: 0.2096'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.01.10 val PER: 0.3788'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.01.12 val PER: 0.2256'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.14 val PER: 0.4142'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.16 val PER: 0.2775'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.30 val PER: 0.3839'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.04.13 val PER: 0.2867'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 426, in save
+    with _open_file_like(f, 'wb') as opened_file:
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 270, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 251, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+OSError: [Errno 28] No space left on device: '/tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/checkpoint_batch_5000.tmp'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1085, in train
+    self.save_model_checkpoint(
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 738, in save_model_checkpoint
+    self.logger.exception(f"Checkpoint save failed (continuing training): {save_path} ({e})")
+Message: "Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/checkpoint_batch_5000 ([Errno 28] No space left on device: '/tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/checkpoint_batch_5000.tmp')"
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 962, in train
+    self.logger.info(f'Train batch {i}: ' +
+Message: 'Train batch 5200: loss: 18.18 grad norm: 58.35 time: 0.051'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 962, in train
+    self.logger.info(f'Train batch {i}: ' +
+Message: 'Train batch 5400: loss: 17.38 grad norm: 47.84 time: 0.066'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 969, in train
+    self.logger.info(f"Running test after training batch: {i}")
+Message: 'Running test after training batch: 5500'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 973, in train
+    val_metrics = self.validation(loader = self.val_loader, return_logits = self.args['save_val_logits'], return_data = self.args['save_val_data'])
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1219, in validation
+    self.logger.info(f"WER debug GT example: {true_sentence}")
+Message: 'WER debug GT example: You can see the code at this point as well.'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 973, in train
+    val_metrics = self.validation(loader = self.val_loader, return_logits = self.args['save_val_logits'], return_data = self.args['save_val_data'])
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1350, in validation
+    self.logger.info(
+Message: 'WER debug example\n  GT : you can see the code at this point as well\n  PR : yu end e a owed at this otte is ill'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 973, in train
+    val_metrics = self.validation(loader = self.val_loader, return_logits = self.args['save_val_logits'], return_data = self.args['save_val_data'])
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1350, in validation
+    self.logger.info(
+Message: 'WER debug example\n  GT : how does it keep the cost down\n  PR : aue us it keep the us end'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 983, in train
+    self.logger.info(
+Message: 'Val batch 5500: PER (avg): 0.2179 CTC Loss (avg): 20.7891 WER(1gram): 72.84% (n=64) time: 6.356'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 991, in train
+    self.logger.info(
+Message: 'WER lens: avg_true_words=6.16 avg_pred_words=6.23 max_pred_words=11'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.13 val PER: 0.1923'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.18 val PER: 0.1735'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.20 val PER: 0.1700'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.25 val PER: 0.1416'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.08.27 val PER: 0.2379'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.01 val PER: 0.1282'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.03 val PER: 0.2138'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.24 val PER: 0.1748'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.09.29 val PER: 0.1895'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.01 val PER: 0.2318'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.06 val PER: 0.1496'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.08 val PER: 0.2923'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.13 val PER: 0.2622'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.15 val PER: 0.2149'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.20 val PER: 0.2181'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.10.22 val PER: 0.1793'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.03 val PER: 0.2286'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.04 val PER: 0.0444'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.17 val PER: 0.0918'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.19 val PER: 0.1038'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.11.26 val PER: 0.2333'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.03 val PER: 0.1870'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.08 val PER: 0.1851'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.10 val PER: 0.1432'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.17 val PER: 0.2204'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2023.12.29 val PER: 0.2135'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.02.25 val PER: 0.1896'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.08 val PER: 0.2717'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.15 val PER: 0.2502'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.03.17 val PER: 0.2169'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.05.10 val PER: 0.2155'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.06.14 val PER: 0.2429'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.19 val PER: 0.3296'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.21 val PER: 0.1586'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2024.07.28 val PER: 0.2154'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.01.10 val PER: 0.3898'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.01.12 val PER: 0.2271'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.14 val PER: 0.3772'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.16 val PER: 0.2618'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.03.30 val PER: 0.3759'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1001, in train
+    self.logger.info(f"{self.args['dataset']['sessions'][day]} val PER: {val_metrics['day_PERs'][day]['total_edit_distance'] / val_metrics['day_PERs'][day]['total_seq_length']:0.4f}")
+Message: 't15.2025.04.13 val PER: 0.2953'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1033, in train
+    self.logger.info(f"New best val WER({wer_tag}) {self.best_val_WER:.2f}% --> {cur_wer:.2f}%")
+Message: 'New best val WER(1gram) 74.87% --> 72.84%'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1056, in train
+    self.logger.info(f"Checkpointing model")
+Message: 'Checkpointing model'
+Arguments: ()
+--- Logging error ---
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 734, in save_model_checkpoint
+    torch.save(checkpoint, tmp_save_path, _use_new_zipfile_serialization=False)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 426, in save
+    with _open_file_like(f, 'wb') as opened_file:
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 270, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 251, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+OSError: [Errno 28] No space left on device: '/tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/best_checkpoint.tmp'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1087, in emit
+    self.flush()
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/logging/__init__.py", line 1067, in flush
+    self.stream.flush()
+OSError: [Errno 28] No space left on device
+Call stack:
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1058, in train
+    self.save_model_checkpoint(
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 738, in save_model_checkpoint
+    self.logger.exception(f"Checkpoint save failed (continuing training): {save_path} ({e})")
+Message: "Checkpoint save failed (continuing training): /tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/best_checkpoint ([Errno 28] No space left on device: '/tmp/e12511253_b2t_349606/trained_models/architecture/headless_baseline/checkpoint/best_checkpoint.tmp')"
+Arguments: ()
+Traceback (most recent call last):
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1072, in train
+    pickle.dump(val_metrics, f)
+OSError: [Errno 28] No space left on device

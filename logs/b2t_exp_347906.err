@@ -1,0 +1,31 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run fp7g9m0x
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/wandb/wandb/run-20260102_193928-fp7g9m0x
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run base
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/fp7g9m0x
+Traceback (most recent call last):
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/lm/local_lm.py", line 147, in __init__
+    import lm_decoder  # type: ignore
+ImportError: libfst.so.8: cannot open shared object file: No such file or directory
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 88, in main
+    trainer = BrainToTextDecoder_Trainer(cfg)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 210, in __init__
+    self._lm = LocalNgramDecoder(cfg)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/lm/local_lm.py", line 150, in __init__
+    raise RuntimeError(
+RuntimeError: lm_decoder is not available in this environment. This is expected on Mac. Run on the cluster where lm_decoder is installed.

@@ -1,0 +1,71 @@
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/tmp/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan  3 11:24 /tmp/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+==============================================
+Job: b2t_exp  ID: 348068
+Base: configs/rnn_args.yaml
+Global override: configs/overrides/wer_1gram_only.yaml
+Folders: configs/experiments/gru/lr_stepdrop/lr40
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+TMPDIR=/tmp
+WANDB_DIR=/tmp/wandb
+==============================================
+
+========== FOLDER: configs/experiments/gru/lr_stepdrop/lr40 ==========
+Num configs: 6
+
+=== RUN base.yaml ===
+2026-01-03 11:24:22,767: Using device: cuda:0
+2026-01-03 11:24:24,794: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil
+2026-01-03 11:24:24,797: Skipping session t15.2023.08.11: missing data/hdf5_data_final/t15.2023.08.11/data_train.hdf5
+2026-01-03 11:24:24,797: Skipping session t15.2023.08.13: missing data/hdf5_data_final/t15.2023.08.13/data_train.hdf5
+2026-01-03 11:24:24,797: Skipping session t15.2023.08.18: missing data/hdf5_data_final/t15.2023.08.18/data_train.hdf5
+2026-01-03 11:24:24,797: Skipping session t15.2023.08.20: missing data/hdf5_data_final/t15.2023.08.20/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.08.25: missing data/hdf5_data_final/t15.2023.08.25/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.08.27: missing data/hdf5_data_final/t15.2023.08.27/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.09.01: missing data/hdf5_data_final/t15.2023.09.01/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.09.03: missing data/hdf5_data_final/t15.2023.09.03/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.09.24: missing data/hdf5_data_final/t15.2023.09.24/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.09.29: missing data/hdf5_data_final/t15.2023.09.29/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.10.01: missing data/hdf5_data_final/t15.2023.10.01/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.10.06: missing data/hdf5_data_final/t15.2023.10.06/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.10.08: missing data/hdf5_data_final/t15.2023.10.08/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.10.13: missing data/hdf5_data_final/t15.2023.10.13/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.10.15: missing data/hdf5_data_final/t15.2023.10.15/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.10.20: missing data/hdf5_data_final/t15.2023.10.20/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.10.22: missing data/hdf5_data_final/t15.2023.10.22/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.11.03: missing data/hdf5_data_final/t15.2023.11.03/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.11.04: missing data/hdf5_data_final/t15.2023.11.04/data_train.hdf5
+2026-01-03 11:24:24,798: Skipping session t15.2023.11.17: missing data/hdf5_data_final/t15.2023.11.17/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2023.11.19: missing data/hdf5_data_final/t15.2023.11.19/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2023.11.26: missing data/hdf5_data_final/t15.2023.11.26/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2023.12.03: missing data/hdf5_data_final/t15.2023.12.03/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2023.12.08: missing data/hdf5_data_final/t15.2023.12.08/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2023.12.10: missing data/hdf5_data_final/t15.2023.12.10/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2023.12.17: missing data/hdf5_data_final/t15.2023.12.17/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2023.12.29: missing data/hdf5_data_final/t15.2023.12.29/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.02.25: missing data/hdf5_data_final/t15.2024.02.25/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.03.03: missing data/hdf5_data_final/t15.2024.03.03/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.03.08: missing data/hdf5_data_final/t15.2024.03.08/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.03.15: missing data/hdf5_data_final/t15.2024.03.15/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.03.17: missing data/hdf5_data_final/t15.2024.03.17/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.04.25: missing data/hdf5_data_final/t15.2024.04.25/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.04.28: missing data/hdf5_data_final/t15.2024.04.28/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.05.10: missing data/hdf5_data_final/t15.2024.05.10/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.06.14: missing data/hdf5_data_final/t15.2024.06.14/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.07.19: missing data/hdf5_data_final/t15.2024.07.19/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.07.21: missing data/hdf5_data_final/t15.2024.07.21/data_train.hdf5
+2026-01-03 11:24:24,799: Skipping session t15.2024.07.28: missing data/hdf5_data_final/t15.2024.07.28/data_train.hdf5
+2026-01-03 11:24:24,800: Skipping session t15.2025.01.10: missing data/hdf5_data_final/t15.2025.01.10/data_train.hdf5
+2026-01-03 11:24:24,800: Skipping session t15.2025.01.12: missing data/hdf5_data_final/t15.2025.01.12/data_train.hdf5
+2026-01-03 11:24:24,800: Skipping session t15.2025.03.14: missing data/hdf5_data_final/t15.2025.03.14/data_train.hdf5
+2026-01-03 11:24:24,800: Skipping session t15.2025.03.16: missing data/hdf5_data_final/t15.2025.03.16/data_train.hdf5
+2026-01-03 11:24:24,800: Skipping session t15.2025.03.30: missing data/hdf5_data_final/t15.2025.03.30/data_train.hdf5
+2026-01-03 11:24:24,800: Skipping session t15.2025.04.13: missing data/hdf5_data_final/t15.2025.04.13/data_train.hdf5
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mbase[0m at: [34m[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../tmp/wandb/wandb/run-20260103_112423-guffsrra/logs[0m

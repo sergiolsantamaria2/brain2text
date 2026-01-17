@@ -1,0 +1,119 @@
+TMPDIR=/tmp
+JOB_TMP=/tmp/e12511253_b2t_349386
+TORCH_EXTENSIONS_DIR=/tmp/e12511253_b2t_349386/torch_extensions
+WANDB_DIR=/tmp/e12511253_b2t_349386/wandb
+torch CUDA runtime expects: 11.7
+CUDA_HOME=/home/e12511253/miniforge3/envs/brain2text
+which nvcc: /home/e12511253/miniforge3/envs/brain2text/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Tue_May__3_18:49:52_PDT_2022
+Cuda compilation tools, release 11.7, V11.7.64
+Build cuda_11.7.r11.7/compiler.31294372_0
+nvcc release: 11.7
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/tmp/e12511253_b2t_349386/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:/home/e12511253/miniforge3/envs/brain2text/lib64:/home/e12511253/miniforge3/envs/brain2text/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan  5 18:50 /tmp/e12511253_b2t_349386/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+CUDART_SO=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+CUDA_LIB=/home/e12511253/miniforge3/envs/brain2text/lib64
+LD_PRELOAD=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+TORCH_USE_RTLD_GLOBAL=1
+trained_models -> /tmp/e12511253_b2t_349386/trained_models
+OUT_ROOT=/tmp/e12511253_b2t_349386/trained_models
+==============================================
+Job: b2t_exp  ID: 349386
+Base: configs/rnn_args.yaml
+Global override 1: configs/overrides/wer_1gram_only.yaml
+Folders: configs/experiments/days_per_batch/lr40_wd1e-5
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+==============================================
+
+========== FOLDER: configs/experiments/days_per_batch/lr40_wd1e-5 ==========
+Num configs: 5
+
+=== RUN base_days_per_batch_wd1e-5.yaml ===
+2026-01-05 18:50:08,510: Using device: cuda:0
+2026-01-05 18:50:10,172: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil
+2026-01-05 18:50:10,195: Using 45 sessions after filtering (from 45).
+2026-01-05 18:50:10,616: Using torch.compile (if available)
+2026-01-05 18:50:10,617: torch.compile not available (torch<2.0). Skipping.
+2026-01-05 18:50:10,617: Initialized RNN decoding model
+2026-01-05 18:50:10,617: GRUDecoder(
+  (day_layer_activation): Softsign()
+  (day_layer_dropout): Dropout(p=0.2, inplace=False)
+  (gru): GRU(7168, 768, num_layers=5, batch_first=True, dropout=0.2)
+  (head): Sequential(
+    (0): ResidualFFNBlock(
+      (norm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (lin): Linear(in_features=768, out_features=768, bias=True)
+      (act): GELU(approximate='none')
+      (drop): Dropout(p=0.1, inplace=False)
+    )
+  )
+  (out): Linear(in_features=768, out_features=41, bias=True)
+)
+2026-01-05 18:50:10,617: Model has 44,907,305 parameters
+2026-01-05 18:50:10,617: Model has 11,819,520 day-specific parameters | 26.32% of total parameters
+2026-01-05 18:50:11,903: Successfully initialized datasets
+2026-01-05 18:50:11,904: AdamW(fused) not available in this torch build. Using standard AdamW.
+2026-01-05 18:50:12,912: Train batch 0: loss: 581.04 grad norm: 1398.64 time: 0.197
+2026-01-05 18:50:12,913: Running test after training batch: 0
+2026-01-05 18:50:13,023: WER debug GT example: You can see the code at this point as well.
+2026-01-05 18:50:18,233: WER debug example
+  GT : you can see the code at this point as well
+  PR : laham zapf
+2026-01-05 18:50:18,957: WER debug example
+  GT : how does it keep the cost down
+  PR : anafranil
+2026-01-05 18:50:53,356: Val batch 0: PER (avg): 1.4293 CTC Loss (avg): 633.1811 WER(1gram): 100.00% (n=64) time: 40.443
+2026-01-05 18:50:53,356: WER lens: avg_true_words=6.16 avg_pred_words=1.77 max_pred_words=4
+2026-01-05 18:50:53,356: t15.2023.08.13 val PER: 1.3056
+2026-01-05 18:50:53,356: t15.2023.08.18 val PER: 1.4208
+2026-01-05 18:50:53,357: t15.2023.08.20 val PER: 1.3002
+2026-01-05 18:50:53,357: t15.2023.08.25 val PER: 1.3389
+2026-01-05 18:50:53,357: t15.2023.08.27 val PER: 1.2460
+2026-01-05 18:50:53,357: t15.2023.09.01 val PER: 1.4537
+2026-01-05 18:50:53,357: t15.2023.09.03 val PER: 1.3171
+2026-01-05 18:50:53,357: t15.2023.09.24 val PER: 1.5461
+2026-01-05 18:50:53,357: t15.2023.09.29 val PER: 1.4671
+2026-01-05 18:50:53,357: t15.2023.10.01 val PER: 1.2147
+2026-01-05 18:50:53,357: t15.2023.10.06 val PER: 1.4876
+2026-01-05 18:50:53,357: t15.2023.10.08 val PER: 1.1827
+2026-01-05 18:50:53,357: t15.2023.10.13 val PER: 1.3964
+2026-01-05 18:50:53,357: t15.2023.10.15 val PER: 1.3889
+2026-01-05 18:50:53,357: t15.2023.10.20 val PER: 1.4866
+2026-01-05 18:50:53,357: t15.2023.10.22 val PER: 1.3942
+2026-01-05 18:50:53,358: t15.2023.11.03 val PER: 1.5923
+2026-01-05 18:50:53,358: t15.2023.11.04 val PER: 2.0171
+2026-01-05 18:50:53,358: t15.2023.11.17 val PER: 1.9518
+2026-01-05 18:50:53,358: t15.2023.11.19 val PER: 1.6707
+2026-01-05 18:50:53,358: t15.2023.11.26 val PER: 1.5413
+2026-01-05 18:50:53,358: t15.2023.12.03 val PER: 1.4254
+2026-01-05 18:50:53,358: t15.2023.12.08 val PER: 1.4487
+2026-01-05 18:50:53,358: t15.2023.12.10 val PER: 1.6899
+2026-01-05 18:50:53,358: t15.2023.12.17 val PER: 1.3077
+2026-01-05 18:50:53,358: t15.2023.12.29 val PER: 1.4063
+2026-01-05 18:50:53,358: t15.2024.02.25 val PER: 1.4228
+2026-01-05 18:50:53,358: t15.2024.03.08 val PER: 1.3257
+2026-01-05 18:50:53,358: t15.2024.03.15 val PER: 1.3196
+2026-01-05 18:50:53,358: t15.2024.03.17 val PER: 1.4052
+2026-01-05 18:50:53,359: t15.2024.05.10 val PER: 1.3224
+2026-01-05 18:50:53,359: t15.2024.06.14 val PER: 1.5315
+2026-01-05 18:50:53,359: t15.2024.07.19 val PER: 1.0817
+2026-01-05 18:50:53,359: t15.2024.07.21 val PER: 1.6290
+2026-01-05 18:50:53,359: t15.2024.07.28 val PER: 1.6588
+2026-01-05 18:50:53,359: t15.2025.01.10 val PER: 1.0923
+2026-01-05 18:50:53,359: t15.2025.01.12 val PER: 1.7629
+2026-01-05 18:50:53,359: t15.2025.03.14 val PER: 1.0414
+2026-01-05 18:50:53,359: t15.2025.03.16 val PER: 1.6257
+2026-01-05 18:50:53,359: t15.2025.03.30 val PER: 1.2874
+2026-01-05 18:50:53,359: t15.2025.04.13 val PER: 1.5949
+2026-01-05 18:50:53,360: New best val WER(1gram) inf% --> 100.00%
+2026-01-05 18:50:53,360: Checkpointing model
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mbase_days_per_batch_wd1e-5[0m at: [34m[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../tmp/e12511253_b2t_349386/wandb/wandb/run-20260105_185009-41119m7a/logs[0m

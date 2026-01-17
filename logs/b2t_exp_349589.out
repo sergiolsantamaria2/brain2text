@@ -1,0 +1,113 @@
+TMPDIR=/tmp
+JOB_TMP=/tmp/e12511253_b2t_349589
+TORCH_EXTENSIONS_DIR=/tmp/e12511253_b2t_349589/torch_extensions
+WANDB_DIR=/tmp/e12511253_b2t_349589/wandb
+torch CUDA runtime expects: 11.7
+CUDA_HOME=/home/e12511253/miniforge3/envs/brain2text
+which nvcc: /home/e12511253/miniforge3/envs/brain2text/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Tue_May__3_18:49:52_PDT_2022
+Cuda compilation tools, release 11.7, V11.7.64
+Build cuda_11.7.r11.7/compiler.31294372_0
+nvcc release: 11.7
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/tmp/e12511253_b2t_349589/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:/home/e12511253/miniforge3/envs/brain2text/lib64:/home/e12511253/miniforge3/envs/brain2text/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan  6 11:38 /tmp/e12511253_b2t_349589/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+CUDART_SO=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+CUDA_LIB=/home/e12511253/miniforge3/envs/brain2text/lib64
+LD_PRELOAD=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+TORCH_USE_RTLD_GLOBAL=1
+OUT_ROOT=/tmp/e12511253_b2t_349589/trained_models
+==============================================
+Job: b2t_exp  ID: 349589
+Base: configs/rnn_args.yaml
+Global override 1: configs/overrides/wer_1gram_only.yaml
+Folders: configs/experiments/gru/architecture
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+==============================================
+
+========== FOLDER: configs/experiments/gru/architecture ==========
+Num configs: 2
+
+=== RUN headless_baseline.yaml ===
+JOB_OUT_DIR=/tmp/e12511253_b2t_349589/trained_models/architecture/headless_baseline
+2026-01-06 11:38:45,032: Using device: cuda:0
+2026-01-06 11:38:47,160: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil
+2026-01-06 11:38:54,444: Using 45 sessions after filtering (from 45).
+2026-01-06 11:38:54,860: Using torch.compile (if available)
+2026-01-06 11:38:54,860: torch.compile not available (torch<2.0). Skipping.
+2026-01-06 11:38:54,861: Initialized RNN decoding model
+2026-01-06 11:38:54,861: GRUDecoder(
+  (day_layer_activation): Softsign()
+  (day_layer_dropout): Dropout(p=0.2, inplace=False)
+  (gru): GRU(7168, 768, num_layers=5, batch_first=True, dropout=0.2)
+  (head): Identity()
+  (out): Linear(in_features=768, out_features=41, bias=True)
+)
+2026-01-06 11:38:54,861: Model has 44,315,177 parameters
+2026-01-06 11:38:54,861: Model has 11,819,520 day-specific parameters | 26.67% of total parameters
+2026-01-06 11:38:59,240: Successfully initialized datasets
+2026-01-06 11:38:59,241: AdamW(fused) not available in this torch build. Using standard AdamW.
+2026-01-06 11:39:00,410: Train batch 0: loss: 645.43 grad norm: 266.17 time: 0.258
+2026-01-06 11:39:00,410: Running test after training batch: 0
+2026-01-06 11:39:00,522: WER debug GT example: You can see the code at this point as well.
+2026-01-06 11:39:06,271: WER debug example
+  GT : you can see the code at this point as well
+  PR : 
+2026-01-06 11:39:07,507: WER debug example
+  GT : how does it keep the cost down
+  PR : 
+2026-01-06 11:40:15,592: Val batch 0: PER (avg): 1.2148 CTC Loss (avg): 720.4867 WER(1gram): 100.00% (n=64) time: 75.182
+2026-01-06 11:40:15,593: WER lens: avg_true_words=6.16 avg_pred_words=0.00 max_pred_words=0
+2026-01-06 11:40:15,593: t15.2023.08.13 val PER: 1.1185
+2026-01-06 11:40:15,593: t15.2023.08.18 val PER: 1.1492
+2026-01-06 11:40:15,593: t15.2023.08.20 val PER: 1.1525
+2026-01-06 11:40:15,594: t15.2023.08.25 val PER: 1.1551
+2026-01-06 11:40:15,594: t15.2023.08.27 val PER: 1.0691
+2026-01-06 11:40:15,594: t15.2023.09.01 val PER: 1.2224
+2026-01-06 11:40:15,594: t15.2023.09.03 val PER: 1.1152
+2026-01-06 11:40:15,594: t15.2023.09.24 val PER: 1.3252
+2026-01-06 11:40:15,594: t15.2023.09.29 val PER: 1.2412
+2026-01-06 11:40:15,594: t15.2023.10.01 val PER: 1.0575
+2026-01-06 11:40:15,594: t15.2023.10.06 val PER: 1.2422
+2026-01-06 11:40:15,594: t15.2023.10.08 val PER: 1.0447
+2026-01-06 11:40:15,594: t15.2023.10.13 val PER: 1.1598
+2026-01-06 11:40:15,595: t15.2023.10.15 val PER: 1.2030
+2026-01-06 11:40:15,595: t15.2023.10.20 val PER: 1.3691
+2026-01-06 11:40:15,595: t15.2023.10.22 val PER: 1.2929
+2026-01-06 11:40:15,595: t15.2023.11.03 val PER: 1.2985
+2026-01-06 11:40:15,595: t15.2023.11.04 val PER: 1.3823
+2026-01-06 11:40:15,595: t15.2023.11.17 val PER: 1.6392
+2026-01-06 11:40:15,595: t15.2023.11.19 val PER: 1.4232
+2026-01-06 11:40:15,595: t15.2023.11.26 val PER: 1.2594
+2026-01-06 11:40:15,595: t15.2023.12.03 val PER: 1.1849
+2026-01-06 11:40:15,596: t15.2023.12.08 val PER: 1.2563
+2026-01-06 11:40:15,596: t15.2023.12.10 val PER: 1.3167
+2026-01-06 11:40:15,596: t15.2023.12.17 val PER: 1.0686
+2026-01-06 11:40:15,596: t15.2023.12.29 val PER: 1.1640
+2026-01-06 11:40:15,596: t15.2024.02.25 val PER: 1.1320
+2026-01-06 11:40:15,596: t15.2024.03.08 val PER: 1.1550
+2026-01-06 11:40:15,596: t15.2024.03.15 val PER: 1.1157
+2026-01-06 11:40:15,596: t15.2024.03.17 val PER: 1.1709
+2026-01-06 11:40:15,596: t15.2024.05.10 val PER: 1.2036
+2026-01-06 11:40:15,596: t15.2024.06.14 val PER: 1.4132
+2026-01-06 11:40:15,596: t15.2024.07.19 val PER: 0.9848
+2026-01-06 11:40:15,596: t15.2024.07.21 val PER: 1.4172
+2026-01-06 11:40:15,596: t15.2024.07.28 val PER: 1.4662
+2026-01-06 11:40:15,596: t15.2025.01.10 val PER: 0.9532
+2026-01-06 11:40:15,597: t15.2025.01.12 val PER: 1.4142
+2026-01-06 11:40:15,597: t15.2025.03.14 val PER: 1.0192
+2026-01-06 11:40:15,597: t15.2025.03.16 val PER: 1.4215
+2026-01-06 11:40:15,597: t15.2025.03.30 val PER: 1.0793
+2026-01-06 11:40:15,597: t15.2025.04.13 val PER: 1.3110
+2026-01-06 11:40:15,598: New best val WER(1gram) inf% --> 100.00%
+2026-01-06 11:40:15,598: Checkpointing model
+2026-01-06 11:40:15,660: Failed to save checkpoint to /tmp/e12511253_b2t_349589/trained_models/architecture/headless_baseline/checkpoint/best_checkpoint. Error: [enforce fail at inline_container.cc:325] . unexpected pos 10048 vs 9936
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mheadless_baseline[0m at: [34m[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../tmp/e12511253_b2t_349589/wandb/wandb/run-20260106_113845-4tdt6a2h/logs[0m

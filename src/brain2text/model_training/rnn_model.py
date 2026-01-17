@@ -515,6 +515,7 @@ class XLSTMDecoder(nn.Module):
         self.xlstm_conv1d_kernel_size = int(xlstm_conv1d_kernel_size)
         self.xlstm_dropout = float(xlstm_dropout)
         self.xlstm_backend = str(xlstm_backend)
+        print(f"DEBUG: xlstm_backend = {self.xlstm_backend}")
 
         # Head + speckle knobs
         self.head_type = str(head_type)
@@ -548,6 +549,7 @@ class XLSTMDecoder(nn.Module):
             num_heads=self.xlstm_num_heads,
             conv1d_kernel_size=self.xlstm_conv1d_kernel_size,
             dropout=self.xlstm_dropout,
+            backend=self.xlstm_backend,
         )
         slstm_block_cfg = sLSTMBlockConfig(slstm=slstm_layer_cfg, feedforward=None)
 
@@ -560,6 +562,7 @@ class XLSTMDecoder(nn.Module):
             add_post_blocks_norm=True,
             bias=False,
             dropout=self.xlstm_dropout,
+            
             slstm_at="all",
         )
         self.xlstm = xLSTMBlockStack(stack_cfg)

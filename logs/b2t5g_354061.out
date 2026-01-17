@@ -1,0 +1,384 @@
+TMPDIR=/home/e12511253/tmp
+JOB_TMP=/home/e12511253/tmp/e12511253_b2t_354061
+TORCH_EXTENSIONS_DIR=/home/e12511253/tmp/e12511253_b2t_354061/torch_extensions
+WANDB_DIR=/home/e12511253/tmp/e12511253_b2t_354061/wandb
+torch CUDA runtime expects: 11.7
+CUDA_HOME=/home/e12511253/miniforge3/envs/brain2text
+which nvcc: /home/e12511253/miniforge3/envs/brain2text/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Tue_May__3_18:49:52_PDT_2022
+Cuda compilation tools, release 11.7, V11.7.64
+Build cuda_11.7.r11.7/compiler.31294372_0
+nvcc release: 11.7
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/home/e12511253/tmp/e12511253_b2t_354061/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:/home/e12511253/miniforge3/envs/brain2text/lib64:/home/e12511253/miniforge3/envs/brain2text/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan 11 16:51 /home/e12511253/tmp/e12511253_b2t_354061/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+CUDART_SO=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+CUDA_LIB=/home/e12511253/miniforge3/envs/brain2text/lib64
+LD_PRELOAD=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+TORCH_USE_RTLD_GLOBAL=1
+OUT_ROOT=/home/e12511253/Brain2Text/brain2text/trained_models
+==============================================
+Job: b2t5g  ID: 354061
+Base: configs/rnn_args.yaml
+Global override 1: configs/overrides/wer_5gram_only.yaml
+Folders: configs/experiments/diphones
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+==============================================
+
+========== FOLDER: configs/experiments/diphones ==========
+Num configs: 5
+
+=== RUN diphone_100k.yaml ===
+JOB_OUT_DIR=/home/e12511253/Brain2Text/brain2text/trained_models/diphones/diphone_100k
+2026-01-11 16:51:56,827: Using device: cuda:0
+2026-01-11 16:56:04,515: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/languageModel
+2026-01-11 16:56:04,517: Diphone mode ENABLED: n_classes changed from 41 to 1601
+2026-01-11 16:56:04,544: Using 45 sessions after filtering (from 45).
+2026-01-11 16:56:05,039: Using torch.compile (if available)
+2026-01-11 16:56:05,040: torch.compile not available (torch<2.0). Skipping.
+2026-01-11 16:56:05,040: Initialized RNN decoding model
+2026-01-11 16:56:05,040: GRUDecoder(
+  (day_layer_activation): Softsign()
+  (day_layer_dropout): Dropout(p=0.2, inplace=False)
+  (gru): GRU(7168, 768, num_layers=5, batch_first=True, dropout=0.2)
+  (head): Identity()
+  (out): Linear(in_features=768, out_features=1601, bias=True)
+)
+2026-01-11 16:56:05,040: Model has 45,514,817 parameters
+2026-01-11 16:56:05,041: Model has 11,819,520 day-specific parameters | 25.97% of total parameters
+2026-01-11 16:56:09,980: Successfully initialized datasets
+2026-01-11 16:56:09,981: AdamW(fused) not available in this torch build. Using standard AdamW.
+2026-01-11 16:56:11,757: Train batch 0: loss: 1387.45 grad norm: 201.84 time: 0.239
+2026-01-11 16:56:11,757: Running test after training batch: 0
+2026-01-11 16:56:11,889: WER debug GT example: You can see the code at this point as well.
+2026-01-11 16:56:20,006: WER debug example
+  GT : you can see the code at this point as well
+  PR : 
+2026-01-11 16:56:21,785: WER debug example
+  GT : how does it keep the cost down
+  PR : 
+2026-01-11 17:01:13,645: Val batch 0: PER (avg): 4.4643 CTC Loss (avg): 1561.5818 WER(5gram): 100.00% (n=256) time: 301.887
+2026-01-11 17:01:13,645: WER lens: avg_true_words=5.99 avg_pred_words=0.00 max_pred_words=0
+2026-01-11 17:01:13,646: t15.2023.08.13 val PER: 3.7588
+2026-01-11 17:01:13,646: t15.2023.08.18 val PER: 4.0226
+2026-01-11 17:01:13,646: t15.2023.08.20 val PER: 3.9674
+2026-01-11 17:01:13,646: t15.2023.08.25 val PER: 3.9578
+2026-01-11 17:01:13,646: t15.2023.08.27 val PER: 3.6897
+2026-01-11 17:01:13,646: t15.2023.09.01 val PER: 4.0649
+2026-01-11 17:01:13,646: t15.2023.09.03 val PER: 3.9430
+2026-01-11 17:01:13,646: t15.2023.09.24 val PER: 4.6917
+2026-01-11 17:01:13,646: t15.2023.09.29 val PER: 4.6254
+2026-01-11 17:01:13,647: t15.2023.10.01 val PER: 3.6552
+2026-01-11 17:01:13,647: t15.2023.10.06 val PER: 4.5178
+2026-01-11 17:01:13,647: t15.2023.10.08 val PER: 3.3816
+2026-01-11 17:01:13,647: t15.2023.10.13 val PER: 4.2475
+2026-01-11 17:01:13,647: t15.2023.10.15 val PER: 4.7337
+2026-01-11 17:01:13,647: t15.2023.10.20 val PER: 4.8859
+2026-01-11 17:01:13,647: t15.2023.10.22 val PER: 4.7071
+2026-01-11 17:01:13,647: t15.2023.11.03 val PER: 5.0102
+2026-01-11 17:01:13,647: t15.2023.11.04 val PER: 6.2253
+2026-01-11 17:01:13,648: t15.2023.11.17 val PER: 6.5490
+2026-01-11 17:01:13,648: t15.2023.11.19 val PER: 4.9721
+2026-01-11 17:01:13,648: t15.2023.11.26 val PER: 4.9486
+2026-01-11 17:01:13,648: t15.2023.12.03 val PER: 4.5840
+2026-01-11 17:01:13,648: t15.2023.12.08 val PER: 5.0752
+2026-01-11 17:01:13,648: t15.2023.12.10 val PER: 5.5177
+2026-01-11 17:01:13,648: t15.2023.12.17 val PER: 4.1258
+2026-01-11 17:01:13,648: t15.2023.12.29 val PER: 4.4859
+2026-01-11 17:01:13,648: t15.2024.02.25 val PER: 4.2275
+2026-01-11 17:01:13,648: t15.2024.03.08 val PER: 4.2077
+2026-01-11 17:01:13,649: t15.2024.03.15 val PER: 4.0638
+2026-01-11 17:01:13,649: t15.2024.03.17 val PER: 4.3501
+2026-01-11 17:01:13,649: t15.2024.05.10 val PER: 4.1530
+2026-01-11 17:01:13,649: t15.2024.06.14 val PER: 4.7177
+2026-01-11 17:01:13,649: t15.2024.07.19 val PER: 3.3072
+2026-01-11 17:01:13,649: t15.2024.07.21 val PER: 5.0034
+2026-01-11 17:01:13,649: t15.2024.07.28 val PER: 5.2147
+2026-01-11 17:01:13,649: t15.2025.01.10 val PER: 3.1501
+2026-01-11 17:01:13,649: t15.2025.01.12 val PER: 5.7567
+2026-01-11 17:01:13,650: t15.2025.03.14 val PER: 3.0444
+2026-01-11 17:01:13,650: t15.2025.03.16 val PER: 5.4974
+2026-01-11 17:01:13,650: t15.2025.03.30 val PER: 4.2816
+2026-01-11 17:01:13,650: t15.2025.04.13 val PER: 4.8631
+2026-01-11 17:01:13,650: New best val WER(5gram) inf% --> 100.00%
+2026-01-11 17:01:13,830: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/diphones/diphone_100k/checkpoint/checkpoint_batch_0
+2026-01-11 17:01:33,455: Train batch 200: loss: 204.34 grad norm: 49.13 time: 0.062
+2026-01-11 17:01:53,233: Train batch 400: loss: 149.13 grad norm: 49.95 time: 0.071
+2026-01-11 17:02:03,017: Running test after training batch: 500
+2026-01-11 17:02:03,135: WER debug GT example: You can see the code at this point as well.
+2026-01-11 17:02:10,278: WER debug example
+  GT : you can see the code at this point as well
+  PR : 
+2026-01-11 17:02:10,436: WER debug example
+  GT : how does it keep the cost down
+  PR : 
+2026-01-11 17:02:49,186: Val batch 500: PER (avg): 0.9633 CTC Loss (avg): 171.6113 WER(5gram): 100.00% (n=256) time: 46.168
+2026-01-11 17:02:49,186: WER lens: avg_true_words=5.99 avg_pred_words=0.00 max_pred_words=0
+2026-01-11 17:02:49,187: t15.2023.08.13 val PER: 0.9626
+2026-01-11 17:02:49,187: t15.2023.08.18 val PER: 0.9564
+2026-01-11 17:02:49,187: t15.2023.08.20 val PER: 0.9603
+2026-01-11 17:02:49,187: t15.2023.08.25 val PER: 0.9608
+2026-01-11 17:02:49,187: t15.2023.08.27 val PER: 0.9598
+2026-01-11 17:02:49,187: t15.2023.09.01 val PER: 0.9570
+2026-01-11 17:02:49,187: t15.2023.09.03 val PER: 0.9596
+2026-01-11 17:02:49,188: t15.2023.09.24 val PER: 0.9551
+2026-01-11 17:02:49,188: t15.2023.09.29 val PER: 0.9579
+2026-01-11 17:02:49,188: t15.2023.10.01 val PER: 0.9696
+2026-01-11 17:02:49,188: t15.2023.10.06 val PER: 0.9537
+2026-01-11 17:02:49,188: t15.2023.10.08 val PER: 0.9716
+2026-01-11 17:02:49,188: t15.2023.10.13 val PER: 0.9589
+2026-01-11 17:02:49,188: t15.2023.10.15 val PER: 0.9637
+2026-01-11 17:02:49,188: t15.2023.10.20 val PER: 0.9698
+2026-01-11 17:02:49,188: t15.2023.10.22 val PER: 0.9566
+2026-01-11 17:02:49,188: t15.2023.11.03 val PER: 0.9661
+2026-01-11 17:02:49,188: t15.2023.11.04 val PER: 0.9488
+2026-01-11 17:02:49,189: t15.2023.11.17 val PER: 0.9611
+2026-01-11 17:02:49,189: t15.2023.11.19 val PER: 0.9581
+2026-01-11 17:02:49,189: t15.2023.11.26 val PER: 0.9674
+2026-01-11 17:02:49,189: t15.2023.12.03 val PER: 0.9643
+2026-01-11 17:02:49,189: t15.2023.12.08 val PER: 0.9654
+2026-01-11 17:02:49,189: t15.2023.12.10 val PER: 0.9671
+2026-01-11 17:02:49,189: t15.2023.12.17 val PER: 0.9688
+2026-01-11 17:02:49,189: t15.2023.12.29 val PER: 0.9657
+2026-01-11 17:02:49,189: t15.2024.02.25 val PER: 0.9677
+2026-01-11 17:02:49,189: t15.2024.03.08 val PER: 0.9616
+2026-01-11 17:02:49,189: t15.2024.03.15 val PER: 0.9694
+2026-01-11 17:02:49,189: t15.2024.03.17 val PER: 0.9630
+2026-01-11 17:02:49,190: t15.2024.05.10 val PER: 0.9629
+2026-01-11 17:02:49,190: t15.2024.06.14 val PER: 0.9606
+2026-01-11 17:02:49,190: t15.2024.07.19 val PER: 0.9684
+2026-01-11 17:02:49,190: t15.2024.07.21 val PER: 0.9683
+2026-01-11 17:02:49,190: t15.2024.07.28 val PER: 0.9632
+2026-01-11 17:02:49,190: t15.2025.01.10 val PER: 0.9683
+2026-01-11 17:02:49,190: t15.2025.01.12 val PER: 0.9600
+2026-01-11 17:02:49,190: t15.2025.03.14 val PER: 0.9645
+2026-01-11 17:02:49,190: t15.2025.03.16 val PER: 0.9673
+2026-01-11 17:02:49,190: t15.2025.03.30 val PER: 0.9621
+2026-01-11 17:02:49,191: t15.2025.04.13 val PER: 0.9643
+2026-01-11 17:02:49,362: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/diphones/diphone_100k/checkpoint/checkpoint_batch_500
+2026-01-11 17:02:59,547: Train batch 600: loss: 156.62 grad norm: 29.17 time: 0.091
+2026-01-11 17:03:19,399: Train batch 800: loss: 154.54 grad norm: 180.76 time: 0.065
+2026-01-11 17:03:38,627: Train batch 1000: loss: 135.40 grad norm: 36.86 time: 0.072
+2026-01-11 17:03:38,628: Running test after training batch: 1000
+2026-01-11 17:03:38,745: WER debug GT example: You can see the code at this point as well.
+2026-01-11 17:03:45,176: WER debug example
+  GT : you can see the code at this point as well
+  PR : 
+2026-01-11 17:03:45,196: WER debug example
+  GT : how does it keep the cost down
+  PR : 
+2026-01-11 17:03:50,515: Val batch 1000: PER (avg): 0.9868 CTC Loss (avg): 162.0577 WER(5gram): 100.00% (n=256) time: 11.887
+2026-01-11 17:03:50,517: WER lens: avg_true_words=5.99 avg_pred_words=0.02 max_pred_words=1
+2026-01-11 17:03:50,518: t15.2023.08.13 val PER: 0.9886
+2026-01-11 17:03:50,518: t15.2023.08.18 val PER: 0.9899
+2026-01-11 17:03:50,518: t15.2023.08.20 val PER: 0.9944
+2026-01-11 17:03:50,518: t15.2023.08.25 val PER: 0.9864
+2026-01-11 17:03:50,518: t15.2023.08.27 val PER: 0.9743
+2026-01-11 17:03:50,518: t15.2023.09.01 val PER: 0.9854
+2026-01-11 17:03:50,518: t15.2023.09.03 val PER: 0.9846
+2026-01-11 17:03:50,518: t15.2023.09.24 val PER: 0.9939
+2026-01-11 17:03:50,518: t15.2023.09.29 val PER: 0.9968
+2026-01-11 17:03:50,518: t15.2023.10.01 val PER: 0.9934
+2026-01-11 17:03:50,518: t15.2023.10.06 val PER: 0.9871
+2026-01-11 17:03:50,519: t15.2023.10.08 val PER: 0.9973
+2026-01-11 17:03:50,519: t15.2023.10.13 val PER: 0.9915
+2026-01-11 17:03:50,519: t15.2023.10.15 val PER: 0.9901
+2026-01-11 17:03:50,519: t15.2023.10.20 val PER: 0.9899
+2026-01-11 17:03:50,519: t15.2023.10.22 val PER: 0.9855
+2026-01-11 17:03:50,519: t15.2023.11.03 val PER: 0.9803
+2026-01-11 17:03:50,520: t15.2023.11.04 val PER: 0.9795
+2026-01-11 17:03:50,520: t15.2023.11.17 val PER: 0.9720
+2026-01-11 17:03:50,520: t15.2023.11.19 val PER: 0.9840
+2026-01-11 17:03:50,520: t15.2023.11.26 val PER: 0.9841
+2026-01-11 17:03:50,520: t15.2023.12.03 val PER: 0.9832
+2026-01-11 17:03:50,521: t15.2023.12.08 val PER: 0.9860
+2026-01-11 17:03:50,521: t15.2023.12.10 val PER: 0.9855
+2026-01-11 17:03:50,521: t15.2023.12.17 val PER: 0.9875
+2026-01-11 17:03:50,521: t15.2023.12.29 val PER: 0.9822
+2026-01-11 17:03:50,521: t15.2024.02.25 val PER: 0.9916
+2026-01-11 17:03:50,522: t15.2024.03.08 val PER: 0.9844
+2026-01-11 17:03:50,522: t15.2024.03.15 val PER: 0.9906
+2026-01-11 17:03:50,522: t15.2024.03.17 val PER: 0.9958
+2026-01-11 17:03:50,522: t15.2024.05.10 val PER: 0.9881
+2026-01-11 17:03:50,522: t15.2024.06.14 val PER: 0.9842
+2026-01-11 17:03:50,522: t15.2024.07.19 val PER: 0.9881
+2026-01-11 17:03:50,522: t15.2024.07.21 val PER: 0.9903
+2026-01-11 17:03:50,522: t15.2024.07.28 val PER: 0.9875
+2026-01-11 17:03:50,523: t15.2025.01.10 val PER: 0.9725
+2026-01-11 17:03:50,523: t15.2025.01.12 val PER: 0.9823
+2026-01-11 17:03:50,523: t15.2025.03.14 val PER: 0.9719
+2026-01-11 17:03:50,523: t15.2025.03.16 val PER: 0.9817
+2026-01-11 17:03:50,523: t15.2025.03.30 val PER: 0.9770
+2026-01-11 17:03:50,524: t15.2025.04.13 val PER: 0.9772
+2026-01-11 17:03:50,712: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/diphones/diphone_100k/checkpoint/checkpoint_batch_1000
+2026-01-11 17:04:10,018: Train batch 1200: loss: 148.96 grad norm: 61.68 time: 0.077
+2026-01-11 17:04:29,633: Train batch 1400: loss: 138.71 grad norm: 286.26 time: 0.070
+2026-01-11 17:04:39,574: Running test after training batch: 1500
+2026-01-11 17:04:39,739: WER debug GT example: You can see the code at this point as well.
+2026-01-11 17:04:46,010: WER debug example
+  GT : you can see the code at this point as well
+  PR : 
+2026-01-11 17:04:46,043: WER debug example
+  GT : how does it keep the cost down
+  PR : 
+2026-01-11 17:04:52,957: Val batch 1500: PER (avg): 0.9986 CTC Loss (avg): 147.3808 WER(5gram): 100.00% (n=256) time: 13.382
+2026-01-11 17:04:52,957: WER lens: avg_true_words=5.99 avg_pred_words=0.00 max_pred_words=0
+2026-01-11 17:04:52,957: t15.2023.08.13 val PER: 0.9990
+2026-01-11 17:04:52,958: t15.2023.08.18 val PER: 1.0000
+2026-01-11 17:04:52,958: t15.2023.08.20 val PER: 0.9984
+2026-01-11 17:04:52,958: t15.2023.08.25 val PER: 1.0000
+2026-01-11 17:04:52,958: t15.2023.08.27 val PER: 1.0000
+2026-01-11 17:04:52,958: t15.2023.09.01 val PER: 0.9992
+2026-01-11 17:04:52,958: t15.2023.09.03 val PER: 1.0000
+2026-01-11 17:04:52,958: t15.2023.09.24 val PER: 0.9939
+2026-01-11 17:04:52,959: t15.2023.09.29 val PER: 0.9955
+2026-01-11 17:04:52,959: t15.2023.10.01 val PER: 0.9987
+2026-01-11 17:04:52,959: t15.2023.10.06 val PER: 0.9968
+2026-01-11 17:04:52,959: t15.2023.10.08 val PER: 1.0000
+2026-01-11 17:04:52,959: t15.2023.10.13 val PER: 0.9953
+2026-01-11 17:04:52,959: t15.2023.10.15 val PER: 0.9934
+2026-01-11 17:04:52,959: t15.2023.10.20 val PER: 1.0000
+2026-01-11 17:04:52,959: t15.2023.10.22 val PER: 0.9955
+2026-01-11 17:04:52,959: t15.2023.11.03 val PER: 0.9993
+2026-01-11 17:04:52,960: t15.2023.11.04 val PER: 1.0000
+2026-01-11 17:04:52,960: t15.2023.11.17 val PER: 1.0000
+2026-01-11 17:04:52,960: t15.2023.11.19 val PER: 0.9980
+2026-01-11 17:04:52,960: t15.2023.11.26 val PER: 0.9993
+2026-01-11 17:04:52,960: t15.2023.12.03 val PER: 0.9979
+2026-01-11 17:04:52,960: t15.2023.12.08 val PER: 0.9987
+2026-01-11 17:04:52,960: t15.2023.12.10 val PER: 1.0000
+2026-01-11 17:04:52,960: t15.2023.12.17 val PER: 1.0000
+2026-01-11 17:04:52,960: t15.2023.12.29 val PER: 1.0000
+2026-01-11 17:04:52,961: t15.2024.02.25 val PER: 0.9986
+2026-01-11 17:04:52,961: t15.2024.03.08 val PER: 1.0000
+2026-01-11 17:04:52,961: t15.2024.03.15 val PER: 0.9994
+2026-01-11 17:04:52,961: t15.2024.03.17 val PER: 1.0000
+2026-01-11 17:04:52,961: t15.2024.05.10 val PER: 1.0000
+2026-01-11 17:04:52,961: t15.2024.06.14 val PER: 0.9984
+2026-01-11 17:04:52,961: t15.2024.07.19 val PER: 1.0000
+2026-01-11 17:04:52,961: t15.2024.07.21 val PER: 1.0000
+2026-01-11 17:04:52,961: t15.2024.07.28 val PER: 0.9971
+2026-01-11 17:04:52,962: t15.2025.01.10 val PER: 1.0000
+2026-01-11 17:04:52,962: t15.2025.01.12 val PER: 0.9985
+2026-01-11 17:04:52,962: t15.2025.03.14 val PER: 1.0000
+2026-01-11 17:04:52,962: t15.2025.03.16 val PER: 0.9987
+2026-01-11 17:04:52,962: t15.2025.03.30 val PER: 1.0000
+2026-01-11 17:04:52,962: t15.2025.04.13 val PER: 1.0000
+2026-01-11 17:04:53,134: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/diphones/diphone_100k/checkpoint/checkpoint_batch_1500
+2026-01-11 17:05:02,798: Train batch 1600: loss: 135.60 grad norm: 39.57 time: 0.072
+2026-01-11 17:05:23,405: Train batch 1800: loss: 125.46 grad norm: 88.12 time: 0.095
+2026-01-11 17:05:43,112: Train batch 2000: loss: 119.09 grad norm: 70.62 time: 0.074
+2026-01-11 17:05:43,113: Running test after training batch: 2000
+2026-01-11 17:05:43,267: WER debug GT example: You can see the code at this point as well.
+2026-01-11 17:05:49,659: WER debug example
+  GT : you can see the code at this point as well
+  PR : 
+2026-01-11 17:05:49,687: WER debug example
+  GT : how does it keep the cost down
+  PR : 
+2026-01-11 17:05:57,398: Val batch 2000: PER (avg): 0.8147 CTC Loss (avg): 123.6028 WER(5gram): 100.00% (n=256) time: 14.285
+2026-01-11 17:05:57,398: WER lens: avg_true_words=5.99 avg_pred_words=0.00 max_pred_words=1
+2026-01-11 17:05:57,399: t15.2023.08.13 val PER: 0.7973
+2026-01-11 17:05:57,399: t15.2023.08.18 val PER: 0.7888
+2026-01-11 17:05:57,399: t15.2023.08.20 val PER: 0.7959
+2026-01-11 17:05:57,399: t15.2023.08.25 val PER: 0.7952
+2026-01-11 17:05:57,399: t15.2023.08.27 val PER: 0.8312
+2026-01-11 17:05:57,399: t15.2023.09.01 val PER: 0.7906
+2026-01-11 17:05:57,399: t15.2023.09.03 val PER: 0.8254
+2026-01-11 17:05:57,399: t15.2023.09.24 val PER: 0.8155
+2026-01-11 17:05:57,399: t15.2023.09.29 val PER: 0.7958
+2026-01-11 17:05:57,400: t15.2023.10.01 val PER: 0.8230
+2026-01-11 17:05:57,400: t15.2023.10.06 val PER: 0.7998
+2026-01-11 17:05:57,400: t15.2023.10.08 val PER: 0.8309
+2026-01-11 17:05:57,400: t15.2023.10.13 val PER: 0.8340
+2026-01-11 17:05:57,400: t15.2023.10.15 val PER: 0.8115
+2026-01-11 17:05:57,400: t15.2023.10.20 val PER: 0.7919
+2026-01-11 17:05:57,400: t15.2023.10.22 val PER: 0.8007
+2026-01-11 17:05:57,400: t15.2023.11.03 val PER: 0.8107
+2026-01-11 17:05:57,400: t15.2023.11.04 val PER: 0.7645
+2026-01-11 17:05:57,400: t15.2023.11.17 val PER: 0.7900
+2026-01-11 17:05:57,400: t15.2023.11.19 val PER: 0.7725
+2026-01-11 17:05:57,400: t15.2023.11.26 val PER: 0.8210
+2026-01-11 17:05:57,401: t15.2023.12.03 val PER: 0.8004
+2026-01-11 17:05:57,401: t15.2023.12.08 val PER: 0.8116
+2026-01-11 17:05:57,401: t15.2023.12.10 val PER: 0.8187
+2026-01-11 17:05:57,401: t15.2023.12.17 val PER: 0.8451
+2026-01-11 17:05:57,401: t15.2023.12.29 val PER: 0.8264
+2026-01-11 17:05:57,401: t15.2024.02.25 val PER: 0.7978
+2026-01-11 17:05:57,401: t15.2024.03.08 val PER: 0.8279
+2026-01-11 17:05:57,401: t15.2024.03.15 val PER: 0.8418
+2026-01-11 17:05:57,402: t15.2024.03.17 val PER: 0.8089
+2026-01-11 17:05:57,402: t15.2024.05.10 val PER: 0.8009
+2026-01-11 17:05:57,402: t15.2024.06.14 val PER: 0.8060
+2026-01-11 17:05:57,402: t15.2024.07.19 val PER: 0.8418
+2026-01-11 17:05:57,402: t15.2024.07.21 val PER: 0.7986
+2026-01-11 17:05:57,402: t15.2024.07.28 val PER: 0.8096
+2026-01-11 17:05:57,402: t15.2025.01.10 val PER: 0.8788
+2026-01-11 17:05:57,402: t15.2025.01.12 val PER: 0.8014
+2026-01-11 17:05:57,402: t15.2025.03.14 val PER: 0.8802
+2026-01-11 17:05:57,402: t15.2025.03.16 val PER: 0.8037
+2026-01-11 17:05:57,402: t15.2025.03.30 val PER: 0.8667
+2026-01-11 17:05:57,403: t15.2025.04.13 val PER: 0.8046
+2026-01-11 17:05:57,573: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/diphones/diphone_100k/checkpoint/checkpoint_batch_2000
+2026-01-11 17:06:16,335: Train batch 2200: loss: 104.79 grad norm: 54.05 time: 0.068
+2026-01-11 17:06:36,234: Train batch 2400: loss: 95.68 grad norm: 53.58 time: 0.059
+2026-01-11 17:06:46,363: Running test after training batch: 2500
+2026-01-11 17:06:46,564: WER debug GT example: You can see the code at this point as well.
+2026-01-11 17:06:53,417: WER debug example
+  GT : you can see the code at this point as well
+  PR : the
+2026-01-11 17:06:53,714: WER debug example
+  GT : how does it keep the cost down
+  PR : the
+2026-01-11 17:07:52,668: Val batch 2500: PER (avg): 0.5733 CTC Loss (avg): 102.0170 WER(5gram): 94.78% (n=256) time: 66.304
+2026-01-11 17:07:52,670: WER lens: avg_true_words=5.99 avg_pred_words=0.71 max_pred_words=6
+2026-01-11 17:07:52,670: t15.2023.08.13 val PER: 0.5385
+2026-01-11 17:07:52,670: t15.2023.08.18 val PER: 0.5415
+2026-01-11 17:07:52,670: t15.2023.08.20 val PER: 0.5179
+2026-01-11 17:07:52,670: t15.2023.08.25 val PER: 0.5256
+2026-01-11 17:07:52,670: t15.2023.08.27 val PER: 0.6190
+2026-01-11 17:07:52,671: t15.2023.09.01 val PER: 0.5146
+2026-01-11 17:07:52,671: t15.2023.09.03 val PER: 0.5606
+2026-01-11 17:07:52,671: t15.2023.09.24 val PER: 0.5765
+2026-01-11 17:07:52,671: t15.2023.09.29 val PER: 0.5565
+2026-01-11 17:07:52,671: t15.2023.10.01 val PER: 0.5971
+2026-01-11 17:07:52,671: t15.2023.10.06 val PER: 0.5705
+2026-01-11 17:07:52,671: t15.2023.10.08 val PER: 0.6211
+2026-01-11 17:07:52,671: t15.2023.10.13 val PER: 0.6447
+2026-01-11 17:07:52,671: t15.2023.10.15 val PER: 0.5676
+2026-01-11 17:07:52,671: t15.2023.10.20 val PER: 0.5705
+2026-01-11 17:07:52,672: t15.2023.10.22 val PER: 0.5546
+2026-01-11 17:07:52,672: t15.2023.11.03 val PER: 0.5590
+2026-01-11 17:07:52,672: t15.2023.11.04 val PER: 0.4505
+2026-01-11 17:07:52,673: t15.2023.11.17 val PER: 0.4712
+2026-01-11 17:07:52,673: t15.2023.11.19 val PER: 0.4591
+2026-01-11 17:07:52,673: t15.2023.11.26 val PER: 0.6254
+2026-01-11 17:07:52,673: t15.2023.12.03 val PER: 0.5651
+2026-01-11 17:07:52,674: t15.2023.12.08 val PER: 0.5659
+2026-01-11 17:07:52,674: t15.2023.12.10 val PER: 0.5716
+2026-01-11 17:07:52,674: t15.2023.12.17 val PER: 0.5832
+2026-01-11 17:07:52,674: t15.2023.12.29 val PER: 0.5710
+2026-01-11 17:07:52,674: t15.2024.02.25 val PER: 0.5506
+2026-01-11 17:07:52,674: t15.2024.03.08 val PER: 0.5889
+2026-01-11 17:07:52,674: t15.2024.03.15 val PER: 0.5785
+2026-01-11 17:07:52,674: t15.2024.03.17 val PER: 0.5711
+2026-01-11 17:07:52,674: t15.2024.05.10 val PER: 0.5423
+2026-01-11 17:07:52,675: t15.2024.06.14 val PER: 0.5221
+2026-01-11 17:07:52,675: t15.2024.07.19 val PER: 0.6289
+2026-01-11 17:07:52,675: t15.2024.07.21 val PER: 0.5469
+2026-01-11 17:07:52,675: t15.2024.07.28 val PER: 0.5647
+2026-01-11 17:07:52,675: t15.2025.01.10 val PER: 0.6515
+2026-01-11 17:07:52,676: t15.2025.01.12 val PER: 0.5774
+2026-01-11 17:07:52,676: t15.2025.03.14 val PER: 0.6657
+2026-01-11 17:07:52,676: t15.2025.03.16 val PER: 0.6060
+2026-01-11 17:07:52,676: t15.2025.03.30 val PER: 0.6644
+2026-01-11 17:07:52,676: t15.2025.04.13 val PER: 0.6177
+2026-01-11 17:07:52,678: New best val WER(5gram) 100.00% --> 94.78%
+2026-01-11 17:07:52,873: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/diphones/diphone_100k/checkpoint/checkpoint_batch_2500
+2026-01-11 17:08:02,686: Train batch 2600: loss: 101.71 grad norm: 91.85 time: 0.063

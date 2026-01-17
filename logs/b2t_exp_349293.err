@@ -1,0 +1,211 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 4fjld4a9
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_160105-4fjld4a9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run base_patch_stride_wd1e-5
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/4fjld4a9
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0105 16:01:07.130970 2077688 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 16:01:07.175166 2077688 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 16:01:07.238411 2077688 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:          lr/day ▁▅███████▇▇▇▇▇▇▇▇▇▆▆▅▅▅▅▅▄▄▄▄▄▃▃▃▃▂▂▂▂▁▁
+wandb:         lr/main █████▇▇▇▇▇▇▇▆▆▆▅▅▅▄▄▄▃▃▃▃▃▃▃▂▂▂▂▁▁▁▁▁▁▁▁
+wandb: train/grad_norm ██▆▆▆▅▅▅▄▄▄▄▃▄▅▃▄▄▃▁▄▄▃▂▅▄▂▃▂▃▃▃▃▃▂▂▃▂▄▂
+wandb:      train/loss █▆█▆▆▄▄▄▆▄▃▃▄▃▃▂▃▂▃▂▂▃▂▂▃▁▂▃▂▂▁▁▁▂▂▃▁▁▂▃
+wandb:         val/PER █▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val/WER █▇▆▅▄▄▄▄▄▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:        val/loss █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:          lr/day 0.00013
+wandb:         lr/main 0.00013
+wandb: train/grad_norm 47.0069
+wandb:      train/loss 7.50916
+wandb:         val/PER 0.14585
+wandb:         val/WER 44.41624
+wandb:        val/loss 15.07005
+wandb: 
+wandb: 🚀 View run base_patch_stride_wd1e-5 at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/4fjld4a9
+wandb: ⭐️ View project at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_160105-4fjld4a9/logs
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run b38oa4lj
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_163849-b38oa4lj
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run st2_wd1e-5
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/b38oa4lj
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0105 16:38:50.231662 2138826 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 16:38:50.268241 2138826 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 16:38:50.332376 2138826 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading history steps 19999-19999, summary, console lines 2219-2270
+wandb: 
+wandb: Run history:
+wandb:          lr/day ▆████▇▇▇▇▇▆▆▆▆▅▅▅▅▅▄▄▄▄▄▄▃▃▃▃▃▃▃▃▂▂▂▁▁▁▁
+wandb:         lr/main ▃▃█████▇▇▇▇▇▆▆▆▅▅▅▅▅▅▄▄▄▃▃▃▂▂▂▁▁▁▁▁▁▁▁▁▁
+wandb: train/grad_norm ▃█▁▂▁▁▁▁▁▁▂▁▁▁▁▁▂▁▁▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁
+wandb:      train/loss █▅▄▄▄▃▂▃▃▂▂▃▂▂▂▂▃▂▂▂▂▁▂▁▂▂▂▂▁▂▂▂▁▂▂▂▁▁▁▂
+wandb:         val/PER █▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val/WER ▂▁▁▁▃▂▃▄▄▅▄▅▆▆▇▆▅▆▇█▇▇▇▆▅▅▇▇▆▅▅▅▅▄▄▅▄▄▄▄
+wandb:        val/loss █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:          lr/day 0.00013
+wandb:         lr/main 0.00013
+wandb: train/grad_norm 74.36118
+wandb:      train/loss 19.0782
+wandb:         val/PER 0.23376
+wandb:         val/WER 106.59898
+wandb:        val/loss 24.18282
+wandb: 
+wandb: 🚀 View run st2_wd1e-5 at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/b38oa4lj
+wandb: ⭐️ View project at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_163849-b38oa4lj/logs
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run snyw39mb
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_172332-snyw39mb
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run st3_wd1e-5
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/snyw39mb
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0105 17:23:33.778347 2162509 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 17:23:33.819523 2162509 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 17:23:33.885010 2162509 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+wandb: updating run metadata
+wandb: uploading wandb-summary.json; uploading output.log
+wandb: uploading history steps 19999-19999, summary, console lines 2222-2267
+wandb: 
+wandb: Run history:
+wandb:          lr/day ██████████▇▇▇▆▆▆▆▆▆▄▄▄▄▄▄▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁
+wandb:         lr/main ████████▇▇▆▆▆▆▆▆▅▅▅▅▄▃▃▃▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁
+wandb: train/grad_norm ▅█▇▅▅▅▄▆▃▅▄▅▂▃▃▃▄▃▃▄▃▂▃▃▃▄▅▃▃▅▂▃▂▃▅▂▃▁▂▂
+wandb:      train/loss █▇▅▅▄▄▃▃▄▃▂▃▂▃▂▃▂▂▂▂▂▁▂▂▃▂▂▂▁▂▁▂▂▁▂▂▁▁▁▁
+wandb:         val/PER █▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val/WER ▃▁▁▂▃▄▅▅▅▇▅▆▇▆▆▇▆▆█▇▆█▆▆▇▆▆▇▇█▇▆▅▆▅▆▅▆▅▆
+wandb:        val/loss █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:          lr/day 0.00013
+wandb:         lr/main 0.00013
+wandb: train/grad_norm 57.54427
+wandb:      train/loss 15.4848
+wandb:         val/PER 0.20883
+wandb:         val/WER 105.07614
+wandb:        val/loss 22.44025
+wandb: 
+wandb: 🚀 View run st3_wd1e-5 at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/snyw39mb
+wandb: ⭐️ View project at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_172332-snyw39mb/logs
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_180225-7r0me5uc
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run st4_wd1e-5
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/7r0me5uc
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0105 18:02:26.545701 2190623 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 18:02:26.581211 2190623 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 18:02:26.645124 2190623 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading history steps 19948-19999, summary, console lines 2259-2312
+wandb: 
+wandb: Run history:
+wandb:          lr/day █████████▇▇▇▇▇▇▇▆▆▆▆▅▅▅▄▄▃▃▃▃▃▂▂▂▂▁▁▁▁▁▁
+wandb:         lr/main ▁▅█████████▇▇▇▇▆▆▆▆▅▅▅▅▄▄▃▃▃▂▂▂▂▂▁▁▁▁▁▁▁
+wandb: train/grad_norm ▄▄▄█▃▃▃▂▂▂▃▃▂▂▂▂▂▂▂▂▂▂▁▁▂▂▃▃▂▁▂▂▁▂▂▁▃▂▂▂
+wandb:      train/loss █▇▅▅▃▂▂▂▂▂▁▂▁▂▂▁▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val/PER █▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val/WER █▆▆▅▄▄▄▄▃▃▃▂▃▂▂▂▃▂▂▂▂▂▁▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:        val/loss █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:          lr/day 0.00013
+wandb:         lr/main 0.00013
+wandb: train/grad_norm 47.74281
+wandb:      train/loss 7.63687
+wandb:         val/PER 0.14384
+wandb:         val/WER 44.92386
+wandb:        val/loss 14.98385
+wandb: 
+wandb: 🚀 View run st4_wd1e-5 at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/7r0me5uc
+wandb: ⭐️ View project at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_180225-7r0me5uc/logs
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run l59cbepk
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_349293/wandb/wandb/run-20260105_184003-l59cbepk
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run st6_wd1e-5
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/l59cbepk
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0105 18:40:04.819288 2220100 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 18:40:04.864744 2220100 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0105 18:40:04.931420 2220100 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+Traceback (most recent call last):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 423, in save
+    _save(obj, opened_zipfile, pickle_module, pickle_protocol)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 650, in _save
+    zip_file.write_record(name, storage.data_ptr(), num_bytes)
+RuntimeError: [enforce fail at inline_container.cc:445] . PytorchStreamWriter failed writing file data/63: file write failed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98, in <module>
+    main()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91, in main
+    trainer.train()
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 1061, in train
+    self.save_model_checkpoint(
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 719, in save_model_checkpoint
+    torch.save(checkpoint, save_path)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 424, in save
+    return
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/serialization.py", line 290, in __exit__
+    self.file_like.write_end_of_file()
+RuntimeError: [enforce fail at inline_container.cc:325] . unexpected pos 340345280 vs 340345168

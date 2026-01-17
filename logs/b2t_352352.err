@@ -1,0 +1,62 @@
+[2026-01-10T07:20:24.171] error: TMPDIR [/tmp] is not writeable
+[2026-01-10T07:20:24.171] error: Setting TMPDIR to /tmp
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run zhy5ljm1
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /home/e12511253/tmp/e12511253_b2t_352352/wandb/wandb/run-20260110_072029-zhy5ljm1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run xlstm_medium
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/zhy5ljm1
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0110 07:20:30.818249 322688 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0110 07:20:30.861331 322688 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0110 07:20:30.924865 322688 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json
+wandb: uploading output.log; uploading config.yaml
+wandb: uploading history steps 19999-19999, summary, console lines 2260-2311
+wandb: 
+wandb: Run history:
+wandb:          lr/day ▆█████████▇▇▇▆▆▅▅▅▅▅▅▄▄▄▃▃▃▃▃▂▂▂▂▂▂▁▁▁▁▁
+wandb:         lr/main ▃██████▇▇▇▇▇▇▇▇▆▆▆▆▆▅▅▄▄▄▃▃▃▃▃▂▂▂▂▂▁▁▁▁▁
+wandb: train/grad_norm █▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:      train/loss ██▇█▅▇▅▄▅▅▄▅▄▄▄▂▂▃▂▁▃▂▂▁▂▂▂▃▂▂▂▂▁▂▂▂▂▂▁▃
+wandb:         val/PER █▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         val/WER ▅▅▃▁▃▃▂▁▂▁▁▁▁▅▁▃▂▅▇▆▇▅▃▆▅▅▇▅▇█▇▇▇▅▇▇▅▇█▆
+wandb:        val/loss █▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:          lr/day 0.00013
+wandb:         lr/main 0.00013
+wandb: train/grad_norm 105.16151
+wandb:      train/loss 27.59521
+wandb:         val/PER 0.22533
+wandb:         val/WER 100.76142
+wandb:        val/loss 22.483
+wandb: 
+wandb: 🚀 View run xlstm_medium at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/zhy5ljm1
+wandb: ⭐️ View project at: https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /home/e12511253/tmp/e12511253_b2t_352352/wandb/wandb/run-20260110_072029-zhy5ljm1/logs
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run buq2jmig
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /home/e12511253/tmp/e12511253_b2t_352352/wandb/wandb/run-20260110_120958-buq2jmig
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run xlstm_small_lr25
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/buq2jmig
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0110 12:10:00.084744 338171 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0110 12:10:00.128588 338171 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0110 12:10:00.194213 338171 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+[2026-01-10T16:30:22.279] error: *** JOB 352352 ON a-l40s-o-1 CANCELLED AT 2026-01-10T16:30:22 DUE to SIGNAL Terminated ***

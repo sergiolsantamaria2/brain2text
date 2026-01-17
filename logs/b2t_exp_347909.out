@@ -1,0 +1,20 @@
+==============================================
+Job: b2t_exp  ID: 347909
+Base: configs/rnn_args.yaml
+Global override: configs/overrides/wer_1gram_only.yaml
+Folders: configs/experiments/gru/lr_stepdrop/lr40
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+TMPDIR=/tmp
+WANDB_DIR=/tmp/wandb
+==============================================
+
+========== FOLDER: configs/experiments/gru/lr_stepdrop/lr40 ==========
+Num configs: 6
+
+=== RUN base.yaml ===
+2026-01-02 19:43:41,386: Using device: cuda:0
+2026-01-02 19:43:42,788: LM init failed but eval.compute_wer=true. Reason: lm_decoder is not available in this environment. This is expected on Mac. Run on the cluster where lm_decoder is installed.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mbase[0m at: [34m[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../tmp/wandb/wandb/run-20260102_194341-d6tt5dsn/logs[0m

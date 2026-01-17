@@ -1,0 +1,15 @@
+[2026-01-10T22:43:20.623] error: TMPDIR [/tmp] is not writeable
+[2026-01-10T22:43:20.623] error: Setting TMPDIR to /tmp
+Traceback (most recent call last):
+  File "<stdin>", line 19, in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 228, in run_module
+    return _run_code(code, {}, init_globals, run_name, mod_spec)
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 9, in <module>
+    from .rnn_trainer import BrainToTextDecoder_Trainer
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 17, in <module>
+    from brain2text.diphones.diphone_utils import DiphoneConverter, N_DIPHONE_CLASSES
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/diphones/__init__.py", line 7, in <module>
+    from .diphone_utils import (
+ImportError: cannot import name 'phoneme_labels_to_diphone_labels' from 'brain2text.diphones.diphone_utils' (/home/e12511253/Brain2Text/brain2text/src/brain2text/diphones/diphone_utils.py)

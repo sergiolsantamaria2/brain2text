@@ -1,0 +1,19 @@
+[2026-01-10T21:51:11.591] error: TMPDIR [/tmp] is not writeable
+[2026-01-10T21:51:11.592] error: Setting TMPDIR to /tmp
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run zt3cseeo
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /home/e12511253/tmp/e12511253_b2t_352892/wandb/wandb/run-20260110_215116-zt3cseeo
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run diphone_base
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/zt3cseeo
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0110 21:51:17.755160 362769 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/languageModel/TLG.fst
+I0110 21:52:39.481248 362769 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/languageModel/TLG.fst
+I0110 21:55:09.037582 362769 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/languageModel/words.txt
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:138: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  warnings.warn("Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
+[2026-01-10T22:42:09.293] error: *** JOB 352892 ON a-l40s-o-1 CANCELLED AT 2026-01-10T22:42:09 DUE to SIGNAL Terminated ***

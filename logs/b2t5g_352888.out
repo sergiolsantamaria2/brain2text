@@ -1,0 +1,65 @@
+TMPDIR=/home/e12511253/tmp
+JOB_TMP=/home/e12511253/tmp/e12511253_b2t_352888
+TORCH_EXTENSIONS_DIR=/home/e12511253/tmp/e12511253_b2t_352888/torch_extensions
+WANDB_DIR=/home/e12511253/tmp/e12511253_b2t_352888/wandb
+torch CUDA runtime expects: 11.7
+CUDA_HOME=/home/e12511253/miniforge3/envs/brain2text
+which nvcc: /home/e12511253/miniforge3/envs/brain2text/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Tue_May__3_18:49:52_PDT_2022
+Cuda compilation tools, release 11.7, V11.7.64
+Build cuda_11.7.r11.7/compiler.31294372_0
+nvcc release: 11.7
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/home/e12511253/tmp/e12511253_b2t_352888/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:/home/e12511253/miniforge3/envs/brain2text/lib64:/home/e12511253/miniforge3/envs/brain2text/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan 10 21:39 /home/e12511253/tmp/e12511253_b2t_352888/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+CUDART_SO=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+CUDA_LIB=/home/e12511253/miniforge3/envs/brain2text/lib64
+LD_PRELOAD=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+TORCH_USE_RTLD_GLOBAL=1
+OUT_ROOT=/home/e12511253/Brain2Text/brain2text/trained_models
+==============================================
+Job: b2t5g  ID: 352888
+Base: configs/rnn_args.yaml
+Global override 1: configs/overrides/wer_5gram_only.yaml
+Folders: configs/experiments/diphones
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+==============================================
+
+========== FOLDER: configs/experiments/diphones ==========
+Num configs: 4
+
+=== RUN diphone_base.yaml ===
+JOB_OUT_DIR=/home/e12511253/Brain2Text/brain2text/trained_models/diphones/diphone_base
+2026-01-10 21:39:47,963: Using device: cuda:0
+2026-01-10 21:43:37,384: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/languageModel
+2026-01-10 21:43:37,388: Diphone mode ENABLED: n_classes changed from 41 to 1601
+2026-01-10 21:43:46,401: Using 45 sessions after filtering (from 45).
+2026-01-10 21:43:46,837: Using torch.compile (if available)
+2026-01-10 21:43:46,837: torch.compile not available (torch<2.0). Skipping.
+2026-01-10 21:43:46,837: Initialized RNN decoding model
+2026-01-10 21:43:46,837: GRUDecoder(
+  (day_layer_activation): Softsign()
+  (day_layer_dropout): Dropout(p=0.2, inplace=False)
+  (gru): GRU(7168, 768, num_layers=5, batch_first=True, dropout=0.2)
+  (head): Identity()
+  (out): Linear(in_features=768, out_features=1601, bias=True)
+)
+2026-01-10 21:43:46,838: Model has 45,514,817 parameters
+2026-01-10 21:43:46,838: Model has 11,819,520 day-specific parameters | 25.97% of total parameters
+2026-01-10 21:43:59,687: Successfully initialized datasets
+2026-01-10 21:43:59,688: AdamW(fused) not available in this torch build. Using standard AdamW.
+2026-01-10 21:44:01,597: Train batch 0: loss: 1387.52 grad norm: 203.28 time: 0.339
+2026-01-10 21:44:01,597: Running test after training batch: 0
+2026-01-10 21:44:01,705: WER debug GT example: You can see the code at this point as well.
+2026-01-10 21:44:08,169: WER debug example
+  GT : you can see the code at this point as well
+  PR : 
+2026-01-10 21:44:09,264: WER debug example
+  GT : how does it keep the cost down
+  PR : 

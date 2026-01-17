@@ -1,0 +1,96 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run gb3vrefs
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/wandb/wandb/run-20260103_134519-gb3vrefs
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run b1
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/gb3vrefs
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0103 13:45:20.894948 1288988 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0103 13:45:20.930048 1288988 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0103 13:45:20.993252 1288988 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+Using /tmp/torch_extensions as PyTorch extensions root...
+Creating extension directory /tmp/torch_extensions/slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /tmp/torch_extensions/slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0/build.ninja...
+Building extension module slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+Using envvar MAX_JOBS (8) as the number of workers...
+Loading extension module slstm_HS768BS8NH4NS4DBfDRbDWbDGbDSbDAfNG4SA1GRCV0GRC0d0FCV0FC0d0...
+Fatal Python error: Segmentation fault
+
+Current thread 0x000014d834dec640 (most recent call first):
+<no Python frame>
+
+Thread 0x000014d834beb640 (most recent call first):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 312 in wait
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/multiprocessing/queues.py", line 231 in _feed
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 917 in run
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 937 in _bootstrap
+
+Thread 0x000014d8a61dc640 (most recent call first):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/selectors.py", line 416 in select
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/multiprocessing/connection.py", line 931 in wait
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/multiprocessing/connection.py", line 424 in _poll
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/multiprocessing/connection.py", line 257 in poll
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/multiprocessing/queues.py", line 113 in get
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/data/_utils/pin_memory.py", line 26 in do_one_step
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/data/_utils/pin_memory.py", line 49 in _pin_memory_loop
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 917 in run
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 937 in _bootstrap
+
+Thread 0x000014d90ce68640 (most recent call first):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 316 in wait
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 581 in wait
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 265 in _loop_check_status
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 336 in check_internal_messages
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 917 in run
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 937 in _bootstrap
+
+Thread 0x000014d90d069640 (most recent call first):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 312 in wait
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/concurrent/futures/_base.py", line 441 in result
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/lib/asyncio_manager.py", line 136 in run
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/mailbox/response_handle.py", line 71 in wait_or
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/mailbox/mailbox_handle.py", line 129 in wait_or
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 249 in _loop_check_status
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 282 in check_network_status
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 917 in run
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 937 in _bootstrap
+
+Thread 0x000014d90d26a640 (most recent call first):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 316 in wait
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 581 in wait
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 265 in _loop_check_status
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/wandb_run.py", line 309 in check_stop_status
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 917 in run
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 937 in _bootstrap
+
+Thread 0x000014d90d46b640 (most recent call first):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/selectors.py", line 469 in select
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/asyncio/base_events.py", line 1869 in _run_once
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/asyncio/base_events.py", line 601 in run_forever
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/asyncio/base_events.py", line 634 in run_until_complete
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/asyncio/runners.py", line 44 in run
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/lib/asyncio_compat.py", line 75 in run
+  File "/home/e12511253/.local/lib/python3.9/site-packages/wandb/sdk/lib/asyncio_manager.py", line 233 in _main
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 917 in run
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 980 in _bootstrap_inner
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/threading.py", line 937 in _bootstrap
+
+Thread 0x000014d9ccc22740 (most recent call first):
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/autograd/__init__.py", line 197 in backward
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/_tensor.py", line 488 in backward
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/rnn_trainer.py", line 875 in train
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 91 in main
+  File "/home/e12511253/Brain2Text/brain2text/src/brain2text/model_training/train_model.py", line 98 in <module>
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 87 in _run_code
+  File "/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/runpy.py", line 197 in _run_module_as_main
+/var/spool/slurm/d/job348087/slurm_script: line 132: 1288988 Segmentation fault      (core dumped) python -u -m brain2text.model_training.train_model --config "$BASE" --config "$OVR" --config "$CFG"

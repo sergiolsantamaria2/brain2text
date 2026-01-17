@@ -1,0 +1,394 @@
+TMPDIR=/home/e12511253/tmp
+JOB_TMP=/home/e12511253/tmp/e12511253_b2t_351849
+TORCH_EXTENSIONS_DIR=/home/e12511253/tmp/e12511253_b2t_351849/torch_extensions
+WANDB_DIR=/home/e12511253/tmp/e12511253_b2t_351849/wandb
+torch CUDA runtime expects: 11.7
+CUDA_HOME=/home/e12511253/miniforge3/envs/brain2text
+which nvcc: /home/e12511253/miniforge3/envs/brain2text/bin/nvcc
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2022 NVIDIA Corporation
+Built on Tue_May__3_18:49:52_PDT_2022
+Cuda compilation tools, release 11.7, V11.7.64
+Build cuda_11.7.r11.7/compiler.31294372_0
+nvcc release: 11.7
+CONDA_PREFIX=/home/e12511253/miniforge3/envs/brain2text
+TORCH_LIB=/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib
+FST_SO=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+LD_LIBRARY_PATH=/home/e12511253/tmp/e12511253_b2t_351849/lm_runtime_libs:/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs:/home/e12511253/miniforge3/envs/brain2text/lib:/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/lib:/home/e12511253/miniforge3/envs/brain2text/lib64:/home/e12511253/miniforge3/envs/brain2text/lib:
+lrwxrwxrwx 1 e12511253 e12511253 153 Jan  9 11:55 /home/e12511253/tmp/e12511253_b2t_351849/lm_runtime_libs/libfst.so.8 -> /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/runtime/server/x86/fc_base/openfst-build/src/lib/.libs/libfst.so.8.0.0
+lm_decoder import: OK
+CUDART_SO=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+CUDA_LIB=/home/e12511253/miniforge3/envs/brain2text/lib64
+LD_PRELOAD=/home/e12511253/miniforge3/envs/brain2text/lib64/libcudart.so.11.7.60
+TORCH_USE_RTLD_GLOBAL=1
+OUT_ROOT=/home/e12511253/Brain2Text/brain2text/trained_models
+==============================================
+Job: b2t5g  ID: 351849
+Base: configs/rnn_args.yaml
+Global override 1: configs/overrides/wer_5gram_only.yaml
+Folders: configs/experiments/gru/ablations/speckle_grid
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+==============================================
+
+========== FOLDER: configs/experiments/gru/ablations/speckle_grid ==========
+Num configs: 4
+
+=== RUN speckle_005.yaml ===
+JOB_OUT_DIR=/home/e12511253/Brain2Text/brain2text/trained_models/speckle_grid/speckle_005
+2026-01-09 11:55:13,901: Using device: cuda:0
+2026-01-09 11:59:01,589: Local LM WER enabled. lm_dir=/home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/languageModel
+2026-01-09 11:59:01,741: Using 45 sessions after filtering (from 45).
+2026-01-09 11:59:02,175: Using torch.compile (if available)
+2026-01-09 11:59:02,176: torch.compile not available (torch<2.0). Skipping.
+2026-01-09 11:59:02,177: Initialized RNN decoding model
+2026-01-09 11:59:02,177: GRUDecoder(
+  (day_layer_activation): Softsign()
+  (day_layer_dropout): Dropout(p=0.2, inplace=False)
+  (gru): GRU(7168, 768, num_layers=5, batch_first=True, dropout=0.2)
+  (head): Sequential(
+    (0): ResidualFFNBlock(
+      (norm): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (lin): Linear(in_features=768, out_features=768, bias=True)
+      (act): GELU(approximate='none')
+      (drop): Dropout(p=0.1, inplace=False)
+    )
+  )
+  (out): Linear(in_features=768, out_features=41, bias=True)
+)
+2026-01-09 11:59:02,177: Model has 44,907,305 parameters
+2026-01-09 11:59:02,177: Model has 11,819,520 day-specific parameters | 26.32% of total parameters
+2026-01-09 11:59:03,586: Successfully initialized datasets
+2026-01-09 11:59:03,587: AdamW(fused) not available in this torch build. Using standard AdamW.
+2026-01-09 11:59:05,619: Train batch 0: loss: 579.33 grad norm: 1379.00 time: 0.641
+2026-01-09 11:59:05,620: Running test after training batch: 0
+2026-01-09 11:59:05,752: WER debug GT example: You can see the code at this point as well.
+2026-01-09 11:59:12,411: WER debug example
+  GT : you can see the code at this point as well
+  PR : she has from his
+2026-01-09 11:59:13,782: WER debug example
+  GT : how does it keep the cost down
+  PR : money from
+2026-01-09 12:04:24,652: Val batch 0: PER (avg): 1.4296 CTC Loss (avg): 633.1396 WER(5gram): 99.67% (n=256) time: 319.032
+2026-01-09 12:04:24,661: WER lens: avg_true_words=5.99 avg_pred_words=2.81 max_pred_words=7
+2026-01-09 12:04:24,667: t15.2023.08.13 val PER: 1.3067
+2026-01-09 12:04:24,673: t15.2023.08.18 val PER: 1.4241
+2026-01-09 12:04:24,678: t15.2023.08.20 val PER: 1.3034
+2026-01-09 12:04:24,680: t15.2023.08.25 val PER: 1.3434
+2026-01-09 12:04:24,680: t15.2023.08.27 val PER: 1.2508
+2026-01-09 12:04:24,680: t15.2023.09.01 val PER: 1.4562
+2026-01-09 12:04:24,680: t15.2023.09.03 val PER: 1.3064
+2026-01-09 12:04:24,680: t15.2023.09.24 val PER: 1.5400
+2026-01-09 12:04:24,680: t15.2023.09.29 val PER: 1.4697
+2026-01-09 12:04:24,680: t15.2023.10.01 val PER: 1.2120
+2026-01-09 12:04:24,680: t15.2023.10.06 val PER: 1.4941
+2026-01-09 12:04:24,680: t15.2023.10.08 val PER: 1.1813
+2026-01-09 12:04:24,680: t15.2023.10.13 val PER: 1.4073
+2026-01-09 12:04:24,680: t15.2023.10.15 val PER: 1.3863
+2026-01-09 12:04:24,680: t15.2023.10.20 val PER: 1.4866
+2026-01-09 12:04:24,680: t15.2023.10.22 val PER: 1.3953
+2026-01-09 12:04:24,680: t15.2023.11.03 val PER: 1.5943
+2026-01-09 12:04:24,681: t15.2023.11.04 val PER: 2.0273
+2026-01-09 12:04:24,681: t15.2023.11.17 val PER: 1.9596
+2026-01-09 12:04:24,681: t15.2023.11.19 val PER: 1.6806
+2026-01-09 12:04:24,681: t15.2023.11.26 val PER: 1.5384
+2026-01-09 12:04:24,681: t15.2023.12.03 val PER: 1.4233
+2026-01-09 12:04:24,681: t15.2023.12.08 val PER: 1.4487
+2026-01-09 12:04:24,681: t15.2023.12.10 val PER: 1.6951
+2026-01-09 12:04:24,681: t15.2023.12.17 val PER: 1.3067
+2026-01-09 12:04:24,681: t15.2023.12.29 val PER: 1.4084
+2026-01-09 12:04:24,681: t15.2024.02.25 val PER: 1.4213
+2026-01-09 12:04:24,681: t15.2024.03.08 val PER: 1.3215
+2026-01-09 12:04:24,681: t15.2024.03.15 val PER: 1.3183
+2026-01-09 12:04:24,682: t15.2024.03.17 val PER: 1.4003
+2026-01-09 12:04:24,682: t15.2024.05.10 val PER: 1.3224
+2026-01-09 12:04:24,682: t15.2024.06.14 val PER: 1.5315
+2026-01-09 12:04:24,682: t15.2024.07.19 val PER: 1.0817
+2026-01-09 12:04:24,682: t15.2024.07.21 val PER: 1.6345
+2026-01-09 12:04:24,682: t15.2024.07.28 val PER: 1.6618
+2026-01-09 12:04:24,682: t15.2025.01.10 val PER: 1.0854
+2026-01-09 12:04:24,682: t15.2025.01.12 val PER: 1.7652
+2026-01-09 12:04:24,682: t15.2025.03.14 val PER: 1.0355
+2026-01-09 12:04:24,682: t15.2025.03.16 val PER: 1.6086
+2026-01-09 12:04:24,683: t15.2025.03.30 val PER: 1.2897
+2026-01-09 12:04:24,683: t15.2025.04.13 val PER: 1.5849
+2026-01-09 12:04:24,685: New best val WER(5gram) inf% --> 99.67%
+2026-01-09 12:04:24,908: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/speckle_grid/speckle_005/checkpoint/checkpoint_batch_0
+2026-01-09 12:04:43,823: Train batch 200: loss: 77.04 grad norm: 106.33 time: 0.055
+2026-01-09 12:05:02,934: Train batch 400: loss: 53.52 grad norm: 97.95 time: 0.063
+2026-01-09 12:05:12,379: Running test after training batch: 500
+2026-01-09 12:05:12,652: WER debug GT example: You can see the code at this point as well.
+2026-01-09 12:05:18,248: WER debug example
+  GT : you can see the code at this point as well
+  PR : used and is thus had at this guide is all
+2026-01-09 12:05:18,535: WER debug example
+  GT : how does it keep the cost down
+  PR : and does it think that is tied
+2026-01-09 12:06:32,906: Val batch 500: PER (avg): 0.5141 CTC Loss (avg): 55.0802 WER(5gram): 75.10% (n=256) time: 80.526
+2026-01-09 12:06:32,906: WER lens: avg_true_words=5.99 avg_pred_words=5.58 max_pred_words=12
+2026-01-09 12:06:32,907: t15.2023.08.13 val PER: 0.4657
+2026-01-09 12:06:32,907: t15.2023.08.18 val PER: 0.4334
+2026-01-09 12:06:32,907: t15.2023.08.20 val PER: 0.4416
+2026-01-09 12:06:32,907: t15.2023.08.25 val PER: 0.4247
+2026-01-09 12:06:32,907: t15.2023.08.27 val PER: 0.5305
+2026-01-09 12:06:32,907: t15.2023.09.01 val PER: 0.4164
+2026-01-09 12:06:32,907: t15.2023.09.03 val PER: 0.5012
+2026-01-09 12:06:32,907: t15.2023.09.24 val PER: 0.4199
+2026-01-09 12:06:32,908: t15.2023.09.29 val PER: 0.4646
+2026-01-09 12:06:32,908: t15.2023.10.01 val PER: 0.5198
+2026-01-09 12:06:32,908: t15.2023.10.06 val PER: 0.4187
+2026-01-09 12:06:32,908: t15.2023.10.08 val PER: 0.5332
+2026-01-09 12:06:32,908: t15.2023.10.13 val PER: 0.5780
+2026-01-09 12:06:32,908: t15.2023.10.15 val PER: 0.4924
+2026-01-09 12:06:32,908: t15.2023.10.20 val PER: 0.4631
+2026-01-09 12:06:32,908: t15.2023.10.22 val PER: 0.4310
+2026-01-09 12:06:32,908: t15.2023.11.03 val PER: 0.4905
+2026-01-09 12:06:32,908: t15.2023.11.04 val PER: 0.2594
+2026-01-09 12:06:32,909: t15.2023.11.17 val PER: 0.3468
+2026-01-09 12:06:32,909: t15.2023.11.19 val PER: 0.3273
+2026-01-09 12:06:32,909: t15.2023.11.26 val PER: 0.5464
+2026-01-09 12:06:32,909: t15.2023.12.03 val PER: 0.4874
+2026-01-09 12:06:32,909: t15.2023.12.08 val PER: 0.5140
+2026-01-09 12:06:32,909: t15.2023.12.10 val PER: 0.4520
+2026-01-09 12:06:32,909: t15.2023.12.17 val PER: 0.5696
+2026-01-09 12:06:32,909: t15.2023.12.29 val PER: 0.5477
+2026-01-09 12:06:32,909: t15.2024.02.25 val PER: 0.4803
+2026-01-09 12:06:32,909: t15.2024.03.08 val PER: 0.6003
+2026-01-09 12:06:32,910: t15.2024.03.15 val PER: 0.5547
+2026-01-09 12:06:32,910: t15.2024.03.17 val PER: 0.4916
+2026-01-09 12:06:32,910: t15.2024.05.10 val PER: 0.5349
+2026-01-09 12:06:32,910: t15.2024.06.14 val PER: 0.4984
+2026-01-09 12:06:32,910: t15.2024.07.19 val PER: 0.6671
+2026-01-09 12:06:32,910: t15.2024.07.21 val PER: 0.4703
+2026-01-09 12:06:32,910: t15.2024.07.28 val PER: 0.5044
+2026-01-09 12:06:32,911: t15.2025.01.10 val PER: 0.7603
+2026-01-09 12:06:32,911: t15.2025.01.12 val PER: 0.5558
+2026-01-09 12:06:32,911: t15.2025.03.14 val PER: 0.7781
+2026-01-09 12:06:32,911: t15.2025.03.16 val PER: 0.5798
+2026-01-09 12:06:32,911: t15.2025.03.30 val PER: 0.7276
+2026-01-09 12:06:32,911: t15.2025.04.13 val PER: 0.5635
+2026-01-09 12:06:32,912: New best val WER(5gram) 99.67% --> 75.10%
+2026-01-09 12:06:33,122: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/speckle_grid/speckle_005/checkpoint/checkpoint_batch_500
+2026-01-09 12:06:42,878: Train batch 600: loss: 48.14 grad norm: 75.79 time: 0.078
+2026-01-09 12:07:01,917: Train batch 800: loss: 41.16 grad norm: 90.93 time: 0.057
+2026-01-09 12:07:21,449: Train batch 1000: loss: 42.26 grad norm: 80.49 time: 0.066
+2026-01-09 12:07:21,450: Running test after training batch: 1000
+2026-01-09 12:07:21,596: WER debug GT example: You can see the code at this point as well.
+2026-01-09 12:07:27,190: WER debug example
+  GT : you can see the code at this point as well
+  PR : you'd hand me the code at this and is well
+2026-01-09 12:07:27,440: WER debug example
+  GT : how does it keep the cost down
+  PR : howled as it is that it's at
+2026-01-09 12:08:12,151: Val batch 1000: PER (avg): 0.4045 CTC Loss (avg): 42.2655 WER(5gram): 53.46% (n=256) time: 50.700
+2026-01-09 12:08:12,151: WER lens: avg_true_words=5.99 avg_pred_words=5.66 max_pred_words=12
+2026-01-09 12:08:12,152: t15.2023.08.13 val PER: 0.3815
+2026-01-09 12:08:12,152: t15.2023.08.18 val PER: 0.3319
+2026-01-09 12:08:12,152: t15.2023.08.20 val PER: 0.3328
+2026-01-09 12:08:12,152: t15.2023.08.25 val PER: 0.2922
+2026-01-09 12:08:12,152: t15.2023.08.27 val PER: 0.4196
+2026-01-09 12:08:12,152: t15.2023.09.01 val PER: 0.3036
+2026-01-09 12:08:12,152: t15.2023.09.03 val PER: 0.4097
+2026-01-09 12:08:12,152: t15.2023.09.24 val PER: 0.3155
+2026-01-09 12:08:12,152: t15.2023.09.29 val PER: 0.3555
+2026-01-09 12:08:12,152: t15.2023.10.01 val PER: 0.4009
+2026-01-09 12:08:12,153: t15.2023.10.06 val PER: 0.3068
+2026-01-09 12:08:12,153: t15.2023.10.08 val PER: 0.4506
+2026-01-09 12:08:12,153: t15.2023.10.13 val PER: 0.4608
+2026-01-09 12:08:12,153: t15.2023.10.15 val PER: 0.3784
+2026-01-09 12:08:12,153: t15.2023.10.20 val PER: 0.3725
+2026-01-09 12:08:12,153: t15.2023.10.22 val PER: 0.3385
+2026-01-09 12:08:12,153: t15.2023.11.03 val PER: 0.3942
+2026-01-09 12:08:12,153: t15.2023.11.04 val PER: 0.1604
+2026-01-09 12:08:12,154: t15.2023.11.17 val PER: 0.2582
+2026-01-09 12:08:12,154: t15.2023.11.19 val PER: 0.2096
+2026-01-09 12:08:12,154: t15.2023.11.26 val PER: 0.4413
+2026-01-09 12:08:12,154: t15.2023.12.03 val PER: 0.3876
+2026-01-09 12:08:12,154: t15.2023.12.08 val PER: 0.4088
+2026-01-09 12:08:12,154: t15.2023.12.10 val PER: 0.3325
+2026-01-09 12:08:12,155: t15.2023.12.17 val PER: 0.4033
+2026-01-09 12:08:12,155: t15.2023.12.29 val PER: 0.4049
+2026-01-09 12:08:12,155: t15.2024.02.25 val PER: 0.3525
+2026-01-09 12:08:12,155: t15.2024.03.08 val PER: 0.4922
+2026-01-09 12:08:12,155: t15.2024.03.15 val PER: 0.4396
+2026-01-09 12:08:12,155: t15.2024.03.17 val PER: 0.4017
+2026-01-09 12:08:12,155: t15.2024.05.10 val PER: 0.4101
+2026-01-09 12:08:12,155: t15.2024.06.14 val PER: 0.4022
+2026-01-09 12:08:12,155: t15.2024.07.19 val PER: 0.5326
+2026-01-09 12:08:12,156: t15.2024.07.21 val PER: 0.3683
+2026-01-09 12:08:12,156: t15.2024.07.28 val PER: 0.4162
+2026-01-09 12:08:12,156: t15.2025.01.10 val PER: 0.6171
+2026-01-09 12:08:12,156: t15.2025.01.12 val PER: 0.4457
+2026-01-09 12:08:12,156: t15.2025.03.14 val PER: 0.6391
+2026-01-09 12:08:12,156: t15.2025.03.16 val PER: 0.4764
+2026-01-09 12:08:12,156: t15.2025.03.30 val PER: 0.6287
+2026-01-09 12:08:12,156: t15.2025.04.13 val PER: 0.5036
+2026-01-09 12:08:12,157: New best val WER(5gram) 75.10% --> 53.46%
+2026-01-09 12:08:12,380: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/speckle_grid/speckle_005/checkpoint/checkpoint_batch_1000
+2026-01-09 12:08:31,352: Train batch 1200: loss: 32.60 grad norm: 73.30 time: 0.069
+2026-01-09 12:08:50,831: Train batch 1400: loss: 35.81 grad norm: 78.46 time: 0.061
+2026-01-09 12:09:00,530: Running test after training batch: 1500
+2026-01-09 12:09:00,705: WER debug GT example: You can see the code at this point as well.
+2026-01-09 12:09:06,042: WER debug example
+  GT : you can see the code at this point as well
+  PR : you can't see the code at this point is well
+2026-01-09 12:09:06,175: WER debug example
+  GT : how does it keep the cost down
+  PR : how does it keep the us in
+2026-01-09 12:09:30,539: Val batch 1500: PER (avg): 0.3763 CTC Loss (avg): 36.8585 WER(5gram): 36.31% (n=256) time: 30.008
+2026-01-09 12:09:30,539: WER lens: avg_true_words=5.99 avg_pred_words=5.29 max_pred_words=12
+2026-01-09 12:09:30,540: t15.2023.08.13 val PER: 0.3451
+2026-01-09 12:09:30,540: t15.2023.08.18 val PER: 0.3026
+2026-01-09 12:09:30,540: t15.2023.08.20 val PER: 0.3129
+2026-01-09 12:09:30,540: t15.2023.08.25 val PER: 0.2545
+2026-01-09 12:09:30,540: t15.2023.08.27 val PER: 0.4132
+2026-01-09 12:09:30,540: t15.2023.09.01 val PER: 0.2744
+2026-01-09 12:09:30,541: t15.2023.09.03 val PER: 0.3741
+2026-01-09 12:09:30,541: t15.2023.09.24 val PER: 0.3180
+2026-01-09 12:09:30,541: t15.2023.09.29 val PER: 0.3293
+2026-01-09 12:09:30,541: t15.2023.10.01 val PER: 0.3804
+2026-01-09 12:09:30,541: t15.2023.10.06 val PER: 0.2809
+2026-01-09 12:09:30,541: t15.2023.10.08 val PER: 0.4276
+2026-01-09 12:09:30,541: t15.2023.10.13 val PER: 0.4368
+2026-01-09 12:09:30,541: t15.2023.10.15 val PER: 0.3520
+2026-01-09 12:09:30,541: t15.2023.10.20 val PER: 0.3322
+2026-01-09 12:09:30,541: t15.2023.10.22 val PER: 0.3196
+2026-01-09 12:09:30,541: t15.2023.11.03 val PER: 0.3623
+2026-01-09 12:09:30,541: t15.2023.11.04 val PER: 0.1092
+2026-01-09 12:09:30,541: t15.2023.11.17 val PER: 0.2193
+2026-01-09 12:09:30,541: t15.2023.11.19 val PER: 0.1697
+2026-01-09 12:09:30,542: t15.2023.11.26 val PER: 0.4101
+2026-01-09 12:09:30,542: t15.2023.12.03 val PER: 0.3582
+2026-01-09 12:09:30,542: t15.2023.12.08 val PER: 0.3482
+2026-01-09 12:09:30,542: t15.2023.12.10 val PER: 0.2983
+2026-01-09 12:09:30,542: t15.2023.12.17 val PER: 0.3669
+2026-01-09 12:09:30,542: t15.2023.12.29 val PER: 0.3665
+2026-01-09 12:09:30,542: t15.2024.02.25 val PER: 0.3146
+2026-01-09 12:09:30,542: t15.2024.03.08 val PER: 0.4566
+2026-01-09 12:09:30,542: t15.2024.03.15 val PER: 0.4153
+2026-01-09 12:09:30,542: t15.2024.03.17 val PER: 0.3654
+2026-01-09 12:09:30,543: t15.2024.05.10 val PER: 0.3893
+2026-01-09 12:09:30,543: t15.2024.06.14 val PER: 0.3991
+2026-01-09 12:09:30,543: t15.2024.07.19 val PER: 0.5155
+2026-01-09 12:09:30,543: t15.2024.07.21 val PER: 0.3428
+2026-01-09 12:09:30,543: t15.2024.07.28 val PER: 0.3618
+2026-01-09 12:09:30,543: t15.2025.01.10 val PER: 0.6116
+2026-01-09 12:09:30,543: t15.2025.01.12 val PER: 0.4157
+2026-01-09 12:09:30,544: t15.2025.03.14 val PER: 0.6169
+2026-01-09 12:09:30,544: t15.2025.03.16 val PER: 0.4568
+2026-01-09 12:09:30,544: t15.2025.03.30 val PER: 0.6402
+2026-01-09 12:09:30,544: t15.2025.04.13 val PER: 0.4779
+2026-01-09 12:09:30,545: New best val WER(5gram) 53.46% --> 36.31%
+2026-01-09 12:09:30,763: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/speckle_grid/speckle_005/checkpoint/checkpoint_batch_1500
+2026-01-09 12:09:40,781: Train batch 1600: loss: 35.90 grad norm: 75.77 time: 0.064
+2026-01-09 12:10:00,968: Train batch 1800: loss: 34.34 grad norm: 70.12 time: 0.088
+2026-01-09 12:10:21,737: Train batch 2000: loss: 33.62 grad norm: 68.71 time: 0.067
+2026-01-09 12:10:21,737: Running test after training batch: 2000
+2026-01-09 12:10:21,898: WER debug GT example: You can see the code at this point as well.
+2026-01-09 12:10:27,261: WER debug example
+  GT : you can see the code at this point as well
+  PR : you can see the code at this point is well
+2026-01-09 12:10:27,346: WER debug example
+  GT : how does it keep the cost down
+  PR : how does it keep the us and
+2026-01-09 12:10:53,268: Val batch 2000: PER (avg): 0.3258 CTC Loss (avg): 32.4846 WER(5gram): 29.34% (n=256) time: 31.530
+2026-01-09 12:10:53,268: WER lens: avg_true_words=5.99 avg_pred_words=5.74 max_pred_words=12
+2026-01-09 12:10:53,269: t15.2023.08.13 val PER: 0.3056
+2026-01-09 12:10:53,269: t15.2023.08.18 val PER: 0.2523
+2026-01-09 12:10:53,269: t15.2023.08.20 val PER: 0.2494
+2026-01-09 12:10:53,269: t15.2023.08.25 val PER: 0.2334
+2026-01-09 12:10:53,269: t15.2023.08.27 val PER: 0.3441
+2026-01-09 12:10:53,269: t15.2023.09.01 val PER: 0.2265
+2026-01-09 12:10:53,269: t15.2023.09.03 val PER: 0.3325
+2026-01-09 12:10:53,269: t15.2023.09.24 val PER: 0.2597
+2026-01-09 12:10:53,269: t15.2023.09.29 val PER: 0.2757
+2026-01-09 12:10:53,269: t15.2023.10.01 val PER: 0.3316
+2026-01-09 12:10:53,269: t15.2023.10.06 val PER: 0.2454
+2026-01-09 12:10:53,269: t15.2023.10.08 val PER: 0.3897
+2026-01-09 12:10:53,270: t15.2023.10.13 val PER: 0.3755
+2026-01-09 12:10:53,270: t15.2023.10.15 val PER: 0.2993
+2026-01-09 12:10:53,270: t15.2023.10.20 val PER: 0.2852
+2026-01-09 12:10:53,270: t15.2023.10.22 val PER: 0.2572
+2026-01-09 12:10:53,270: t15.2023.11.03 val PER: 0.3161
+2026-01-09 12:10:53,270: t15.2023.11.04 val PER: 0.0853
+2026-01-09 12:10:53,270: t15.2023.11.17 val PER: 0.1773
+2026-01-09 12:10:53,270: t15.2023.11.19 val PER: 0.1317
+2026-01-09 12:10:53,270: t15.2023.11.26 val PER: 0.3623
+2026-01-09 12:10:53,270: t15.2023.12.03 val PER: 0.3088
+2026-01-09 12:10:53,271: t15.2023.12.08 val PER: 0.3123
+2026-01-09 12:10:53,271: t15.2023.12.10 val PER: 0.2589
+2026-01-09 12:10:53,271: t15.2023.12.17 val PER: 0.3212
+2026-01-09 12:10:53,271: t15.2023.12.29 val PER: 0.3102
+2026-01-09 12:10:53,271: t15.2024.02.25 val PER: 0.2711
+2026-01-09 12:10:53,271: t15.2024.03.08 val PER: 0.3997
+2026-01-09 12:10:53,271: t15.2024.03.15 val PER: 0.3609
+2026-01-09 12:10:53,271: t15.2024.03.17 val PER: 0.3305
+2026-01-09 12:10:53,271: t15.2024.05.10 val PER: 0.3388
+2026-01-09 12:10:53,271: t15.2024.06.14 val PER: 0.3423
+2026-01-09 12:10:53,272: t15.2024.07.19 val PER: 0.4667
+2026-01-09 12:10:53,272: t15.2024.07.21 val PER: 0.2924
+2026-01-09 12:10:53,272: t15.2024.07.28 val PER: 0.3228
+2026-01-09 12:10:53,272: t15.2025.01.10 val PER: 0.5413
+2026-01-09 12:10:53,272: t15.2025.01.12 val PER: 0.3695
+2026-01-09 12:10:53,272: t15.2025.03.14 val PER: 0.5355
+2026-01-09 12:10:53,272: t15.2025.03.16 val PER: 0.3848
+2026-01-09 12:10:53,272: t15.2025.03.30 val PER: 0.5448
+2026-01-09 12:10:53,272: t15.2025.04.13 val PER: 0.4180
+2026-01-09 12:10:53,273: New best val WER(5gram) 36.31% --> 29.34%
+2026-01-09 12:10:53,492: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/speckle_grid/speckle_005/checkpoint/checkpoint_batch_2000
+2026-01-09 12:11:13,676: Train batch 2200: loss: 28.28 grad norm: 72.24 time: 0.065
+2026-01-09 12:11:34,002: Train batch 2400: loss: 28.79 grad norm: 61.62 time: 0.055
+2026-01-09 12:11:44,383: Running test after training batch: 2500
+2026-01-09 12:11:44,561: WER debug GT example: You can see the code at this point as well.
+2026-01-09 12:11:49,920: WER debug example
+  GT : you can see the code at this point as well
+  PR : you can see the code at this point is well
+2026-01-09 12:11:50,004: WER debug example
+  GT : how does it keep the cost down
+  PR : how does it keep the us in
+2026-01-09 12:12:14,146: Val batch 2500: PER (avg): 0.3015 CTC Loss (avg): 30.0067 WER(5gram): 27.12% (n=256) time: 29.762
+2026-01-09 12:12:14,147: WER lens: avg_true_words=5.99 avg_pred_words=5.88 max_pred_words=12
+2026-01-09 12:12:14,147: t15.2023.08.13 val PER: 0.2921
+2026-01-09 12:12:14,147: t15.2023.08.18 val PER: 0.2381
+2026-01-09 12:12:14,148: t15.2023.08.20 val PER: 0.2335
+2026-01-09 12:12:14,148: t15.2023.08.25 val PER: 0.2018
+2026-01-09 12:12:14,148: t15.2023.08.27 val PER: 0.3280
+2026-01-09 12:12:14,148: t15.2023.09.01 val PER: 0.2127
+2026-01-09 12:12:14,148: t15.2023.09.03 val PER: 0.3029
+2026-01-09 12:12:14,148: t15.2023.09.24 val PER: 0.2269
+2026-01-09 12:12:14,148: t15.2023.09.29 val PER: 0.2534
+2026-01-09 12:12:14,148: t15.2023.10.01 val PER: 0.2972
+2026-01-09 12:12:14,148: t15.2023.10.06 val PER: 0.2099
+2026-01-09 12:12:14,149: t15.2023.10.08 val PER: 0.3721
+2026-01-09 12:12:14,149: t15.2023.10.13 val PER: 0.3569
+2026-01-09 12:12:14,149: t15.2023.10.15 val PER: 0.2907
+2026-01-09 12:12:14,149: t15.2023.10.20 val PER: 0.2852
+2026-01-09 12:12:14,149: t15.2023.10.22 val PER: 0.2350
+2026-01-09 12:12:14,149: t15.2023.11.03 val PER: 0.3026
+2026-01-09 12:12:14,149: t15.2023.11.04 val PER: 0.0785
+2026-01-09 12:12:14,149: t15.2023.11.17 val PER: 0.1431
+2026-01-09 12:12:14,149: t15.2023.11.19 val PER: 0.1218
+2026-01-09 12:12:14,150: t15.2023.11.26 val PER: 0.3391
+2026-01-09 12:12:14,150: t15.2023.12.03 val PER: 0.2920
+2026-01-09 12:12:14,150: t15.2023.12.08 val PER: 0.2743
+2026-01-09 12:12:14,150: t15.2023.12.10 val PER: 0.2326
+2026-01-09 12:12:14,150: t15.2023.12.17 val PER: 0.2755
+2026-01-09 12:12:14,150: t15.2023.12.29 val PER: 0.3027
+2026-01-09 12:12:14,150: t15.2024.02.25 val PER: 0.2514
+2026-01-09 12:12:14,150: t15.2024.03.08 val PER: 0.3528
+2026-01-09 12:12:14,150: t15.2024.03.15 val PER: 0.3396
+2026-01-09 12:12:14,151: t15.2024.03.17 val PER: 0.3061
+2026-01-09 12:12:14,151: t15.2024.05.10 val PER: 0.3105
+2026-01-09 12:12:14,151: t15.2024.06.14 val PER: 0.3044
+2026-01-09 12:12:14,151: t15.2024.07.19 val PER: 0.4496
+2026-01-09 12:12:14,151: t15.2024.07.21 val PER: 0.2621
+2026-01-09 12:12:14,151: t15.2024.07.28 val PER: 0.2875
+2026-01-09 12:12:14,151: t15.2025.01.10 val PER: 0.4848
+2026-01-09 12:12:14,151: t15.2025.01.12 val PER: 0.3649
+2026-01-09 12:12:14,152: t15.2025.03.14 val PER: 0.4867
+2026-01-09 12:12:14,152: t15.2025.03.16 val PER: 0.3599
+2026-01-09 12:12:14,152: t15.2025.03.30 val PER: 0.5046
+2026-01-09 12:12:14,152: t15.2025.04.13 val PER: 0.3809
+2026-01-09 12:12:14,152: New best val WER(5gram) 29.34% --> 27.12%
+2026-01-09 12:12:14,365: Saved model to checkpoint: /home/e12511253/Brain2Text/brain2text/trained_models/speckle_grid/speckle_005/checkpoint/checkpoint_batch_2500
+2026-01-09 12:12:24,679: Train batch 2600: loss: 34.21 grad norm: 81.64 time: 0.055

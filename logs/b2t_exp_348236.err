@@ -1,0 +1,37 @@
+/home/e12511253/miniforge3/envs/brain2text/lib/python3.9/site-packages/torch/utils/cpp_extension.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import packaging  # type: ignore[attr-defined]
+wandb: Currently logged in as: sergiolsantamaria (sergiolsantamaria-tu-wien) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run k72wss63
+wandb: Tracking run with wandb version 0.23.1
+wandb: Run data is saved locally in /tmp/e12511253_b2t_348236/wandb/wandb/run-20260103_210328-k72wss63
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run base
+wandb: ⭐️ View project at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text
+wandb: 🚀 View run at https://wandb.ai/sergiolsantamaria-tu-wien/brain2text/runs/k72wss63
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0103 21:03:29.727986 1346978 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0103 21:03:29.763543 1346978 brain_speech_decoder.h:58] Reading lm fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/TLG.fst
+I0103 21:03:29.826059 1346978 brain_speech_decoder.h:81] Reading symbol table /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/openwebtext_1gram_lm_sil/words.txt
+I0103 21:03:29.869341 1346978 brain_speech_decoder.h:52] Reading fst /home/e12511253/Brain2Text/brain2text/references/nejm-brain-to-text/language_model/pretrained_language_models/languageModel/TLG.fst
+/var/spool/slurm/d/job348236/slurm_script: line 216: 1346978 Killed                  python -u - "$BASE" "$OVR1" "$CFG" <<'PY'
+import os, sys, ctypes, runpy
+
+base, ovr1, cfg = sys.argv[1:4]
+
+# Make future dlopen() global
+sys.setdlopenflags(os.RTLD_GLOBAL | os.RTLD_NOW)
+
+# Preload cudart globally (critical)
+ctypes.CDLL(os.environ["CUDART_SO"], mode=ctypes.RTLD_GLOBAL)
+
+# Run the training module with the same CLI args
+sys.argv = [
+  "train_model",
+  "--config", base,
+  "--config", ovr1,
+  "--config", cfg,
+]
+runpy.run_module("brain2text.model_training.train_model", run_name="__main__")
+PY
+
+[2026-01-03T21:04:19.385] error: Detected 1 oom_kill event in StepId=348236.batch. Some of the step tasks have been OOM Killed.

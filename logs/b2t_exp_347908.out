@@ -1,0 +1,20 @@
+==============================================
+Job: b2t_exp  ID: 347908
+Base: configs/rnn_args.yaml
+Global override: configs/overrides/wer_1gram_only.yaml
+Folders: configs/experiments/xlstm/num_blocks
+Host: a-l40s-o-1
+CUDA_VISIBLE_DEVICES=0
+TMPDIR=/tmp
+WANDB_DIR=/tmp/wandb
+==============================================
+
+========== FOLDER: configs/experiments/xlstm/num_blocks ==========
+Num configs: 4
+
+=== RUN b1.yaml ===
+2026-01-02 19:43:37,605: Using device: cuda:0
+2026-01-02 19:43:39,082: LM init failed but eval.compute_wer=true. Reason: lm_decoder is not available in this environment. This is expected on Mac. Run on the cluster where lm_decoder is installed.
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mb1[0m at: [34m[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../tmp/wandb/wandb/run-20260102_194338-wq4uvd2v/logs[0m
