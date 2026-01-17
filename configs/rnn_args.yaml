@@ -117,7 +117,7 @@ dataset:
   test_percentage: 0.1
   feature_subset: null
 
-  dataset_dir: ${oc.env:B2T_DATA_DIR,data/hdf5_data_final}
+  dataset_dir: /share/e12511253/brain2text/data/hdf5_data_final
   bad_trials_dict: null
 
   sessions:
